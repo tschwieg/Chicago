@@ -1,0 +1,85 @@
+
+# Let $\sigma_b^{-2} \sim \Gamma(\alpha_b, \beta_b)$
+# $\sigma_{\epsilon}^{-2} \sim \Gamma( \alpha_{\epsilon}, \beta_{\epsilon})$.
+# $\beta \sim \normal( \mu, \Sigma)$
+
+
+# $y_i \sim \normal\left( X_i \beta, \sigma_{\epsilon}^2 I + W_i \sigma_b^2 W_i' \right)$
+
+data = DataFrame(load("pset1q4.csv"))
+N = size(data)[1]
+
+X = Vector{Matrix}(undef,N)
+W = Vector{Vector}(undef,N)
+Y = Vector{Vector}(undef,N)
+for i in 1:N
+    X[i] = [data[i,:x11] data[i,:x12] data[i,:x13] data[i,:x14];
+            data[i,:x21] data[i,:x22] data[i,:x23] data[i,:x24]]
+    W[i] = [data[i,:w1], data[i,:w2]]
+    Y[i] = [data[i,:y1], data[i,:y2]]
+end
+
+
+function EvaluateLikelihood( Y::Vector{Vector}, X::Vector{Matrix}, W::Vector{Vector}, β::Vector{Float64}, σe²::Float64, σb²::Float64)
+    #Note that the likelihood function of a mutlivariate normal is:
+    # $\frac{1}{\sqrt{2 \pi \vert \Sigma \vert}} exp ( -.5 (x - \mu)' \Sigma^{-1} (x-\mu))$
+
+    #Because of numerical concerns we will exponentiate the sum of the logs
+    likelihood = (N/2.0)*log(2*pi)
+    for i in 1:N
+        μ = X[i]*β
+        Σ = σe²*I  + σb²*W[i]*W[i]'
+
+        #Sigma is positive definite, so we should invert it using the
+        #cholesky decomposition, especially as numerical concerns loom
+        F = cholesky(Hermitian(Σ))
+        invSigma = (F.U \ (F.L \ I))
+
+        likelihood += -.5*log( det(Σ)) - .5*(Y[i]-μ)'*invSigma*(Y[i]-μ)
+    end
+    #likelihood = exp(likelihood)
+    return likelihood
+end
+
+function EvaluatePriors( αe::Float64, αb::Float64, βe::Float64, βb::Float64, μ::Vector{Float64}, Σ::Matrix{Float64}, betaVal::Vector{Float64}, sigmaEVal::Float64, sigmaBVal::Float64 )
+    betaPrior = pdf( MvNormal( μ, Σ), betaVal)
+    sigmaEPrior = pdf( Gamma( αe, βe), sigmaEVal)
+    sigmaBPrior = pdf( Gamma( αe, βe), sigmaBVal)
+    #return exp( log(betaPrior) + log( sigmaEPrior) + log( sigmaBPrior))
+    return log(betaPrior) + log( sigmaEPrior) + log( sigmaBPrior)
+end
+
+function pBeta(β::Vector{Float64}, σe²::Float64, σb²::Float64, Y::Vector{Vector}, X::Vector{Matrix}, W::Vector{Vector}, αe::Float64, αb::Float64, βe::Float64, βb::Float64, μ::Vector{Float64}, Σ::Matrix{Float64} )
+    return exp( EvaluateLikelihood(Y,X,W,β,σe², σb²) +EvaluatePriors( αe, αb, βb, βb, μ, Σ, β, σe², σb²) )
+end
+
+function qBeta( β, βCond::Vector{Float64}, ::Nothing )
+    return 1.0#0.00390625 #1 / 256
+end
+
+function qBetaSim( βCond::Vector{Float64}, ::Nothing)
+    return [rand(Uniform(βCond[1]-.5, βCond[1]+.5),1)[1],
+            rand(Uniform(βCond[2]-.5, βCond[2]+.5),1)[1],
+            rand(Uniform(βCond[3]-.5, βCond[3]+.5),1)[1],
+            rand(Uniform(βCond[4]-.5, βCond[4]+.5),1)[1]]
+end
+
+#This is the same as pBeta except we have reordered the first 3 arguments
+function pSigmaE(σe²::Float64,β::Vector{Float64},  σb²::Float64, Y::Vector{Vector}, X::Vector{Matrix}, W::Vector{Vector}, αe::Float64, αb::Float64, βe::Float64, βb::Float64, μ::Vector{Float64}, Σ::Matrix{Float64} )
+    return exp( EvaluateLikelihood(Y,X,W,β,σe², σb²) +EvaluatePriors( αe, αb, βb, βb, μ, Σ, β, σe², σb²) )
+end
+
+
+#This is the same as pBeta except we have reordered the first 3 arguments
+function pSigmaB(σb²::Float64,β::Vector{Float64},  σe²::Float64, Y::Vector{Vector}, X::Vector{Matrix}, W::Vector{Vector}, αe::Float64, αb::Float64, βe::Float64, βb::Float64, μ::Vector{Float64}, Σ::Matrix{Float64} )
+    return exp( EvaluateLikelihood(Y,X,W,β,σe², σb²) +EvaluatePriors( αe, αb, βb, βb, μ, Σ, β, σe², σb²) )
+end
+
+function qSigma( σ::Float64, σCond::Float64, ::Nothing)
+    return pdf(Uniform(max(σCond - 2.0,0), σCond + 2.0),σ)
+end
+
+function qSigmaSim( σCond::Float64, ::Nothing)
+    return rand(Uniform(max(σCond - 2.0,0),σCond + 2.0),1)[1]
+end
+

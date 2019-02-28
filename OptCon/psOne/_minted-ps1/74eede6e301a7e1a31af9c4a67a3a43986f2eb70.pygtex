@@ -1,0 +1,85 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{c}{\PYGZsh{} Let $\sigma_b^{-2} \sim \Gamma(\alpha_b, \beta_b)$}
+\PYG{c}{\PYGZsh{} $\sigma_{\epsilon}^{-2} \sim \Gamma( \alpha_{\epsilon}, \beta_{\epsilon})$.}
+\PYG{c}{\PYGZsh{} $\beta \sim \normal( \mu, \Sigma)$}
+
+
+\PYG{c}{\PYGZsh{} $y_i \sim \normal\left( X_i \beta, \sigma_{\epsilon}^2 I + W_i \sigma_b^2 W_i' \right)$}
+
+\PYG{n}{data} \PYG{o}{=} \PYG{n}{DataFrame}\PYG{p}{(}\PYG{n}{load}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}pset1q4.csv\PYGZdq{}}\PYG{p}{))}
+\PYG{n}{N} \PYG{o}{=} \PYG{n}{size}\PYG{p}{(}\PYG{n}{data}\PYG{p}{)[}\PYG{l+m+mi}{1}\PYG{p}{]}
+
+\PYG{n}{X} \PYG{o}{=} \PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Matrix}\PYG{p}{\PYGZcb{}(}\PYG{n}{undef}\PYG{p}{,}\PYG{n}{N}\PYG{p}{)}
+\PYG{n}{W} \PYG{o}{=} \PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Vector}\PYG{p}{\PYGZcb{}(}\PYG{n}{undef}\PYG{p}{,}\PYG{n}{N}\PYG{p}{)}
+\PYG{n}{Y} \PYG{o}{=} \PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Vector}\PYG{p}{\PYGZcb{}(}\PYG{n}{undef}\PYG{p}{,}\PYG{n}{N}\PYG{p}{)}
+\PYG{k}{for} \PYG{n}{i} \PYG{k+kp}{in} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{N}
+    \PYG{n}{X}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{p}{[}\PYG{n}{data}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{o}{:}\PYG{n}{x11}\PYG{p}{]} \PYG{n}{data}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{o}{:}\PYG{n}{x12}\PYG{p}{]} \PYG{n}{data}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{o}{:}\PYG{n}{x13}\PYG{p}{]} \PYG{n}{data}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{o}{:}\PYG{n}{x14}\PYG{p}{];}
+            \PYG{n}{data}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{o}{:}\PYG{n}{x21}\PYG{p}{]} \PYG{n}{data}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{o}{:}\PYG{n}{x22}\PYG{p}{]} \PYG{n}{data}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{o}{:}\PYG{n}{x23}\PYG{p}{]} \PYG{n}{data}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{o}{:}\PYG{n}{x24}\PYG{p}{]]}
+    \PYG{n}{W}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{p}{[}\PYG{n}{data}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{o}{:}\PYG{n}{w1}\PYG{p}{],} \PYG{n}{data}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{o}{:}\PYG{n}{w2}\PYG{p}{]]}
+    \PYG{n}{Y}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{p}{[}\PYG{n}{data}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{o}{:}\PYG{n}{y1}\PYG{p}{],} \PYG{n}{data}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{o}{:}\PYG{n}{y2}\PYG{p}{]]}
+\PYG{k}{end}
+
+
+\PYG{k}{function} \PYG{n}{EvaluateLikelihood}\PYG{p}{(} \PYG{n}{Y}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Vector}\PYG{p}{\PYGZcb{},} \PYG{n}{X}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Matrix}\PYG{p}{\PYGZcb{},} \PYG{n}{W}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Vector}\PYG{p}{\PYGZcb{},} \PYG{n}{β}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},} \PYG{n}{σe²}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{,} \PYG{n}{σb²}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{)}
+    \PYG{c}{\PYGZsh{}Note that the likelihood function of a mutlivariate normal is:}
+    \PYG{c}{\PYGZsh{} $\frac{1}{\sqrt{2 \pi \vert \Sigma \vert}} exp ( -.5 (x - \mu)' \Sigma^{-1} (x-\mu))$}
+
+    \PYG{c}{\PYGZsh{}Because of numerical concerns we will exponentiate the sum of the logs}
+    \PYG{n}{likelihood} \PYG{o}{=} \PYG{p}{(}\PYG{n}{N}\PYG{o}{/}\PYG{l+m+mf}{2.0}\PYG{p}{)}\PYG{o}{*}\PYG{n}{log}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n+nb}{pi}\PYG{p}{)}
+    \PYG{k}{for} \PYG{n}{i} \PYG{k+kp}{in} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{N}
+        \PYG{n}{μ} \PYG{o}{=} \PYG{n}{X}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{o}{*}\PYG{n}{β}
+        \PYG{n}{Σ} \PYG{o}{=} \PYG{n}{σe²}\PYG{o}{*}\PYG{n+nb}{I}  \PYG{o}{+} \PYG{n}{σb²}\PYG{o}{*}\PYG{n}{W}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{o}{*}\PYG{n}{W}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{o}{\PYGZsq{}}
+
+        \PYG{c}{\PYGZsh{}Sigma is positive definite, so we should invert it using the}
+        \PYG{c}{\PYGZsh{}cholesky decomposition, especially as numerical concerns loom}
+        \PYG{n}{F} \PYG{o}{=} \PYG{n}{cholesky}\PYG{p}{(}\PYG{k+kt}{Hermitian}\PYG{p}{(}\PYG{n}{Σ}\PYG{p}{))}
+        \PYG{n}{invSigma} \PYG{o}{=} \PYG{p}{(}\PYG{n}{F}\PYG{o}{.}\PYG{n}{U} \PYG{o}{\PYGZbs{}} \PYG{p}{(}\PYG{n}{F}\PYG{o}{.}\PYG{n}{L} \PYG{o}{\PYGZbs{}} \PYG{n+nb}{I}\PYG{p}{))}
+
+        \PYG{n}{likelihood} \PYG{o}{+=} \PYG{o}{\PYGZhy{}.}\PYG{l+m+mi}{5}\PYG{o}{*}\PYG{n}{log}\PYG{p}{(} \PYG{n}{det}\PYG{p}{(}\PYG{n}{Σ}\PYG{p}{))} \PYG{o}{\PYGZhy{}} \PYG{o}{.}\PYG{l+m+mi}{5}\PYG{o}{*}\PYG{p}{(}\PYG{n}{Y}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{o}{\PYGZhy{}}\PYG{n}{μ}\PYG{p}{)}\PYG{o}{\PYGZsq{}*}\PYG{n}{invSigma}\PYG{o}{*}\PYG{p}{(}\PYG{n}{Y}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}\PYG{o}{\PYGZhy{}}\PYG{n}{μ}\PYG{p}{)}
+    \PYG{k}{end}
+    \PYG{c}{\PYGZsh{}likelihood = exp(likelihood)}
+    \PYG{k}{return} \PYG{n}{likelihood}
+\PYG{k}{end}
+
+\PYG{k}{function} \PYG{n}{EvaluatePriors}\PYG{p}{(} \PYG{n}{αe}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{,} \PYG{n}{αb}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{,} \PYG{n}{βe}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{,} \PYG{n}{βb}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{,} \PYG{n}{μ}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},} \PYG{n}{Σ}\PYG{o}{::}\PYG{k+kt}{Matrix}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},} \PYG{n}{betaVal}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},} \PYG{n}{sigmaEVal}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{,} \PYG{n}{sigmaBVal}\PYG{o}{::}\PYG{k+kt}{Float64} \PYG{p}{)}
+    \PYG{n}{betaPrior} \PYG{o}{=} \PYG{n}{pdf}\PYG{p}{(} \PYG{n}{MvNormal}\PYG{p}{(} \PYG{n}{μ}\PYG{p}{,} \PYG{n}{Σ}\PYG{p}{),} \PYG{n}{betaVal}\PYG{p}{)}
+    \PYG{n}{sigmaEPrior} \PYG{o}{=} \PYG{n}{pdf}\PYG{p}{(} \PYG{n}{Gamma}\PYG{p}{(} \PYG{n}{αe}\PYG{p}{,} \PYG{n}{βe}\PYG{p}{),} \PYG{n}{sigmaEVal}\PYG{p}{)}
+    \PYG{n}{sigmaBPrior} \PYG{o}{=} \PYG{n}{pdf}\PYG{p}{(} \PYG{n}{Gamma}\PYG{p}{(} \PYG{n}{αe}\PYG{p}{,} \PYG{n}{βe}\PYG{p}{),} \PYG{n}{sigmaBVal}\PYG{p}{)}
+    \PYG{c}{\PYGZsh{}return exp( log(betaPrior) + log( sigmaEPrior) + log( sigmaBPrior))}
+    \PYG{k}{return} \PYG{n}{log}\PYG{p}{(}\PYG{n}{betaPrior}\PYG{p}{)} \PYG{o}{+} \PYG{n}{log}\PYG{p}{(} \PYG{n}{sigmaEPrior}\PYG{p}{)} \PYG{o}{+} \PYG{n}{log}\PYG{p}{(} \PYG{n}{sigmaBPrior}\PYG{p}{)}
+\PYG{k}{end}
+
+\PYG{k}{function} \PYG{n}{pBeta}\PYG{p}{(}\PYG{n}{β}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},} \PYG{n}{σe²}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{,} \PYG{n}{σb²}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{,} \PYG{n}{Y}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Vector}\PYG{p}{\PYGZcb{},} \PYG{n}{X}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Matrix}\PYG{p}{\PYGZcb{},} \PYG{n}{W}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Vector}\PYG{p}{\PYGZcb{},} \PYG{n}{αe}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{,} \PYG{n}{αb}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{,} \PYG{n}{βe}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{,} \PYG{n}{βb}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{,} \PYG{n}{μ}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},} \PYG{n}{Σ}\PYG{o}{::}\PYG{k+kt}{Matrix}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{}} \PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{exp}\PYG{p}{(} \PYG{n}{EvaluateLikelihood}\PYG{p}{(}\PYG{n}{Y}\PYG{p}{,}\PYG{n}{X}\PYG{p}{,}\PYG{n}{W}\PYG{p}{,}\PYG{n}{β}\PYG{p}{,}\PYG{n}{σe²}\PYG{p}{,} \PYG{n}{σb²}\PYG{p}{)} \PYG{o}{+}\PYG{n}{EvaluatePriors}\PYG{p}{(} \PYG{n}{αe}\PYG{p}{,} \PYG{n}{αb}\PYG{p}{,} \PYG{n}{βb}\PYG{p}{,} \PYG{n}{βb}\PYG{p}{,} \PYG{n}{μ}\PYG{p}{,} \PYG{n}{Σ}\PYG{p}{,} \PYG{n}{β}\PYG{p}{,} \PYG{n}{σe²}\PYG{p}{,} \PYG{n}{σb²}\PYG{p}{)} \PYG{p}{)}
+\PYG{k}{end}
+
+\PYG{k}{function} \PYG{n}{qBeta}\PYG{p}{(} \PYG{n}{β}\PYG{p}{,} \PYG{n}{βCond}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},} \PYG{o}{::}\PYG{n}{Nothing} \PYG{p}{)}
+    \PYG{k}{return} \PYG{l+m+mf}{1.0}\PYG{c}{\PYGZsh{}0.00390625 \PYGZsh{}1 / 256}
+\PYG{k}{end}
+
+\PYG{k}{function} \PYG{n}{qBetaSim}\PYG{p}{(} \PYG{n}{βCond}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},} \PYG{o}{::}\PYG{n}{Nothing}\PYG{p}{)}
+    \PYG{k}{return} \PYG{p}{[}\PYG{n}{rand}\PYG{p}{(}\PYG{n}{Uniform}\PYG{p}{(}\PYG{n}{βCond}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{\PYGZhy{}.}\PYG{l+m+mi}{5}\PYG{p}{,} \PYG{n}{βCond}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{+.}\PYG{l+m+mi}{5}\PYG{p}{),}\PYG{l+m+mi}{1}\PYG{p}{)[}\PYG{l+m+mi}{1}\PYG{p}{],}
+            \PYG{n}{rand}\PYG{p}{(}\PYG{n}{Uniform}\PYG{p}{(}\PYG{n}{βCond}\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{]}\PYG{o}{\PYGZhy{}.}\PYG{l+m+mi}{5}\PYG{p}{,} \PYG{n}{βCond}\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{]}\PYG{o}{+.}\PYG{l+m+mi}{5}\PYG{p}{),}\PYG{l+m+mi}{1}\PYG{p}{)[}\PYG{l+m+mi}{1}\PYG{p}{],}
+            \PYG{n}{rand}\PYG{p}{(}\PYG{n}{Uniform}\PYG{p}{(}\PYG{n}{βCond}\PYG{p}{[}\PYG{l+m+mi}{3}\PYG{p}{]}\PYG{o}{\PYGZhy{}.}\PYG{l+m+mi}{5}\PYG{p}{,} \PYG{n}{βCond}\PYG{p}{[}\PYG{l+m+mi}{3}\PYG{p}{]}\PYG{o}{+.}\PYG{l+m+mi}{5}\PYG{p}{),}\PYG{l+m+mi}{1}\PYG{p}{)[}\PYG{l+m+mi}{1}\PYG{p}{],}
+            \PYG{n}{rand}\PYG{p}{(}\PYG{n}{Uniform}\PYG{p}{(}\PYG{n}{βCond}\PYG{p}{[}\PYG{l+m+mi}{4}\PYG{p}{]}\PYG{o}{\PYGZhy{}.}\PYG{l+m+mi}{5}\PYG{p}{,} \PYG{n}{βCond}\PYG{p}{[}\PYG{l+m+mi}{4}\PYG{p}{]}\PYG{o}{+.}\PYG{l+m+mi}{5}\PYG{p}{),}\PYG{l+m+mi}{1}\PYG{p}{)[}\PYG{l+m+mi}{1}\PYG{p}{]]}
+\PYG{k}{end}
+
+\PYG{c}{\PYGZsh{}This is the same as pBeta except we have reordered the first 3 arguments}
+\PYG{k}{function} \PYG{n}{pSigmaE}\PYG{p}{(}\PYG{n}{σe²}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{,}\PYG{n}{β}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},}  \PYG{n}{σb²}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{,} \PYG{n}{Y}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Vector}\PYG{p}{\PYGZcb{},} \PYG{n}{X}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Matrix}\PYG{p}{\PYGZcb{},} \PYG{n}{W}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Vector}\PYG{p}{\PYGZcb{},} \PYG{n}{αe}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{,} \PYG{n}{αb}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{,} \PYG{n}{βe}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{,} \PYG{n}{βb}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{,} \PYG{n}{μ}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},} \PYG{n}{Σ}\PYG{o}{::}\PYG{k+kt}{Matrix}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{}} \PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{exp}\PYG{p}{(} \PYG{n}{EvaluateLikelihood}\PYG{p}{(}\PYG{n}{Y}\PYG{p}{,}\PYG{n}{X}\PYG{p}{,}\PYG{n}{W}\PYG{p}{,}\PYG{n}{β}\PYG{p}{,}\PYG{n}{σe²}\PYG{p}{,} \PYG{n}{σb²}\PYG{p}{)} \PYG{o}{+}\PYG{n}{EvaluatePriors}\PYG{p}{(} \PYG{n}{αe}\PYG{p}{,} \PYG{n}{αb}\PYG{p}{,} \PYG{n}{βb}\PYG{p}{,} \PYG{n}{βb}\PYG{p}{,} \PYG{n}{μ}\PYG{p}{,} \PYG{n}{Σ}\PYG{p}{,} \PYG{n}{β}\PYG{p}{,} \PYG{n}{σe²}\PYG{p}{,} \PYG{n}{σb²}\PYG{p}{)} \PYG{p}{)}
+\PYG{k}{end}
+
+
+\PYG{c}{\PYGZsh{}This is the same as pBeta except we have reordered the first 3 arguments}
+\PYG{k}{function} \PYG{n}{pSigmaB}\PYG{p}{(}\PYG{n}{σb²}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{,}\PYG{n}{β}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},}  \PYG{n}{σe²}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{,} \PYG{n}{Y}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Vector}\PYG{p}{\PYGZcb{},} \PYG{n}{X}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Matrix}\PYG{p}{\PYGZcb{},} \PYG{n}{W}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Vector}\PYG{p}{\PYGZcb{},} \PYG{n}{αe}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{,} \PYG{n}{αb}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{,} \PYG{n}{βe}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{,} \PYG{n}{βb}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{,} \PYG{n}{μ}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},} \PYG{n}{Σ}\PYG{o}{::}\PYG{k+kt}{Matrix}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{}} \PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{exp}\PYG{p}{(} \PYG{n}{EvaluateLikelihood}\PYG{p}{(}\PYG{n}{Y}\PYG{p}{,}\PYG{n}{X}\PYG{p}{,}\PYG{n}{W}\PYG{p}{,}\PYG{n}{β}\PYG{p}{,}\PYG{n}{σe²}\PYG{p}{,} \PYG{n}{σb²}\PYG{p}{)} \PYG{o}{+}\PYG{n}{EvaluatePriors}\PYG{p}{(} \PYG{n}{αe}\PYG{p}{,} \PYG{n}{αb}\PYG{p}{,} \PYG{n}{βb}\PYG{p}{,} \PYG{n}{βb}\PYG{p}{,} \PYG{n}{μ}\PYG{p}{,} \PYG{n}{Σ}\PYG{p}{,} \PYG{n}{β}\PYG{p}{,} \PYG{n}{σe²}\PYG{p}{,} \PYG{n}{σb²}\PYG{p}{)} \PYG{p}{)}
+\PYG{k}{end}
+
+\PYG{k}{function} \PYG{n}{qSigma}\PYG{p}{(} \PYG{n}{σ}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{,} \PYG{n}{σCond}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{,} \PYG{o}{::}\PYG{n}{Nothing}\PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{pdf}\PYG{p}{(}\PYG{n}{Uniform}\PYG{p}{(}\PYG{n}{max}\PYG{p}{(}\PYG{n}{σCond} \PYG{o}{\PYGZhy{}} \PYG{l+m+mf}{2.0}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{),} \PYG{n}{σCond} \PYG{o}{+} \PYG{l+m+mf}{2.0}\PYG{p}{),}\PYG{n}{σ}\PYG{p}{)}
+\PYG{k}{end}
+
+\PYG{k}{function} \PYG{n}{qSigmaSim}\PYG{p}{(} \PYG{n}{σCond}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{,} \PYG{o}{::}\PYG{n}{Nothing}\PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{rand}\PYG{p}{(}\PYG{n}{Uniform}\PYG{p}{(}\PYG{n}{max}\PYG{p}{(}\PYG{n}{σCond} \PYG{o}{\PYGZhy{}} \PYG{l+m+mf}{2.0}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{),}\PYG{n}{σCond} \PYG{o}{+} \PYG{l+m+mf}{2.0}\PYG{p}{),}\PYG{l+m+mi}{1}\PYG{p}{)[}\PYG{l+m+mi}{1}\PYG{p}{]}
+\PYG{k}{end}
+\end{Verbatim}

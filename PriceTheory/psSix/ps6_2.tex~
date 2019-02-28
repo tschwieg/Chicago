@@ -1,0 +1,63 @@
+\documentclass[12pt]{paper}
+
+\usepackage[margins=1in]{geometry}
+\usepackage{Schwieg}
+
+\begin{document}
+
+
+\section*{What can you say about the relationship between prevalence
+  and new infections? Separate your answer into a mechanical
+  component, related to random pairings of partners and a behavioral
+  component.}
+
+Let us believe in a world in which there are three types of
+actors. Actors who do not have syphilis, actors who have contracted
+syphilis but are not yet contagious, and actors who have syphilis and
+are still contagious.
+
+Any individual actor knows which state he is in, but not the state of
+whom'stever he is paired with. All individuals are aware of the amount
+of contagious individuals, summarized by the probability of obtaining
+syphilis from a random encounter $p$.
+
+A healthy individual who does not have syphilis scores some benefit
+$\alpha$ from a sexual encounter, and faces cost $\beta$ if he contracts
+syphilis. 
+
+An individual chooses his amount of sexual encounters $\alpha$, after $\alpha$
+encounters, his probability of contracting the disease is given by $P
+= 1 - (1-p)^{\alpha}$. This is increasing in the number of encounters, though
+it is concave. Let us believe that there is a monetary component to
+these encounters, either in time spent in seduction, or in actual
+costs spent on dates. These two factors can be combined into a cost
+function $c(\alpha,p)$. 
+
+This cost function is state dependent, as individuals that have
+syphilis cannot obtain the disease a second time. These individuals
+face a cost of $c(\alpha,0)$. Let us believe that there is some guilt
+factor associated with giving syphilis to another person. Call this
+level $\beta$. This guilt is only felt if syphilis is translated to
+another person. In expectation, this is $\alpha ( 1 - p)\beta$.
+
+The benefit of $\alpha$ sexual encounters is given by $u(\alpha)$ which is an
+increasing and concave function. Individuals in equilibrium will
+copulate to the point where $u(\alpha) = c(\alpha,p)$
+
+\section*{b}
+
+For there to be a steady state, we would need $y_{t+1} = y_t$. Note
+that $NewInfections_{t-x} = P$
+
+If a copulation occurs between two clean individuals, then there is no
+added infection, as is the case if the copulation occurs between two
+diseased individuals.
+
+The only case when a new infection is created is when an infected
+person does the dirty with a clean individual. Immediately this
+suggests that no infected individuals is a steady state.
+
+Any other steady state requires that $r y_t = NewInfections_{t-x}$. 
+
+
+\end{document}

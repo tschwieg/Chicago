@@ -1,0 +1,22 @@
+## Testing: $f( \beta ) = (\beta_1 - \beta_2 )^2 = 0$
+## However we need the rows of the total derivative to be linearly independent.
+## $\nabla f( \beta ) = ( 0, 2( \beta_1 - \beta_2 ), -2 ( \beta_1 - \beta_2 ) )'$
+## The rows are not linearly independent - The standard nonlinear test will not work.
+
+## Worse yet, if we attempt to simply take the square root of both
+## sides we lose the reliability as this is a Wald-Test. Wald Tests
+## are not invariant to non-linear Transforms. This means we want to
+## use a likelihood-ratio test, which is. However if we do not want to
+## assume normality of Y and then the GLM framework to get a
+## likelihood-ratio test, we can just stand for the errors in the Wald Test.
+
+## Our test is simply testing if $\beta_1 - \beta_2 = 0$
+
+R <- matrix( c( 0, 1, -1 ), nrow = 1, ncol = 3 )
+r <- c(0)
+
+## I just copy and pasted the previous code
+c <- qchisq( alpha, df = 1, lower.tail = FALSE )
+testStat <- fischerFTest( R, r, N, beta, condVarHetero )
+pValue <-  pchisq( testStat, df = 1, lower.tail = FALSE )
+

@@ -1,0 +1,23 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Testing: $f( \beta ) = (\beta_1 - \beta_2 )^2 = 0$}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} However we need the rows of the total derivative to be linearly independent.}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} $\nabla f( \beta ) = ( 0, 2( \beta_1 - \beta_2 ), -2 ( \beta_1 - \beta_2 ) )'$}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} The rows are not linearly independent \PYGZhy{} The standard nonlinear test will not work.}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Worse yet, if we attempt to simply take the square root of both}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} sides we lose the reliability as this is a Wald\PYGZhy{}Test. Wald Tests}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} are not invariant to non\PYGZhy{}linear Transforms. This means we want to}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} use a likelihood\PYGZhy{}ratio test, which is. However if we do not want to}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} assume normality of Y and then the GLM framework to get a}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} likelihood\PYGZhy{}ratio test, we can just stand for the errors in the Wald Test.}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Our test is simply testing if $\beta_1 - \beta_2 = 0$}
+
+R \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{k+kt}{matrix}\PYG{p}{(} \PYG{k+kt}{c}\PYG{p}{(} \PYG{l+m}{0}\PYG{p}{,} \PYG{l+m}{1}\PYG{p}{,} \PYG{l+m}{\PYGZhy{}1} \PYG{p}{),} nrow \PYG{o}{=} \PYG{l+m}{1}\PYG{p}{,} ncol \PYG{o}{=} \PYG{l+m}{3} \PYG{p}{)}
+r \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{k+kt}{c}\PYG{p}{(}\PYG{l+m}{0}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} I just copy and pasted the previous code}
+\PYG{k+kt}{c} \PYG{o}{\PYGZlt{}\PYGZhy{}} qchisq\PYG{p}{(} alpha\PYG{p}{,} df \PYG{o}{=} \PYG{l+m}{1}\PYG{p}{,} lower.tail \PYG{o}{=} \PYG{k+kc}{FALSE} \PYG{p}{)}
+testStat \PYG{o}{\PYGZlt{}\PYGZhy{}} fischerFTest\PYG{p}{(} R\PYG{p}{,} r\PYG{p}{,} N\PYG{p}{,} \PYG{k+kp}{beta}\PYG{p}{,} condVarHetero \PYG{p}{)}
+pValue \PYG{o}{\PYGZlt{}\PYGZhy{}}  pchisq\PYG{p}{(} testStat\PYG{p}{,} df \PYG{o}{=} \PYG{l+m}{1}\PYG{p}{,} lower.tail \PYG{o}{=} \PYG{k+kc}{FALSE} \PYG{p}{)}
+\end{Verbatim}

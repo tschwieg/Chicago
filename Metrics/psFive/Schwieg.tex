@@ -1,0 +1,351 @@
+\documentclass[12pt]{paper}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{Schwieg}
+
+\begin{document}
+\section*{Question 1}
+
+\subsection*{a}
+
+\begin{equation*}
+  \Lagrange(\beta,\lambda) = \frac{1}{2n} \sum_{i=1}^n ( Y_i - X_i' \beta)^2 + \lambda' ( R
+  \beta - c)
+\end{equation*}
+Taking gradients and applying the rules of matrix calculus:
+
+\begin{align*}
+  \nabla_{\beta} \Lagrange &= - \frac{1}{n}\sum_{i=1}^n X_i ( Y_i - X_i' \beta) + R' \lambda
+  = 0\\
+  \nabla_{\lambda} \Lagrange &= R \beta - c = 0
+\end{align*}
+
+Let $\altest{\beta}, \altest{\lambda}$ be such that this system is satisfied. 
+
+\subsection*{b}
+
+Expanding the condition on $\beta$:
+\begin{align*}
+  -\frac{1}{n}\sum_{i=1}^n X_i Y_i + \frac{1}{n} \sum_{i=1}^n X_i X_i'
+  \altest{\beta} + R' \altest{\lambda} &= 0\\
+  \frac{1}{n} \sum_{i=1}^n X_i Y_i - R' \altest{\lambda} &= \frac{1}{n}
+                                                  \sum_{i=1}^n X_i X_i'
+                                                  \altest{\beta}\\
+  \inv{\left( \frac{1}{n} \sum_{i=1}^n X_i X_i'  \right)} \left(
+  \frac{1}{n} \sum_{i=1}^n  X_i Y_i \right) - \inv{\left( \frac{1}{n}
+  \sum_{i=1}^n X_i X_i'  \right)} R' \altest{\lambda} &= \altest{\beta}\\
+  \est{\beta} - \inv{\left( \frac{1}{n} \sum_{i=1}^n X_i X_i'
+  \right)} R' \altest{\lambda} &= \altest{\beta}
+\end{align*}
+
+Note that the inversion is possible because of the same line of
+reasoning that allowed for it during the calculation of the OLS
+estimator. The same assumptions and calculations are made.
+
+Applying this formula for $\altest{\beta}$ in the second condition:
+\begin{align*}
+  R \altest{\beta} - c &= 0\\
+  R \est{\beta} - R \inv{\left( \frac{1}{n} \sum_{i=1}^n X_i X_i'  \right)}
+  R' \altest{\lambda} - c &= 0\\
+   \inv{ \left( R \inv{ \left( \frac{1}{n} \sum_{i=1}^n X_i
+               X_i' \right)} R' \right)} \left(  R \est{\beta} - c \right)
+               &= \altest{\lambda}
+\end{align*}
+
+
+\subsection*{c}
+
+Since $R,X,c$ are fixed, $\altest{\lambda}$ is a continuous function of
+$\est{\beta}$, as matrix multiplication, addition and inversion are all
+continuous operations. It is well known that $\est{\beta} \plim \beta$ by the
+Weak Law of Large Numbers and Continuous Mapping Theorem, so we know
+that:
+\begin{equation*}
+  \altest{\lambda} \plim \inv{ \left( R \inv{ \left( \frac{1}{n} \sum_{i=1}^n X_i
+               X_i' \right)} R' \right)} \left(  R \beta - c \right) = 0
+\end{equation*}
+
+\subsection*{d}
+
+The Limiting distribution of $\est{\beta}$ is given by:
+\begin{align*}
+  \sqrt{n} \left(  \est{\beta} - \beta \right) \convDist \normal( 0, \Omega)\\
+  \Omega = \inv{\exV{XX'}} \Vari{X u} \inv{\exV{XX'}}\\
+\end{align*}
+
+Our function $\altest{\lambda}$ is linear in $\est{\beta}$, and is thus
+continuous and differentiable. We can then apply the delta method to
+determine its distribution when $R \beta = c$.
+
+\begin{align*}
+  \nabla_{\est{\beta}} \altest{\lambda} = \inv{ \left( R \inv{ \left( \frac{1}{n} \sum_{i=1}^n X_i
+  X_i' \right)} R' \right)} R = \Sigma_R\\
+  \altest{\lambda}(\beta) = 0\\
+  \\
+  \sqrt{n} \altest{\lambda} \convDist \normal( 0, \Sigma_R' \Omega \Sigma_R)
+\end{align*}
+
+where $\Omega, \Sigma_R$ are given above.
+
+\subsection*{e}
+
+Note that our above asymptotic distribution depends on the moments for
+the estimator of $\Omega$. We may estimate it with the
+heteroskedasticity-robust estimators used in the notes: 
+
+\begin{equation*}
+  \est{\Omega} = \inv{\left( \frac{1}{n}\sum_{i=1}^n X_i X_i' \right)}
+  \left( \frac{1}{n}\sum_{i=1}^n X_i X_i' (\est{u}{i})^2 \right)
+  \inv{\left( \frac{1}{n}\sum_{i=1}^n X_i X_i' \right)}
+\end{equation*}
+
+It is known that $\est{\Omega} \plim \Omega$, so under the null hypothesis:
+\begin{align*}
+   \sqrt{n} \left(  \est{\beta} - \beta \right) \convDist \normal( 0,
+  \est{\Omega} )\\
+  \sqrt{n} \altest{\lambda} \convDist \normal( 0, \Sigma_R' \est{\Omega} \Sigma_R) \\
+  n \altest{\lambda} \inv{ \left( \Sigma_R' \est{\Omega} \Sigma_R \right)} \altest{\lambda}'
+  \convDist \chi_p^2 \\
+\end{align*}
+
+This depends completely on known quantities, and can therefore be
+tested.
+\begin{align*}
+  n \altest{\lambda} \inv{ \left( \Sigma_R' \est{\Omega} \Sigma_R \right)} \altest{\lambda}' &= T_n
+\end{align*}
+
+Our test will take the form of:
+\begin{equation*}
+  \indicate{\abs{T_n} > c_{p,1-\alpha}}
+\end{equation*}
+where $c_{p,1-\alpha}$ is the critical value for the $\alpha$ specified.
+
+To determine if our test is consistent in level:
+\begin{align*}
+  \lim_{n\rightarrow\infty} \exV{\indicate{\abs{T_n} >  c_{p,1-\alpha}}} &= 
+                \lim_{n\rightarrow\infty}\Pr(\abs{T_n}> c_{p,1-\alpha})\\
+  &=  \lim_{n\rightarrow\infty} \Pr \left(n \altest{\lambda} \inv{ \left( \Sigma_R' \est{\Omega} \Sigma_R \right)} \altest{\lambda}' >  c_{p,1-\alpha} \right)\\
+  &= \Pr \left( \chi_p^2 >  c_{p,1-\alpha} \right)\\
+  &= \alpha
+\end{align*}
+
+\subsection*{f}
+This test is very similar to the Wald-Test developed before, but the
+variance estimate is far more complicated. Computationally this test
+is far more complicated, involving three levels of inversion, two in
+computing $\Sigma_R$ and once more in the actual test. For data sets with
+any reasonably high condition number this test will perform much more
+poorly than the Wald-Test simply on computation problems.
+
+Both tests are in the limit the most powerful tests, so it is
+difficult to compare between Wald and LM tests without knowing the
+potential distributions we would encounter. One would expect that
+when the likelihood function has a very high peak, an LM test, which
+relies on comparing the slopes of the likelihood function to do better
+than a Wald Test which is examining the values of $\beta$.
+
+Both tests rely on the asymptotic normality of $\est{\beta}$ and the
+converge of $\est{O}$, so neither makes more assumptions than the
+other.
+
+\section*{Question 2}
+
+\begin{align*}
+  \Vari{\hat{X}} &= \Vari{X} + \Vari{V} + Cov( X, V)\\
+                 &= \Vari{X} + \Vari{V} + \exV{XV} - \exV{X}\exV{V}\\
+                 &= \Vari{X} + \Vari{V}\\
+\end{align*}
+
+\begin{align*}
+  \Vari{Y} &= \Vari{\beta_0} + \Vari{\beta_1 X} + \Vari{U} + Cov( \beta_0, U) +
+             Cov( \beta_1 X, U) + Cov( \beta_0, \beta_1 X)\\
+           &= \beta_1^2 \Vari{X} + \Vari{U} + \beta_1 \exV{XU} - \beta_1 \exV{X} \exV{U}\\
+  &= \beta_1^2 \Vari{X} + \Vari{U}\\
+\end{align*}
+As $\beta_0$ is a constant, and $\exV{U} = \exV{XU} = 0$.
+
+\begin{align*}
+  Cov( \hat{X}, Y) &= Cov( X, Y) + Cov( V, Y)\\
+                   &= \exV{XY} - \exV{X}\exV{Y} + \exV{VY} - \exV{V}\exV{Y}\\
+  &= \exV{\beta_0 X + \beta_1 X^2 + UX} - \exV{X}(\beta_0 + \beta_1 \exV{X}) + \exV{
+    \beta_0 V + \beta_1 XV + UV} - 0\\
+  &= \beta_0 \exV{X} + \beta_1 \exV{X^2} - \beta_0 \exV{X} - \beta_1 \exV{X}^2\\
+  &= \beta_1 \Vari{X}
+\end{align*}
+
+\subsection*{b}
+
+Note that $\beta_1 = \frac{Cov(\hat{X},Y)}{\Vari{X}}$. Let $\beta_1 \geq 0$. If
+$\beta_1 = 0$, then $Cov( \hat{X}, Y) = 0$  and this result is true
+trivially. (Assuming that $\frac{c}{0}= \infty$ when $c > 0$ ). So let $\beta_1
+> 0$. When $\beta_1$ is positive, $Cov( \hat{X},
+Y)$ is positive as well by the final proof.
+
+We know that $\Vari{X} \leq \Vari{X} + \Vari{V} = \Vari{\hat{X}}$, so
+clearly dividing by this larger number can only reduce $\beta_1$.
+
+\begin{equation*}
+  \frac{Cov( \hat{X}, Y)}{\Vari{\hat{X}}} \leq \beta_1
+\end{equation*}
+
+Combining the last two results we get that:
+\begin{align*}
+  \Vari{Y} &= \beta_1 Cov( \hat{X}, Y) + \Vari{U}\\
+  \beta_1 &= \frac{\Vari{Y} - \Vari{U}}{Cov( \hat{X}, Y)}\\
+  \beta_1 \leq \frac{\Vari{Y}}{Cov( \hat{X}, Y)}
+\end{align*}
+
+
+\subsection*{c}
+
+Result $(b)$ holds when $\beta_1 = 0$, so let us examine the case when
+$\beta_1 < 0$. Note that since $Cov(\hat{X},Y) = \beta_1 \Vari{X}$, it must be
+the case that $Cov( \hat{X},Y) < 0$.
+
+\begin{equation*}
+  \beta_1 = \frac{Cov{\hat{X},Y}}{\Vari{X}} \leq \frac{Cov{\hat{X},Y}}{\Vari{\hat{X}}}
+\end{equation*}
+
+as the Covariance is now negative, so increasing the denominator
+increases the term.
+
+Combining the last two results we get that:
+\begin{align*}
+  \Vari{Y} &= \beta_1 Cov( \hat{X}, Y) + \Vari{U}\\
+  \beta_1 &= \frac{\Vari{Y} - \Vari{U}}{Cov( \hat{X}, Y)}\\
+  \beta_1 \geq \frac{\Vari{Y}}{Cov( \hat{X}, Y)}
+\end{align*}
+
+Combining these two together we arrive at:
+
+\begin{equation*}
+  \frac{\Vari{Y}}{Cov( \hat{X}, Y)} \leq \beta_1 \leq \frac{Cov{\hat{X},Y}}{\Vari{\hat{X}}}
+\end{equation*}
+
+\section*{Question 3}
+
+$X,Z$ are both $k+1$ dimensional vectors, and rank $\exV{ZX'}$ is
+$k+1$.  We shall approach by contra-positive, showing that perfect
+colinearity in $Z$ implies that the rank of $\exV{ZX'}$ is not $k+1$.
+
+Assume that there is perfect colinearity in $Z$. That is, $\exists c \neq 0$
+such that $1 = \Pr ( c' Z = 0)$.
+
+\begin{align*}
+  0 &= \exV{c'Z} = \exV{Z' c}\\
+  0 &= \exV{ \exV{ Z' c \vert X}}\\
+  X 0 &= \exV{ \exV{ X Z' c \vert X}}\\
+  \vec{0} &= \exV{ X Z' c}\\
+  \vec{0} &= \exV{ X Z' } c\\
+  \vec{0} &= \exV{ (Z X')' } c\\
+  \vec{0} &= \exV{ Z X' }' c
+\end{align*}
+
+This tells us that the matrix $\exV{Z X'}'$ has a determinant that is
+zero, as there is a linear combination of its columns that can be
+made to equal zero. Note that it is reasonable to talk about
+determinants since $ZX'$ is a square matrix. Transposing a matrix does
+not effect its determinants, so the determinant of $\exV{Z X'}$ is
+zero as well. This is equivalent to having a rank less than $k+1$.
+
+
+\section*{Question 4}
+
+We are given $V = X - BLP(X \vert Z)$. Let us define
+$BLP(X \vert Z) = \Pi' Z$ where $\Pi$ is a $\ell+1 x k +1$ matrix.
+
+Consider $BLP( U \vert V) = V' \gamma$, note that this has an implied
+first-order condition of orthogonality.
+\begin{equation*}
+  \vec{0} = \exV{ V ( U - V' \gamma)} = \exV{ V \tilde{U}}
+\end{equation*}
+
+This is exactly exogeneity for $V$.
+
+From the first-order conditions on the $BLP( X \vert Z)$ we know that for
+all $j$,
+\begin{align*}
+  \exV{ Z ( X_j - \Pi' Z)} &= 0\\
+  \exV{ Z V_j } &= 0\\
+  \exV{ Z V'} &= 0
+\end{align*}
+
+Where the last result accumulates all of the $j$ vector conditions
+into one matrix condition.
+
+We may also note that:
+
+\begin{align*}
+  \exV{ X \tilde{U}} &= \exV{ V \tilde{U} + BLP( X \vert Z) \tilde{U}} =
+                       \exV{ BLP( X \vert Z) \tilde{U}}\\
+  &=\exV{  \Pi' Z \left( U - V'\gamma \right)}\\
+  &= \Pi' \exV{ Z U} - \Pi' \exV{Z V'}\gamma\\
+  &= \Pi ' \vec{0} - \Pi' \vec{0} \gamma = \vec{0}\\
+\end{align*}
+
+\subsection*{b}
+
+Using the sub-vector results from linear regression before, we may
+solve for $\beta$ as:
+
+Define $\tilde{Y} = Y - BLP( Y \vert V)$ and $\tilde{X} = X - BLP( X \vert V)
+= BLP( X \vert Z) = \Pi'Z$.
+
+
+This occurs because $V$ contains no more information than $Z$, so
+predicting $X$ on $V$ is the same as predicting it on $Z$ (after
+handling the subtracting elements.) Best Linear Predictors, under
+interpretation one are a linear conditional expectation. Applying the
+law of iterated expectations:
+\begin{equation*}
+  \exV{ \exV{ X \vert V} \vert Z} = \exV{ X \vert Z}
+\end{equation*}
+
+as $Z$ has less information than $V$. So the best linear predictor of
+$X$ given $V$ is $X - \Pi'Z$. 
+
+Then
+\begin{align*}
+  \beta &= \inv{ \exV{ \tilde{X} \tilde{X}'}} \exV{ \tilde{X} \tilde{Y}}\\
+    &= \inv{ \exV{ \tilde{X} \tilde{X}'}} \exV{ \tilde{X} Y}\\
+    &= \inv{ \exV{ \Pi'ZZ' \Pi' }} \exV{ \Pi'ZY}\\
+    &= \inv{ \Pi' \exV{ZZ'} \Pi} \Pi' \exV{ZY}
+\end{align*}
+
+This is exactly our instrumental variables estimator that we derived
+in class. 
+
+\section*{Question 5}
+
+Let $BLP( Y \vert Z) = Z'\lambda$ and $\Gamma'Z = BLP(X \vert Z)$
+\begin{align*}
+  Y = Z'\lambda + \epsilon \quad\quad X = \Gamma'Z + \eta
+\end{align*}
+
+Show that $\lambda = \Gamma \beta$ and $\epsilon = \eta'\beta + U$.
+
+\begin{align*}
+  Y &= X'\beta + U \\
+  Z'\lambda + \epsilon &= Z' \Gamma \beta  + \eta' \beta + U
+\end{align*}
+
+This must be true for any arbitrary $Z$ satisfying the above
+constraints, so it must be that the coefficients for the $Z$ are
+equal, and the coefficients for the terms without the $Z$ are also
+equal.
+
+\begin{align*}
+  \lambda &= \Gamma\beta\\
+  \epsilon &= \eta' \beta + U
+\end{align*}
+
+\subsection*{b}
+
+We know that $\Gamma$ is an $\ell+1$ by $k+1$ matrix, and that $\eta$ is $k+1$
+vector.
+
+Replace $X$ with its best linear predictor given above. Then show that
+exogeneity holds.
+
+
+\end{document}

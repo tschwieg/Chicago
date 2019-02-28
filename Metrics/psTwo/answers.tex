@@ -1,0 +1,532 @@
+\documentclass[12pt]{paper}
+
+\usepackage{Schwieg}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{minted}
+
+\begin{document}
+
+\author{
+{Timothy Schwieg}\\
+{Paulo Henrique Ramos}\\
+{Samuel Barker}\\
+{Ana Vasilj}
+}
+
+\date{\today}
+\title{Empirical Analysis I -  Problem Set 2}
+
+
+\maketitle
+
+\section*{Question 1}
+
+\subsection*{a}
+
+Because $Var[X_i]$ and $Var[Y_i]$ both exist and
+$Var[X_i]=\exV{X_i^2}-(\exV{X_i})^2$ (similar for $Y_i$), then
+$\exV{X_i}$ and $\exV{Y_i}$ also exist. Thus, with
+i.i.d. observations, we can apply the WLLN to conclude that
+$\overline{X}_n\overset{P}{\to}\exV{X_i}$ and
+$\overline{Y}_n\overset{P}{\to}\exV{Y_i}$. Since marginal convergence in
+probability implies joint convergence, we have
+$(\overline{X}_n,\overline{Y}_n)\overset{P}{\to}(\exV{X_i},\exV{Y_i})$.
+
+Now, consider the function $g(a,b)=\frac{a}{b}$, if $b\ne 0$, and
+$g(a,b)=0$ otherwise (continuous everywhere except at $b=0$). We can
+apply the continuous mapping theorem (because $\exV{Y_i}\ne0$) to
+conclude that
+$g(\overline{X}_n,\overline{Y}_n)\overset{P}{\to}g(\exV{X_i},\exV{Y_i})$,
+which means:
+\begin{equation}
+\begin{split}
+  \hat{\theta}_n=\frac{\overline{X}_n}{\overline{Y}_n}\overset{P}{\to}\frac{\exV{X_i}}{\exV{Y_i}}=\theta
+\end{split}
+\end{equation}
+
+Therefore, we have that $\hat{\theta}_n$ is consistent for $\theta$.
+
+\subsection*{b}
+
+First without using the Delta method:
+
+Define $\mu_X:=\exV{X_i}$ and $\mu_Y:=\exV{Y_i}$. First notice that, by
+the Central Limit Theorem (we can use, because of iid and finite variance),
+$\sqrt{n}(\overline{X}_n-\mu_X)\overset{d}{\to}N(0,\sigma^2_X)$ and
+$\sqrt{n}(\overline{Y}_n-\mu_Y)\overset{d}{\to}N(0,\sigma^2_Y)$, with
+$\sigma^2_X$ and $\sigma^2_Y$ being the variances of $X$ and $Y$. Due to Slutsky
+and the properties of the normal distribution, we can also conclude
+that:
+\begin{equation}
+\begin{split}
+  \sqrt{n}(\overline{X}_n\mu_Y-\mu_X\mu_Y)=\mu_Y\sqrt{n}(\overline{X}_n-\mu_X)&\overset{d}{\to}\mu_Y N(0,\sigma^2_X)=N(0,\sigma^2_X\mu_Y^2)\\
+  \sqrt{n}(\overline{Y}_n\mu_X-\mu_Y\mu_X)=\mu_X\sqrt{n}(\overline{Y}_n-\mu_Y)&\overset{d}{\to}\mu_X N(0,\sigma^2_Y)=N(0,\sigma^2_Y\mu_X^2)\\
+\end{split}
+\end{equation}
+
+Now, because of the independence of $X_i$ and $Y_i$, we can subtract
+the second normal from the first and conclude that:
+\begin{equation}
+\begin{split}
+  \sqrt{n}(\overline{X}_n\mu_Y-\mu_X\mu_Y-\overline{Y}_n\mu_X+\mu_Y\mu_X)&\overset{d}{\to}N(0,\sigma^2_X\mu_Y^2+\sigma^2_Y\mu_X^2)\\
+  \sqrt{n}(\overline{X}_n\mu_Y-\overline{Y}_n\mu_X)&\overset{d}{\to}N(0,\sigma^2_X\mu_Y^2+\sigma^2_Y\mu_X^2)\\
+  \frac{1}{\overline{Y}_n\mu_Y}\sqrt{n}(\overline{X}_n\mu_Y-\overline{Y}_n\mu_X)&\overset{d}{\to}\frac{1}{\mu_Y^2}N(0,\sigma^2_X\mu_Y^2+\sigma^2_Y\mu_X^2)\\
+  \sqrt{n}(\frac{\overline{X}_n}{\overline{Y}_n}-\frac{\mu_X}{\mu_Y})&\overset{d}{\to}N(0,\frac{\sigma^2_X\mu_Y^2+\sigma^2_Y\mu_X^2}{\mu_Y^4}),\\
+\end{split}
+\end{equation}
+\noindent where the third line is possible because:
+$\overline{Y}_n\mu_Y\overset{P}{\to}\mu_Y^2$ (due to slutsky); applying the
+continuous mapping theorem with the function $g(a)=1/a$
+(not-continuous only on 0, and $\mu_Y^2\ne0$), we can also conclude that
+$\frac{1}{\overline{Y}_n\mu_Y}\overset{P}{\to}\frac{1}{\mu_Y^2}$; thus, by
+slutsky again, the third line follows.
+
+Now, using the Delta method:
+
+From the Central Limit Theorem, we know that
+$\sqrt{n} ( (\mean{X},\mean{Y}) - (\exV{X},\exV{Y})) \convDist \normal(
+0, \Sigma(X,Y))$, because both variances existing implies $\Sigma(X,Y)$ exists. We can now apply the delta method with the function $g(x,y) = \frac{x}{y}$, since it is continuous and differentiable at $\theta=\frac{\exV{X_i}}{\exV{Y_i}}$.
+
+Note that
+\begin{equation*}
+  \nabla g(x,y) = \left ( \frac{1}{y}, \frac{-x}{y^2} \right)'
+\end{equation*}
+
+Thus, by the delta method, we have:
+
+\begin{align*}
+  \sqrt{n} \left ( \est{\theta} - \theta \right) &\convDist \normal \left( 0, \nabla g' \Sigma \nabla
+                                         g \right)\\
+  &= \normal \left( 0, \frac{\Vari{X}\exV{Y}^2 +
+    \Vari{Y}\exV{X}^2}{\exV{Y}^4} \right)
+\end{align*}
+
+\section*{Question 2}
+
+First, we recall that the mean of a $\chi^2_n$ (chi-square with $n$
+degrees of freedom) is $n$, and its variance is $2n$. Also, we know
+that a $\chi^2_n$ random variable is the sum of the square of $n$
+independent standard normal random variables. Therefore, since
+$X_n\sim\chi^2_n$, we have:
+\begin{equation}
+\begin{split}
+X_n=\sum_{i=1}^{n}{Z_i^2},
+\end{split}
+\end{equation}
+\noindent where $Z_i\sim N(0,1)$.
+
+Applying the Central Limit Theorem to
+$\sqrt{n}(\frac{X_n}{n}-\exV{Z_i^2})$ (we can, because the fourth moment of a standard normal exists and the $Z_i^2$ are iid), we get:
+\begin{equation}
+\begin{split}
+(\frac{X_n-\exV{X_n}}{\sqrt{n}})&=(\frac{X_n-n}{\sqrt{n}})=\sqrt{n}(\frac{X_n}{n}-1) \\
+&=\sqrt{n}(\frac{X_n}{n}-\exV{Z_i^2})\overset{d}{\to}N(0,Var(Z_i^2))=N(0,2)\\
+\end{split}
+\end{equation}
+
+Now slutsky gives us that
+$X_n-\exV{X_n}=\sqrt{n}(\frac{X_n-\exV{X_n}}{\sqrt{n}})\overset{d}{\to}N(0,2n)$,
+and slutsky again gives us that
+$X_n=X_n-\exV{X_n}+\exV{X_n}\overset{d}{\to}N(n,2n)$. Thus this is the
+sense in which a $\chi_n^2$ random variable is approximately normal,
+specifically $N(n,2n)$, when $n$ is large.
+
+\section*{Question 3}
+Let $T_n \convDist T$ and $C_n \plim c$. Let $\Pr( T \leq t)$ be
+continuous at $c$.
+
+We know that $C_n \convDist c$, so by Slutky's lemma, we know that
+$T_n - C_n \convDist T - c$.  Since it is known that $\Pr( T \leq t )$ is
+continuous at $c$, this tells us that: $\Pr( T - c \leq x)$ is continuous
+at $x = 0$. Convergence in Distribution then means:
+$\Pr( T_n - C_n \leq 0) \rightarrow \Pr( X - c \leq 0)$. Equivalently:
+$\Pr( T_n \leq C_n ) \rightarrow \Pr( X \leq c)$
+\vspace{.25in}
+
+Let $C_n = c-\frac{1}{n}$ w.p. $1$. We know that $C_n \plim c$. Let
+$T_{n}=c=T$ for every $n$. Then, although we have $T_n\convDist T$, we have that $\Pr(T_n=c\le C_n=c-1/n)=0\ne \Pr(T\le c)=1$ for every n. Thus they cannot converge.
+
+
+\section*{Question 4}
+We wish to show that $\limsup_{N\rightarrow\infty} \exV{\indicate{
+    \sqrt{N} \frac{\mean{X}}{S_N} > t_{n-1,1-\alpha}}} \leq \alpha$ is true under
+the Null.
+
+Under the Null hypothesis, and using the fact that the variance is
+finite:
+\begin{align*}
+  \Pr\left( \sqrt{N} \frac{\mean{X}}{S_n} > t_{n-1,1-\alpha} \right) &= \Pr\left( \sqrt{N}
+                                                       \frac{\mean{X}
+                                                       - \mu\left(P\right)}{S_n} +
+                                                       \sqrt{N}\frac{\mu\left(P\right)}{S_n}
+                                                       > t_{n-1,1-\alpha}\right)\\
+ &\leq \Pr\left( \sqrt{N} \frac{\mean{X} - \mu\left(P\right)}{S_n} > t_{n-1,1-\alpha}\right)
+  \convDist Pr\left( Z > t_{n-1,1-\alpha}\right)  
+\end{align*}
+where $Z \sim \normal\left(0,1\right)$
+
+Since $t_{n-1,1-\alpha} \rightarrow z_{1-\alpha}$, and neither are random,
+$t_{n-1,1-\alpha} \plim z_{1-\alpha}$ trivially. We may also note that the cdf
+of the normal random variable is continuous on $\setR$. Applying the result from
+question 3: 
+
+\begin{align*}
+  \limsup_{N\rightarrow\infty} \exV{\indicate{ \sqrt{N} \frac{\mean{X}}{S_N} > t_{n-1,1-\alpha}}}
+         &= \lim_{N\rightarrow\infty}\Pr\left( \sqrt{N} \frac{\mean{X}}{S_N} > t_{n-1,1-\alpha} \right)\\ 
+         &\leq \lim_{N\rightarrow\infty}\Pr\left( \sqrt{N} \frac{\mean{X} - \mu\left(P\right)}{S_n} >  t_{n-1,1-\alpha}\right)\\
+         &= \Pr\left( Z > z_{1-\alpha}\right) = \alpha 
+\end{align*}
+
+
+
+\section*{Question 5}
+
+From the Central Limit Theorem, we know that $\sqrt{N} \left( \mean{X}
+- \mu(P)\right) \convDist \normal(0,\Sigma(P))$. As $\Sigma(P)$ is invertible,
+we know that
+\begin{equation*}
+  N ( \mean{X} - \mu(P))' \inv{\Sigma(P)} ( \mean{X} - \mu(P)) \convDist  z'
+  \chi^2(k) z \sim \chi^2(k)
+\end{equation*}
+
+Let us define an estimator of $\Sigma(P)$ as $\est{\Sigma(P)} = \frac{1}{N-1} \sum_{i = 1}^N
+(X_i - \mean{X})(X_i - \mean{X})'$.
+
+\begin{align*}
+  \est{\Sigma(P)} &= \frac{N}{N-1} \brak{ \frac{1}{N} \sum_{i = 1}^N X_i X_i'
+               - \mean{X} \mean{X}' }\\
+  &= g( \frac{N}{N-1}, \frac{1}{N}\sum_{i=1}^N X_i X_i', \mean{X} \mean{X}')
+\end{align*}
+
+This is a continuous function of those three parameters defined as
+$g(a,b,c) = a(b-c)$. We may also note that:
+\begin{align*}
+  \frac{N}{N-1} &\rightarrow 1\\
+  \frac{1}{N}\sum_{i=1}^N X_i X_i' &\rightarrow \exV{X X'}\\
+  \mean{X} &\to \exV{X}  
+\end{align*}
+The continuous mapping theorem tells us that
+\begin{equation*}
+\mean{X} \mean{X}' \plim \exV{X} \exV{X}'  
+\end{equation*}
+Applying the Continuous mapping theorem to $g$:
+\begin{equation*}
+  \est{\Sigma(P)} \plim \exV{X X'} - \exV{X} \exV{X}' = \Sigma(P)
+\end{equation*}
+
+Since $\est{\Sigma(P)}$ is a consistent estimator of $\Sigma(P)$, any continuous
+function of it should converge in probability to that function of
+$\Sigma(P)$. This occurs because of the continuous mapping theorem and the
+special case where convergence in distribution to a constant implies
+convergence in probability to that constant.
+
+In particular, we may take the inverse of the matrix as a continuous
+function. We can see that the inverse of a matrix is continuous by
+considering the fact that it can be calculated using elementary row
+operations all of which are continuous functions. This tells us that
+$\inv{\est{\Sigma(P)}} \plim \inv{\Sigma(P)}$.
+
+Via Slutsky's lemma:
+\begin{equation*}
+  N ( \mean{X} - \mu(P))' \inv{\est{\Sigma(P)}} ( \mean{X} - \mu(P)) \convDist  \chi^2(k)
+\end{equation*}
+
+We can then define a confidence interval for $\mu(P)$ by
+\begin{equation*}
+  C_N = \{ t \in R^{k} | N ( \mean{X} - t)^{\prime} \inv{\est{\Sigma(P)}} (\mean{X} - t) < \chi^2_{1-\alpha}(k)  \}
+\end{equation*}
+where $\chi^2_{1-\alpha}(k)$ is the critical value for the $\chi^2(k)$
+distribution with error level $\alpha$.
+
+It is clear that this is consistent in level, as we choose
+$\chi^2_{1-\alpha}(k)$ as precisely the value for which
+$\Pr( \mu(P) \notin C_n ) \rightarrow\alpha$, thus $\Pr( \mu(P) \in C_n ) \rightarrow 1 - \alpha$
+
+\section*{Question 6}
+
+\subsection*{a}
+Let $C$ denote the fair coin flipped.
+\begin{align*}
+  \Pr( X_i = 1 ) &= \Pr( X_i = 1 | C = H) \Pr( C = H) + \Pr( X_i = 1 |
+  C = T) \Pr( C = T)\\
+                 &= \theta \frac{1}{2} + .1 \frac{1}{2}\\
+  &= \frac{\theta + .1}{2}
+\end{align*}
+
+\subsection*{b}
+
+Denote $Y = \indicate{X_i = 1}$. Note that $\exV{Y} = \Pr( X_i
+=1)$. Let $\est{\theta} = 2 \mean{Y} - 0.1$. 
+
+From the weak law of large numbers, we know that $\mean{Y} \plim
+\frac{\theta + .1}{2}$. We can see $\est{\theta}$ as a continuous function of $\exV{Y}$, $g(y)=2y-0.1$. Thus, by the continuous mapping theorem, we know
+that 2$\mean{Y}-0.1 \plim 2\frac{\theta + .1}{2}-0.1$, so $\est{\theta} \plim 2
+\frac{\theta + .1}{2} - 0.1 = \theta$.
+
+
+\subsection*{c}
+To be able to apply the Central Limit Theorem, we must verify that the
+expected value and the variance of $Y$ are finite.
+\begin{align*}
+  \exV{Y} &= \exV{\indicate{X_i = 1}} = \Pr( X_i = 1 ) =
+            \frac{\theta+.1}{2}\\
+  \Vari{Y} &= \Pr( X_i = 1 )( 1 - \Pr( X_i = 1)) = \left(
+             \frac{10\theta+1}{20}  \right) \left( \frac{19-10\theta}{20} \right)\\
+\end{align*}
+
+By the central limit theorem: $\sqrt{N}(\mean{Y} - \frac{\theta+.1}{2})
+\convDist \normal(0,\Vari{Y})$.
+
+Define:
+\begin{equation*}
+  g(x) = 2x - .1
+\end{equation*}
+
+Note that this is a continuous function on $\setR$ and that $\est{\theta} =
+g(\mean{Y})$. $g\left(\exV{Y}\right) = \theta$.
+
+By the delta-method we have that:
+
+\begin{equation*}
+  \sqrt{N} \left(  \est{\theta} - \theta \right) \convDist \normal( 0, 4
+  \Vari{Y}) = \normal( 0, 4 \left(
+             \frac{10\theta+1}{20}  \right) \left( \frac{19-10\theta}{20} \right))
+\end{equation*}
+
+Define
+$h(x) = 4 \left( \frac{10x+1}{20} \right) \left( \frac{19-10x}{20}
+\right)$. This is a continuous function as well, and as we know that
+$\est{\theta} \plim \theta$ then $h(\est{\theta}) \plim h(\theta)$ by the continuous
+mapping theorem. Then, because $h(\theta)$ is constant, using slutsky, we have:
+
+\begin{equation*}
+  \sqrt{N} \left(  \frac{\est{\theta} - \theta}{\sqrt{h(\est{\theta})}} \right) \convDist
+  \normal( 0, 1)
+\end{equation*}
+          
+
+Therefore we can define
+\begin{equation*}
+\begin{split}
+C_n&=\left\{\theta| \sqrt{N} \left(  \frac{|\est{\theta} - \theta|}{\sqrt{h(\est{\theta})}} \right)<z_{1-0.025}\right\}\\
+C_n &= \left[ \est{\theta} - z_{1-0.025}\sqrt{ \frac{h(\est{\theta})}{N}}, \est{\theta} + z_{1-0.025}
+\sqrt{ \frac{h( \est{\theta})}{N}} \right]
+\end{split}
+\end{equation*}
+
+From the convergence in distribution above $(\Pr(\theta\in Cn)\convDist \Pr(|Z|\le z_{1-0.025}=0.95)$, it is clear that $\Pr( \theta \in
+C_n) \rightarrow .95$
+
+\subsection*{d}
+
+We know that $\est{\theta} = 2 \mean{Y} - .1$. Thus:
+\begin{align*}
+  \Vari{\est{\theta}} &= 4 \Vari{\mean{Y}}\\
+                 &= \frac{1}{N^2} \sum_{i=1}^N \Vari{ \indicate{ X_i = 1}}\\
+                 &\leq \frac{4}{N} \frac{1}{4} = \frac{1}{N}\\  
+\end{align*}
+
+
+Using Markov's inequality we know that:
+\begin{align*}
+  \Pr( \abs{ \est{\theta} - \theta} > \epsilon) &\leq \frac{\Vari{\est{\theta}}}{\epsilon^2}\\
+                               &\le \frac{1}{N \epsilon^2}\\
+                               &\Longleftrightarrow\\
+\Pr( \abs{ \est{\theta} - \theta} \le \epsilon) &\ge 1- \frac{1}{N \epsilon^2}\\
+\end{align*}
+Letting $\epsilon = \sqrt{\frac{1}{.05 N}}$ and $C_n = [\est{\theta} - \epsilon, \est{\theta} +
+\epsilon]$ we set that:
+\begin{equation*}
+  \Pr( \theta \in C_n) = \Pr( \abs{ \est{\theta} - \theta} \le \epsilon) \ge 1- \frac{1}{N \epsilon^2} = .95
+\end{equation*}
+
+\subsection*{e}
+
+The length of the Markov's inequality Confidence region is $2\epsilon=\frac{2}{\sqrt{.05N}}$. The
+confidence interval based upon the Central Limit Theorem has length:
+\begin{equation*}
+\begin{split}
+\est{\theta} + z_{1-0.025}
+\sqrt{ \frac{h( \est{\theta})}{N}} - \est{\theta} + z_{1-0.025}\sqrt{ \frac{h(\est{\theta})}{N}}=2z_{1-0.025}
+\sqrt{ \frac{h( \est{\theta})}{N}}
+\end{split}
+\end{equation*}
+Thus, the ratio of the length of the confidence region from the markov
+inequality over the CLT region (which is
+$\frac{1}{\sqrt{.05}z_{1-0.025}\sqrt{h(\est{\theta})}}$) depends on
+$n$ only through the variance estimate $h(\est{\theta})$. Because it
+converges to the true variance as $n\to\infty$ (which is at most 1, recall
+the expression for $h()$ and the properties of a bernoulli), we have
+that $\frac{1}{\sqrt{.05}z_{1-0.025}\sqrt{h(\est{\theta})}}\to X$ such that
+$X\ge\frac{1}{\sqrt{.05}z_{1-0.025}}$. To reach further conclusions, we
+need to know the value of $z_{1-0.025}$. Since it is approx. 1.96, we
+have that $X>\frac{1}{1.96\sqrt{.05}}>1$. Thus the confidence interval
+of the CLT gets smaller as $n\to\infty$.
+
+\subsection*{f}
+
+Running the Monte-Carlo Simulations in Julia: 
+
+\begin{minted}[mathescape,
+               linenos,
+               breaklines,
+               numbersep=5pt,
+               frame=lines]{julia}
+using Distributions
+
+srand(235711)
+
+theta = [.001,.1,.25,.5]
+N = [5,20,50,100,500,1000]
+
+critVal = -quantile( Normal( 0,1), .025)
+
+M = 1000
+confCheck = zeros(M,length(theta), length(N))
+NconfCheck = zeros(M,length(theta), length(N))
+for m in 1:M
+    for t in theta
+        for n in N
+            Yes = Vector{Int64}(n)
+            coinFlips = rand(Uniform(),n)
+            questions = rand(Uniform(),n)
+            for i in 1:n
+                if( coinFlips[i] > .5)
+                    Yes[i] = questions[i] <= .1
+                else
+                    Yes[i] = questions[i] <= t
+                end
+            end
+
+            yBar = mean(Yes)
+            thetaHat = 2*yBar - .1
+
+            MarkovBound = sqrt(1/(.05*n))
+            confCheck[m,findfirst(theta,t),findfirst(N,n)] = abs(thetaHat - t) < MarkovBound
+            vHat = (4/n)*((1.0+10.0*thetaHat)/20.0)*((19.0 - thetaHat*10.0)/20.0)
+
+            nBound = critVal*sqrt(vHat)
+            NconfCheck[m,findfirst(theta,t),findfirst(N,n)] = abs(thetaHat - t) < nBound
+        end
+    end
+end
+\end{minted}
+
+The Results can be summarized as: 
+
+\begin{center}
+\begin{tabular}{rrrrrrr}
+\(\theta\) & 5 & 20 & 50 & 100 & 500 & 1000\\
+.001 & 1.0 & 1.0 & 1.0 & 1.0 & 1.0 & 1.0\\
+.1 & 1.0 & 1.0 & 1.0 & 1.0 & 1.0 & 1.0\\
+.25 & 1.0 & 1.0 & 1.0 & 1.0 & 1.0 & 1.0\\
+.5 & 1.0 & 1.0 & 1.0 & 1.0 & 1.0 & 1.0\\
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{rrrrrrr}
+\(\theta\) & 5 & 20 & 50 & 100 & 500 & 1000\\
+.001 & .234 & .638 & .925 & .869 & .94 & .941\\
+.1 & .396 & .881 & .888 & .943 & .948 & .948\\
+.25 & .602 & .868 & .94 & .936 & .942 & .942\\
+.5 & .8 & .95 & .933 & .947 & .948 & .945\\
+\end{tabular}
+\end{center}
+
+\section*{Question 7}
+
+\subsection*{a} 
+
+To show that $\hat{F}_n(x)$ is a consistent estimator of $F(x)$, we need to show that $\hat{F}_n(x)\overset{P}{\to}F(x)$. This can be seen using the Weak Law of Large Numbers. Because observations are i.i.d. (and thus $\indicate{X_i\le x}$ are i.i.d as well), $\exV{\indicate{X_i\le x}}=\Pr(X_i\le x)=F(x)$, $F(x)$ is finite, and $\hat{F}_n(x)$ is just an average of the random variables $\indicate{X_i\le x}$, we can apply the WLLN and conclude that $\hat{F}_n(x)\overset{P}{\to}F(x)$.
+
+\subsection*{b} 
+
+To obtain the result, we can apply the Central Limit Theorem. We can do that because, as seen in item (1) above, observations are i.i.d., $\exV{\indicate{X_i\le x}}=F(x)$, which is finite, $\hat{F}_n(x)$ being just an average of $\indicate{X_i\le x}$, and also because $\sigma^2(x)=Var(\indicate{X_i\le x})=\Pr(X_i\le x)(1-\Pr(X_i\le x))=F(x)(1-F(x))<\infty$. Thus we can conclude that $\sqrt{n}(\hat{F}_n(x)-F(x))\overset{d}{\to}N(0,F(x)(1-F(x))$. This also gives us a theoretical expression for $\sigma^2(x)=F(x)(1-F(x))$.
+
+\subsection*{c} 
+
+Because $g(p)=p(1-p)$ is a continuous function of $p$, and we know that $\hat{F}_n(x)\overset{P}{\to}F(x)$, by the continuous mapping theorem we have that $\hat{F}_n(x)(1-\hat{F}_n(x))\overset{P}{\to}F(x)(1-F(x))$. Thus, $\hat{F}_n(x)(1-\hat{F}_n(x))$ is a consistent estimator of $\sigma^2(x)$.
+
+\subsection*{d} 
+
+$\theta=\inf{\{x\in\setR|F(x)\ge 0.5\}}$. We want to show that $F(\theta)=0.5$.
+
+First, suppose that $F(\theta)>0.5$. Then, we can take $N$ large enough, such that $F(\theta-\frac{1}{n})>0.5$ for all $n>N$, because continuity of $F$ and $\theta-\frac{1}{n}\to\theta$ implies $F(\theta-\frac{1}{n})\to F(\theta)$ (i.e., they get arbitrarily close). But then this contradicts $\theta$ being a lower bound of $\{x\in\setR|F(x)\ge 0.5\}$. 
+
+Now assume that $F(\theta)<0.5$; similarly we can take $N$ large enough, such that $F(\theta+\frac{1}{n})<0.5$ for all $n>N$, because continuity of $F$ (in this case, right continuity would be enough) and $\theta+\frac{1}{n}\to\theta$ implies $F(\theta+\frac{1}{n})\to F(\theta)$. But this contradicts $\theta$ being the greatest lower bound.
+
+Thus, we can conclude that $F(\theta)=0.5$ must be valid.
+
+\subsection*{e}
+
+The CLT gives us that $\sqrt{n}(\hat{F}_n(x)-F(x))\overset{d}{\to}N(0,F(x)(1-F(x))$ for every $x$, in particular for $x=\theta_0$. Also, $\hat{F}_n(\theta_0)(1-\hat{F}_n(\theta_0))\overset{P}{\to}F(\theta_0)(1-F(\theta_0))$. Thus, as long as $F(\theta_0)(1-F(\theta_0))>0$ (which is the case if the null $H_0: \theta=\theta_0$ is true, for instance), we can use the continuous mapping theorem and get that $\frac{1}{\sqrt{\hat{F}_n(\theta_0)(1-\hat{F}_n(\theta_0))}}\overset{P}{\to}\frac{1}{\sqrt{F(\theta_0)(1-F(\theta_0))}}$ (because the function $g(a)=1/\sqrt{a}$ is continuous except when $a$ is zero).
+
+Using Slutsky and the continuous mapping theorem (because $|.|$ is continuous), we can obtain that: $\frac{\sqrt{n}(|\hat{F}_n(\theta_0)-0.5)|}{\sqrt{\hat{F}_n(\theta_0)(1-\hat{F}_n(\theta_0))}}\overset{d}{\to}|N(0,1)|$ under the null hypothesis, because, if true, $F(\theta_0)=0.5$. This gives us a test statistic $T_n=\frac{\sqrt{n}(|\hat{F}_n(\theta_0)-0.5)|}{\sqrt{\hat{F}_n(\theta_0)(1-\hat{F}_n(\theta_0))}}$ (the test is to reject if $T_n\ge z_{1-\frac{\alpha}{2}}$, i.e., greater than the $1-\frac{\alpha}{2}$ quantile of the standard normal distribution) and also:
+
+\begin{equation}
+\begin{split}
+\Pr(T_n>z_{1-\frac{\alpha}{2}})&=\Pr(\frac{\sqrt{n}(|\hat{F}_n(\theta_0)-0.5)|}{\sqrt{\hat{F}_n(\theta_0)(1-\hat{F}_n(\theta_0))}}>z_{1-\frac{\alpha}{2}})\\
+&\Longleftrightarrow\\
+\limsup{\Pr(T_n>z_{1-\frac{\alpha}{2}})}&\le\limsup{\Pr(\frac{\sqrt{n}(|\hat{F}_n(\theta_0)-0.5)|}{\sqrt{\hat{F}_n(\theta_0)(1-\hat{F}_n(\theta_0))}}\ge z_{1-\frac{\alpha}{2}})}\\
+&\le \Pr(|z|\ge z_{1-\frac{\alpha}{2}})=\alpha,
+\end{split}
+\end{equation}
+\noindent where we used portmanteu lemma (after closing the set and obtaining the inequality in the second line) and the fact that $T_n$ converges to a $|N(0,1)|$. Thus, we can conclude that the test is consistent in level $\alpha$, because the $\limsup{}$ of the probability of type 1 error is less than or equal $\alpha$. 
+
+\subsection*{f}
+
+The $p-value$ is defined as $\inf{\{\alpha\in(0,1)|T_n>z_{1-\frac{\alpha}{2}}\}}$, where $T_n$ is the test statistic developed above. Thus, we have:
+\begin{equation}
+\begin{split}
+\inf{\{\alpha\in(0,1)|T_n>z_{1-\frac{\alpha}{2}}\}}&=\inf{\{\alpha\in(0,1)|\phi(T_n)>\phi(z_{1-\frac{\alpha}{2}})\}}\\
+&=\inf{\{\alpha\in(0,1)|\phi(T_n)>1-\frac{\alpha}{2}\}}\\
+&=\inf{\{\alpha\in(0,1)|\alpha>2(1-\phi(T_n))\}}=2(1-\phi(T_n))\\
+\end{split}
+\end{equation}
+
+\section*{Question 8}
+
+\subsection*{a} 
+
+ First let's apply a continuous function to $\tilde{X}_n$ and define $\overline{lnX}_n:=\ln{\tilde{X}_n}=\ln{(\prod_{i}{X_i})^{\frac{1}{n}}}=\frac{1}{n}(\sum_{i}{\ln{X_i}})$. In words, $\ln{\tilde{X}_n}$ is the average of the random variable $\ln{X_i}$ (which is also i.i.d., although possibly with a different distribution than $X_i$).
+
+Because we have an average, if $\exV{\ln{X_i}}$ is finite, we can apply the Weak Law of Large Numbers to $\overline{lnX}_n$. Through integration by parts we can obtain that $\exV{\ln{X_i}}$ is finite:
+\begin{equation}
+\begin{split}
+\exV{\ln{X_i}}&=\int_{0}^{b}{\ln{x}\frac{1}{b}dx}=\frac{1}{b}\int_{0}^{b}{\ln{x}dx}\\
+&=\frac{1}{b}(b\ln{b}-\lim_{x\to0}{x\ln{x}}-\int_{0}^{b}{x\frac{1}{x}dx})\\
+&=\frac{1}{b}(b\ln{b}-b)=\ln{b}-1
+\end{split}
+\end{equation}
+
+Thus, since $\ln{b}-1$ is finite, by the WLLN, we can conclude that $\overline{lnX}_n=\ln{\tilde{X}_n}\overset{P}{\to}\ln{b}-1$. Because $g(x)=e^x$ is a continuous function, the continuous mapping theorem gives us that $\tilde{X}_n=e^{\ln{\tilde{X}_n}}\overset{P}{\to}e^{\ln{b}-1}=\frac{e^{\ln{b}}}{e}=\frac{b}{e}$. Define $\lambda(b)=\frac{b}{e}$ and we have the desired result.
+
+\subsection*{b}
+
+  First, we will show that $\sqrt{n}(\ln{\tilde{X}_n}-(\ln{b}-1))\overset{d}{\to}N(0,\sigma^{2,*}(b))$, with $\sigma^{2,*}(b)$ the variance of $\ln{X_i}$, and then we will be able to apply the delta method to achieve the desired result. To show the above convergence we need to check that the variance of $\ln{X_i}$ is finite. Because $Var(\ln{X_i})=\exV{(\ln{X_i})^2}-(\exV{\ln{X_i}})^2$, and we know the second term is finite, we need only check the first term:
+\begin{equation}
+\begin{split}
+\exV{(\ln{X_i})^2}&=\int_{0}^{b}{(\ln{x})^2\frac{1}{b}dx}=\frac{1}{b}\int_{0}^{b}{(\ln{x})^2dx}\\
+&=\frac{1}{b}(b(\ln{b})^2-\lim_{x\to0}{x(\ln{x})^2}-\int_{0}^{b}{x2\ln{x}\frac{1}{x}dx})\\
+&=\frac{1}{b}(b(\ln{b})^2-\lim_{x\to0}{x(\ln{x})^2}-2(b\ln{b}-b))\\
+&=\frac{1}{b}((b(\ln{b})^2-2b(\ln{b}-1))\\
+&=(\ln{b})^2-2(\ln{b}-1)
+\end{split}
+\end{equation}
+\noindent where the fact that $\lim_{x\to0}{x(\ln{x})^2}=0$ can be seen by applying L'Hopital rule tow times.
+
+Because $(\ln{b})^2-2(\ln{b}-1)$ is finite, we can apply the Central Limit Theorem and conclude that $\sqrt{n}(\ln{\tilde{X}_n}-(\ln{b}-1))\overset{d}{\to}N(0,\sigma^{2,*}(b))$, where $\sigma^{2,*}(b)=(\ln{b})^2-2(\ln{b}-1)-(\ln{b})^2+2\ln{b}-1=1$.
+
+Now we can apply the delta method with $g(x)=e^{x}$ (continuous and differentiable at $(\ln{b}-1)$) to conclude that:
+\begin{equation}
+\begin{split}
+\sqrt{n}(\exp{\{\ln{\tilde{X}_n}\}}-\exp{\{(\ln{b}-1)\}})&=\sqrt{n}(\tilde{X}_n-\frac{b}{e}))\\
+&\overset{d}{\to} e^{(\ln{b}-1)} N(0,1)=N(0,e^{2(\ln{b}-1)})
+\end{split}
+\end{equation}
+
+Therefore, we obtained that $\sqrt{n}(\tilde{X}_n-\lambda(b)))\overset{d}{\to}N(0,\sigma^2(x))$, with $\lambda(b)=\frac{b}{e}$ and $\sigma^2(b)=e^{2(\ln{b}-1)}$, as desired.
+
+\end{document}

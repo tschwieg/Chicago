@@ -1,0 +1,206 @@
+\documentclass[12pt]{paper}
+
+\usepackage{Schwieg}
+\usepackage{tikz}
+
+\begin{document}
+Consider a world where there are three important factors, consumers,
+landowners and firms.
+
+\section{Consumers}
+
+Consumers value their leisure time as well as their consumption of the
+single good produced in this world: $Y$. For a given time period, they
+must choose their labor/leisure trade-off as well as the region in
+which they are inhabiting. Assume that they can freely travel between
+regions. Since the consumers value only the good and their leisure, we
+may model their utility function as: $U( Y, Le)$.
+
+Assume that there are many consumers in each region, such that they
+are price-takers in the labor market. Then they receive wages $w_i$
+for working in each region $i$. The consumer's problem in this world
+is then:
+\begin{align*}
+  \max_{Y,L,Le,i} &U( Y, Le )\\
+  \text{s.t} Y &\leq w_i L\\
+  L + Le &= 1\\
+  i &\in \{ 1, 2, ..., K\}
+\end{align*}
+
+If we believe that utility is increasing in $Y$ and $Le$, then these
+constraints can be simplified as all money will be spent on good $Y$
+and leisure is completely determined by labor time.
+
+\begin{align*}
+  \max_{L,i} &U( w_i L, Le)\\
+  \text{s.t} L &\in [0,1]\\
+  i &\in \{ 1, 2, ..., K\}
+\end{align*}
+
+Immediately we can notice that the only part of this decision where the
+region chosen by the consumer is relevant is in his wage. His leisure
+and purchasing power of $Y$ are unaffected by where he lives, except
+indirectly through the wage. This implies that the consumer will first
+select the region with the highest wage, and then choose his leisure
+time based on that wage.
+
+This implies that the only equilibrium that can be supported is the
+equilibrium where all the regions have the same wage paid. If there
+was some region with a higher wage, then no consumer would want to
+live anywhere else, and firms in that specific region could lower
+their wage and make strictly more profit.
+
+The consumer's problem has simplified to this:
+\begin{align*}
+  \max_L & U( w L, 1 - L)\\
+  \text{s.t.} L &\in [0,1]
+\end{align*}
+
+
+\section{Firms}
+
+Suppose there are many firms in each region of the
+economy all of which using the same production function, and producing
+output. Suppose that there exists a capital market exogenous to this
+model, and an accompanying rental rate of capital, $r$. Since there
+are many small firms without market power, they must be price takers
+in the market, and suppose that capital is homogeneous so that the
+market is competitive.
+
+From the discussion on the consumer, it is known that every firm will
+have to offer the same wage to each worker regardless of region that
+the firm is located in.
+
+The firms face a production function of
+\begin{equation*}
+  Y = F( T, K, L)
+\end{equation*}
+Where $T = Q_iX$, is the ``efficiency units'' of the land, $K$ is the
+capital employed, and $L$ is the amount of labor employed.
+This function exhibits constant returns to scale.
+
+The firm faces the optimization question of:
+\begin{equation*}
+  \max_{T,K,L} \Pi = F( T, K, L ) - tT - wL - rK
+\end{equation*}
+Consider the cost function of this firm:
+\begin{align*}
+  C(y,t,w,r) = &\min_{T,K,L} tT + wL + rK\\
+  &\text{s.t.} F(T,K,L) = y
+\end{align*}
+
+This is equivalent to the Hicksian system for a utility function of
+$F(T,K,L)$. So the cost function is concave. We also know that the
+solution is characterized by a tangency of the expenditure with the
+isoquant. Since the production function exhibits CRS, its level curves
+all have the same slope following a ray out of the origin. So if we
+can find one tangency for a given output $y$, then the optimal
+inputs for any other output must lie along the ray. (This is assuming
+some stuff about isoquants)
+
+This tells us that the expansion path, or the choice of inputs to meet
+larger and larger outputs follows along a line. This means that as you
+scale y, each of the inputs scales by the same amount, increasing the
+cost by that amount as well. As the firm is a price taker in output as
+well as input, it must earn zero profit.
+
+Following these assumptions are the standard competitive assumptions
+\begin{align*}
+  F_L(T,K,L) = w\\
+  F_K(T,K,L) = r\\
+  F_T(T,K,L) = t
+\end{align*}
+
+That is, that the price of each factor input equals the benefit of
+each factor input.
+
+\section{Land Owners}
+
+Each land owner has $X$ quantity of land where the quality of each
+piece of land is given by $Q_i$. This can be thought of us each firm
+having a different quantity of homogeneous land. Since there is
+nothing else that the land-owners can do with their land, they face no
+opportunity cost of renting the land to the firms. They are willing to
+accept any price for their land.
+
+This leads to a perfectly inelastic supply at the maximum amount of
+land supplied. The Land-Owner has no monopoly power over the land
+since there are many, and has no ability to restrict his output to
+maximize his revenue, he simply faces a price and tries to sell as
+much of his land as possible. As a result supply is fixed at the
+amount of land in the region, and is perfectly inelastic. 
+
+
+\section{Equilibrium}
+
+In Equilibrium, there will be no excess demand or supply in terms of
+labor, capital, land or the good $Y$. This gives us several conditions
+that must hold:
+
+The first condition is that the wages must be equal across the
+different regions. The rental rate is equal between the different
+regions as well.
+
+The rental rate of capital is completely exogenous within this model,
+so it fixes the marginal productivity of capital for all firms to be
+constant. Although the wage rate is determined endogenously, it is
+fixed constant between all regions as well.
+
+Since the quantity of land is fixed per region, the effective quantity
+of land is fixed per region. Equilibrium in the land market will occur
+where $MPT$ intersects this perfectly inelastic supply. As a result
+the price per effective unit of land will be constant.
+
+One important thing to note is that all of these calculations have
+been in terms of the effective output of the land. This must scale
+directly with the quality of the land by the given equation: $R(Q,X) =
+tQX$. That is, land prices are a linear function of land quality. All
+other factor prices remain constant between the different
+regions. As the quality of land is driven upwards, more land is used,
+as supply is perfectly elastic.
+
+As more effective land is used, it must be the case that the firm is
+producing more output. This can be seen by considering the conditional
+factor demand equations. The factor demand for land at a given level
+of output for the first quantity of effective land is optimal, so the
+only way that the high quantity is optimal is if more output is
+produced. If output increases, we have shown that the optimal path is
+linear. This tells us that factor quantities vary exactly with the
+quality of the land as well. That is: $Q_2L_1 = Q_1L_2$.
+
+\section{Part B}
+
+Now consumers must consume a fixed amount of land when they work in a
+region. Assume that per region there is a cost of renting given by
+$R_i$. To work in a particular region, consumers now have income: $w_i
+L - R_i$.
+
+The land-owners no longer have a perfectly inelastic supply curve
+either. They face a second option of renting out their land to
+consumers who wish to work in the area. For an equilibrium to occur,
+the land-owner should be indifferent between renting out his land and
+selling it to a consumer. However this depends on the quantity land,
+which is separate from the effective quantity.
+
+Indifference implies that $R_i = t = MPT$. Since each consumer costs a
+fixed amount of land, it is equivalent to consumers costing more
+effective land in more effective regions. As $Q$ increases, each
+consumer costs more ``effective land'' and thus raises $MPT = R_i$
+
+Consumers must also be indifferent between this change. Their new
+budget line, adjusted by the rent cost must lie tangent to the same
+indifference curve as the budget line of all other regions. This
+determines the wage increase that must exist to compensate for the
+rental cost.
+
+Since there is less land available, $MPT$ has increased,
+and higher wages mean that $MPL$ has increased, but $MPK$ remains
+constant. The decreased quantity of land should reduce the
+productivity of workers, so for their to be an increase in the
+productivity, there must be a decrease in the labor demanded. 
+
+
+
+\end{document}
+
+%  LocalWords:  isoquants

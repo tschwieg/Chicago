@@ -1,0 +1,147 @@
+\documentclass{article}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage[utf8]{inputenc}
+
+\title{Problem Set 6: Question 1}
+\author{Samuel Barker, Daniel Noriega, Rafeh Qureshi, Timothy Schweig}
+%\date{November 16th, 2018}
+
+\begin{document}
+
+\maketitle
+
+\section*{Introduction}
+We begin with a setup where individuals decide on whether to invest in training. Men have one argument for their utility as it is monotonically increasing in their income, Y. Namely, their utility, indexed by m is $U_m(Y)$. Women, however, also care about the fraction of the composition of their profession that is female. Thus, they have their utility monotonically increasing in both the lifetime income and the proportion of women in the profession
+$$ U_f \left(Y,\frac{F}{M+F}\right) \approx U_f(Y,Fc).$$
+Where F is the number of women in the profession, M is the number of men and c is $\frac{1}{N+M}$, which can be regarded as a constant if $M+N$ is high enough. Intuitively, if the number of total people is appreciably high, the derivative of the fraction is going to be dominated by the first order effect of the numerator\footnote{One can see this more formally by differentiating the fraction with the product rule and seeing that the effect of the denominator is small if $M+N$ is large}. Now, note that men and women enter based on their utilities (and don't regard each other as the outside option), and, would be willing to indifferent at different levels of wages initially. However, we must have that the firms in equilibrium offer them the same wage $w_p$, as otherwise, if it is cheaper to hire women for instance, firms would just demand women until the price for women is pushed up to be the same as that of men. \\ 
+
+Now, men and women invest in training if (and only if) the lifetime wage of professional work exceed the cost of training. We can use $w_p$ and $w_o$ to refer to lifetime discounted earnings
+$$ w_p- T>w_o.$$
+In the end, we will have that men and women enter the labor, increasing the supply and thereby lowering the wages until 
+$$ w_p- T=w_o.$$
+\newpage
+We also know that women will invest into training until
+$$U_f(w_p - T,cF)= U(w_0) $$
+and the men will invest until $$U_m(w_p - T)= U(w_0) $$
+Note, the utility for the marginal woman changes such that:
+$$\frac{\partial U(w_p - T, cF)}{\partial F} = \frac{\partial U(w_p - T, cF)}{\partial w_p}\frac{\partial (w_p-T)}{\partial F} + c\frac{\partial U(w_p - T, Fc)}{\partial F}. $$
+
+Our central claim is that as the fraction of women and wages increase, eventually there will come a point where women view an increase in the proportion of women as more desirable than part of their wage. Thus, we will get a backward bending supply curve for women's labor. This makes sense, especially considering that we claimed above that we should get multiple equilibria.
+
+
+\subsection*{Part A}
+As in figure 1, we can see that with the wage set in the professional market $w_p$ there may be multiple points where the demand intersects the supply curve and we get stable (locally optimal points) where competitive pressures move people to. Note, in the examples in Figure 1, we would have that women are better off in the second intersection as they have the same wage and a greater proportion of women in the professional market. 
+\\
+
+\subsection*{Part B}
+Q: How does the equilibrium wage rate depend on whether the professionals are demanded competitively or by a monopsonist?
+\\
+
+A monopsonist would have the ability to choose a wage such that their marginal revenue is equal to their marginal costs. This allows them to set a lower wage than a competitive equilibrium would determine. However, since female supply is not monotone with respect to wages, an artificially low wage from the monopsonist could potentially lead to higher or lower quantities of female labor supplied--whichever lead to higher profits for the monopsonist. While we say that they would set marginal costs equal to marginal revenue, they would have to evaluate at which level of female labor surplus is maximum.
+\\
+
+If the competitive market determined an equilibrium wage for which the highest equilibrium female-worker number is achieved, a small decrease in the quantity of workers demanded may actually imply an increase in wages. Conversely, if the competitive market determined a wage for which the lower equilibrium female-worker number is attained, a decrease in the quantity of workers demanded would imply a decrease in wages.
+
+\subsection*{Part C}
+Q: In the competitive case, what is the effect of professional-school tuition on wage rate and gender composition of the professions? Does it matter for an individual’s supply whether only she pays more tuition, or all students do? How do these answers depend on the magnitude of the effect of the population average on an individual’s supply?
+\\
+Because we have in equilibrium that
+$$ w_p- T=w_o,$$
+
+we have that an increase in $T$ is causes $w_p$ to decrease by an identical amount (since we have that $w_o$ is constant), which means that there are fewer people in equilibrium choosing to enroll in training and, by scarcity, driving up the wages of professional workers. Now, as there are fewer workers, the number of women will decrease more than the number of men as the women also lose the incentive to enroll in professional school for their wages, so the proportion of women in the profession decreases as well (more women leave than men do). \\
+
+Note that an individual's tuition determines whether she enrolls into professional training, but the training for everyone affects the equilibrium wage and the proportion of women in the market. As seen by how the utility changes with an additional woman entering the professional market 
+$$\frac{\partial U(w_p - T, cF)}{\partial F} = \frac{\partial U(w_p - T, cF)}{\partial w_p}\frac{\partial (w_p-T)}{\partial F} + c\frac{\partial U(w_p - T, Fc)}{\partial F}. $$
+we see that the effect of the change in utility is weighted by the population size. Namely, the effect that the additional woman has on the utility is lower when the total population is higher.  
+
+\subsection*{Part D}
+Q: How do your answers depend on the elasticity of demand for professional workers?
+\\
+
+An increase in the elasticity of demand would reflect a demand that is more responsive to changes in wages. In other words, the less elastic demand is, the less variable the quantity demanded will be. Consequently, if demand for workers were more elastic, the two possible equilibria (see Part A) would require a smaller difference in wages as changes in quantity for a given change in wages would be greater.
+\\
+
+In particular, if demand were perfectly elastic, the two possible equilibria would occur at exactly the same wage, at which demand is fully responsive. On the other hand, if demand were perfectly inelastic there would only be one single quantity of workers possible, at which demand does not respond to price, and therefore, only one equilibrium would be feasible. If one assumed that wages cannot be negative (no one would pay to go to work), one could imagine that there would be a threshold for a minimum elasticity which would be required for two equilibria to exist.
+% works
+\begin{figure}
+\begin{tikzpicture}[scale=1]
+\draw [->](0,0)-- (0,0) -- (8,0) node [below] {$Quantity$};
+\draw [->](0,0)-- (0,0) -- (0,5) node [above] {$Wage$};
+\draw (0.2,.2) to [out=70,in=180] (3.75,4);
+\draw (3.75,4) to [out=360,in=110] (7.5,.2);
+\node [above right] at (7.5,.2) {$S_F$};
+\draw (0,2)--(8,2) node [above]{$D$};
+\node [left] at (0,2) {$W^*$};
+\draw [fill] (.95,2) circle [radius=.05];
+\draw [dashed] (.95,2)--(.95,0);
+\node [below] at (.95,0) {$Q^*_1$};
+\draw [fill] (6.745,2) circle [radius=.05];
+\node [below] at (6.745,0) {$Q^*_2$};
+\draw [dashed] (6.745,2)--(6.745,0);
+\end{tikzpicture}
+\caption{Perfectly Elastic Demand}
+\end{figure}
+
+
+
+\begin{figure}
+\begin{tikzpicture}[scale=1]
+\draw [->](0,0)-- (0,0) -- (8,0) node [below] {$Quantity$};
+\draw [->](0,0)-- (0,0) -- (0,5) node [above] {$Wage$};
+\draw (0.2,.2) to [out=70,in=180] (3.75,4);
+\draw (3.75,4) to [out=360,in=110] (7.5,.2);
+\draw [dashed] (0,3.73)--(7,3.73);
+\node [left] at (0,3.73) {$W^*$};
+\node [above right] at (7.5,.2) {$S_F$};
+\node [above] at (4,5) {$D$};
+\node [below] at (5,0) {$Q^*$};
+\draw [fill] (5,3.73) circle [radius=.05];
+\draw (5,5)--(5,0);
+\end{tikzpicture}
+\caption{Perfectly Inelastic Demand}
+\end{figure}
+
+
+
+\begin{figure}
+\begin{tikzpicture}[scale=1]
+\draw [->](0,0)-- (0,0) -- (8,0) node [below] {$Quantity$};
+\draw [->](0,0)-- (0,0) -- (0,5) node [above] {$Wage$};
+\draw (0.2,.2) to [out=70,in=180] (3.75,4);
+\draw (3.75,4) to [out=360,in=110] (7.5,.2);
+\node [above right] at (7.5,.2) {$S_F$};
+\node [above] at (7.8,2) {$D$};
+\draw (.2,4.8)--(7.8,2);
+\draw [dashed] (2.83,0)--(2.83,3.9);
+\draw [fill] (2.83,3.85) circle [radius=.05];
+\node [below] at (2.83,0) {$Q^*_1$};
+\node [left] at (0,3.85) {$W_1^*$};
+\draw [dashed] (0,3.85)--(8,3.85);
+\draw [dashed] (6.39,0)--(6.39,2.5);
+\draw [fill] (6.39,2.5) circle [radius=.05];
+\node [below] at (6.39,0) {$Q^*_2$};
+\draw [dashed] (0,2.5)--(8,2.5);
+\node [left] at (0,2.5) {$W_2^*$};
+\end{tikzpicture}
+\caption{A More Typical Demand}
+\end{figure}
+
+
+
+\subsection*{Part E}
+Q: Can this model explain why the 1970s dramatically increased the fraction of women in law and medical school from less than one quarter to essentially one half?
+\\
+Yes; as we see there are multiple stable equilibria that can occur. We can imagine that in the 1970s, due to increasing womens' liberation and encouragement of women to enter the labor market, there was a shift in the quantity of women in the labor force, wherein the quantity of women was shifted from the lower female-worker number equilibrium to the higher female-worker number equilibrium. Namely, as discussed above, there was a compounding effect as the the number of women in the professional labor market was pushed upwards, so that the higher number of female workers' equilibrium became feasible. 
+\\
+
+\subsection*{Part F}
+Q: Suppose that the predictions that you derived above were confirmed in the data on the professional labor markets. Does that mean that the gender composition of the profession enters a woman’s utility function? If not, how else could you explain the findings?
+\\
+
+This is a bit of a philosophical question--we don't care if it actually does or doesn't end up in the utility function. Our predictions were correct, therefore the gender composition entering a woman's utility function is a reasonable conclusion.\\
+
+However, the gender composition entering women's utility function does not have to be the only explanation to the findings. One could imagine other models that would also make the predictions our model made. Or perhaps even other factors cause the supply curve itself to change, resulting in different quantities of labor at the same wage. For example, woman could be altruistic, and the realization that other women are altruistic could act as an altruism-fostering mechanism. In this case, woman realizing that other women are willing to accept a lower salary could encourage them to accept an even lower salary. This would not necessarily depend on the gender composition of a given profession, but rather on women's awareness of other women's altruism.
+
+
+\end{document}

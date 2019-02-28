@@ -1,0 +1,25 @@
+\documentclass[12pt]{paper}
+
+\usepackage{Schwieg}
+\usepackage[margin=1in]{geometry}
+\usepackage{tikz}
+
+\begin{document}
+Suppose that both private and public universities have the same share
+in the basket that is used to determine inflation. Therefore
+proportional increases in the tuition of both types of universities
+will have the same effect on the average
+
+
+\section{How would a proportional increase in the tuition of both
+  types of schools affect the market share of public schools?}
+
+First note that an increase in the tuition of both types of schools
+will increase the average price level at a macro level. There is
+substantial spending on education and this will be reflected as
+including education spending in the basket of goods examined.
+
+For a proportional increase in the tuition of $\alpha$, the average price
+level will increase by $\beta < \alpha$ as education spending is a small
+portion of the overall budget. 
+\end{document}

@@ -1,0 +1,207 @@
+\documentclass[12pt]{paper}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{tikz}
+\usepackage{Schwieg}
+\title{Problem Set 4.2}
+\author{Samuel Barker\and Timothy Schwieg\and Rafeh Qureshi\and Daniel Noriega}
+\begin{document}
+\maketitle
+
+
+\section*{Setup}
+We set up a model\footnote{We revisited Becker's \textit{The Economic
+    Approach to Human Behavior} to confirm our thoughts} in terms of
+the differences to utility crime inflicts upon the perpetrator and the
+victim. Looking at the level of crime in society (A), we have the
+utility gain by the perpetrator (1 below) and the loss of gain to the
+victim (2 below). We take it that crime is socially sub-optimal
+(assuming we weight everyone equally) if for a given level of criminal
+activity (A), (3) holds 
+
+
+\begin{align}
+\frac{\partial U_p}{\partial A} & > 0 \\
+\frac{\partial U_v}{\partial A} & < 0 \\
+ \frac{\partial U_p}{\partial A} - \frac{\partial U_v}{\partial A} &> 0
+\end{align}
+Aggregating to the group level, we can sum up over the utility gains
+to the criminals in society and the utility losses to the victims to
+get analogues of these at the societal level:
+\begin{align}
+B(A) & > 0 \\
+H(A) & < 0 \\
+B(A)- H(A) \equiv F(A) &> 0
+\end{align}
+where $B(A)$,$H(A)$ and $F(A)$ represent the utility gains to the
+criminals, utility losses to the victims and the aggregate societal
+loss respectively.
+\subsection*{Policing}
+Society spends a given amount of resources on policing to increase the
+probability of conviction $p$. Clearly, it is not optimal for society
+to expend all its resources to getting $p$ to as high as possible, i.e
+if we have the marginal benefit of spending another dollar by the
+government to society as a constant $b_0$ (which represents the
+opportunity cost of government expenditure), society spends on
+policing until the marginal benefit to society of another dollar spent
+on policing is equal to $b_0$. We will analyze this further later, but
+for now we can say the optimal level for policing, due to this
+criterion, is $\hat p$. Because policing is fully captured in $p$, we
+can just look at the costs of policing and analyze changes in societal
+loss F(A) with respect to p. Thus, we have the function of policing
+costs as $C(p,A)$. Note, that the level of criminal activity itself is
+a function of $p$.
+
+\section*{a}
+We think of this problem as a cost minimization problem, given the
+aggregate level of ``utility'' in a society is fixed at $U_{opt}$
+\begin{align}
+ \min_{f,m} V(A,p,f) = \int_0^a H(a) - B(a) + C(p,a) da \\
+  H(A_{opt}) - B(A_{opt}) + C(p,A_{opt}) = 0
+\end{align}
+Note the criteria in (8) describes the efficient amount of criminal
+activity in society by the social planner. Here, the costs of policing
+($C$) are offset by the benefit to the society($F(A)$). We look at the
+mechanisms through which the social planner decreases $A$ to socially
+optimal levels:
+
+
+\begin{align*} 
+ \frac{\partial V}{\partial p} & = \frac{\partial C}{\partial p} + \frac{\partial{H(A)}}{ \partial{A}} \frac{ \partial{A}}{\partial{p}} - \frac{\partial{B(A)}}{\partial{A}}\frac{\partial{A}}{\partial{p}} + \frac{\partial{C}}{\partial{A}}\frac{\partial{A}}{\partial{p}} &=0\\
+  \frac{\partial V}{\partial f} & = \frac{\partial{H(A)}}{\partial{A}} \frac{\partial{A}}{\partial{f}} - \frac{\partial{B(A)}}{\partial{A}}\frac{\partial{A}}{\partial{f}} + \frac{\partial{C}}{\partial{A}}\frac{\partial{A}}{\partial{f}} &= 0
+\end{align*}
+
+
+Intuitively, with respect to a change in probability of getting
+caught, we would see the costs of policing increase directly with
+respect to the change in $p$ and decrease indirectly through the
+change in activity (A) if policing costs are increasing with criminal
+activity ($\frac{\partial{C}}{\partial{A}}>0$) and criminal activity is decreasing
+with probability of conviction ($\frac{\partial{A}}{\partial{p}}<0$). Similarly, we
+would see the benefit to the criminals decrease with an increase in
+$p$ through the criminal activity decreasing with $p$. The loss to
+victims similarly decreases through the $\frac{\partial{A}}{p}$. \par
+
+Let's say the level of policing is fixed at $\hat{p}$. Looking at the
+change in societal costs with the fine, we see that changing $f$
+increases the costs to society through the decrease in benefit of the
+criminals (due to it bringing about a decrease in criminal activity -
+$\frac{\partial{A}}{\partial{f}}<0$). It also decreases the costs to society through
+it decreasing the loss of victims. \par
+With respect to fines, we can recast the problem to our familiar
+optimality conditions through voluntary trade. Namely, the pecuniary
+costs of the fine must be analogous to the price in the sense that it
+compensates the victims for their dis-utility. More formally, the
+optimal criminal activity will be such that the marginal loss to
+society is zero (F(A)=0), but then,
+$$ H(A_{opt}) + C(p,A_{opt}) = B(A_{opt}) = p f$$. Namely, the fine
+will be such that the expected value of the fine (probability of
+getting caught $p$ times the fine paid when caught $f$) will
+compensate the policing costs of bringing about that $p$ and the harm
+to victims from the criminal activity $A$. Thus, it is similar to the
+price levied on victims (in expectation) for them to purchase the
+level of criminal activity $A$.  \pagebreak
+\section*{b}
+Certainly, to offset the harm to the victims, fines are recommended
+form of punishment, but if the criminals don't have enough assets to
+pay, we must concentrate on exerting another cost to them such as
+through imprisonment (or torture, guillotine etc). \par
+Here, however, there are two additional costs; in addition to the
+policing costs $C$, we will have the costs of the punishment
+itself. We represent this cost as $pZ(A,z)$, where $z$ is the
+amount of punishment brought about (i.e z could be days of prison
+sentence) and $p$ shows up in expectation as we look at the cost of
+punishment for the individuals that as caught
+($\mathbbm{E}(Z(A,z)) = pZ(A,z) $). The condition for optimality here
+is that the level of harm exerted on to the criminals must equal the
+reduction in the harm exerted on to society. Namely, we shall have:
+\begin{align*} 
+ \frac{\partial V}{\partial p} & = \frac{\partial C}{\partial p} + Z(A,z) + \frac{\partial Z(A,z)}{\partial A}\frac{\partial A}{\partial p} + \frac{\partial{H(A)}}{ \partial{A}} \frac{ \partial{A}}{\partial{p}} - \frac{\partial{B(A)}}{\partial{A}}\frac{\partial{A}}{\partial{p}} + \frac{\partial{C}}{\partial{A}}\frac{\partial{A}}{\partial{p}} &=0\\
+  \frac{\partial V}{\partial z} & = \frac{\partial{H(A)}}{\partial{A}} \frac{\partial{A}}{\partial{z}} + \frac{\partial{Z}}{\partial{A}} \frac{\partial{A}}{\partial{z}} + \frac{\partial{Z}}{\partial{z}} - \frac{\partial{B(A)}}{\partial{A}}\frac{\partial{A}}{\partial{f}} + \frac{\partial{C}}{\partial{A}}\frac{\partial{A}}{\partial{f}} &= 0
+\end{align*}
+Above, we see that we would like the reduction in the societal loss
+($F(A) + C(p,A)$) with respect to $p$ and $f$ respectively both to
+equal the change in societal loss due to the punishment. Namely, the
+change in harm brought about by the changes in $p$ and $f$
+respectively must be offset by the marginal benefit brought on to
+society by the changes in $p$ or $f$. \par
+The crimes that will occur in equilibrium will be those where the
+individuals have a small enough probability of getting caught or
+individuals value the risk of getting caught low enough that their
+benefit of one more unit of crime exceeds (or equals) their expected
+cost. Here, we could expect that the individuals who commit crime be
+relatively risk-loving (they are essentially gambling with respect to
+the probability of getting away with their crime and utility benefit
+$B(A)$. Otherwise, we could also have the criminals commit crime till
+they are indifferent between their expected dis-utility from the
+punishment. One special case of this is when the criminals have very
+low aversion to the punishment $Z$ and may actually may derive some
+benefit from it. i.e This would happen if they are homeless and would
+be okay with imprisonment; then, they are likely to commit a crime.
+\pagebreak
+\section*{c}
+The delay between the commission of crime the time would be captured
+in the societal loss from the criminal activity. Namely, there will be
+an increase in the social cost due to the interest accrued in the time
+between the committing of the crime and the fine that is accrued. Take
+the optimal fine in (a) of
+$$ f = 1/p \times (H(A_{opt}) + C(p,A_{opt})) $$ Then, due to the time
+between the crime and the conviction, the fine must
+be aggrandized to compensate the individual for what the monetary
+equivalent of the dis-utility would have accrued in that time:
+$$ f = (1+r)^t \times (H(A_{opt}) + C(p,A_{opt}))/p $$ Similarly, we must
+be careful in (b) to incorporating the gain in the societal loss over
+time
+\begin{align*} 
+   Z(A,z) + \frac{\partial Z(A,z)}{\partial A}\frac{\partial A}{\partial p} &= (1+r)^t *(\frac{\partial C}{\partial p}  + \frac{\partial{H(A)}}{ \partial{A}} \frac{ \partial{A}}{\partial{p}} -  + \frac{\partial{C}}{\partial{A}}\frac{\partial{A}}{\partial{p}})\\
+ \frac{\partial{Z}}{\partial{A}} \frac{\partial{A}}{\partial{z}} + \frac{\partial{Z}}{\partial{z}} &= (1+r)^t*(\frac{\partial{H(A)}}{\partial{A}} \frac{\partial{A}}{\partial{z}} - \frac{\partial{B(A)}}{\partial{A}}\frac{\partial{A}}{\partial{f}} + \frac{\partial{C}}{\partial{A}}\frac{\partial{A}}{\partial{f}})
+\end{align*}
+Thus, here the optimal level of $z$ (i.e the level of punishment) will
+increase to diminish crime further in order to compensate for the
+increase in the societal harm brought on by the delay.
+\section*{d}
+Yes; note that the fine compensates the differential in the marginal
+loss to society (i.e the marginal societal loss in summing the victim
+and perpetrators' utility and the cost of enforcing). It is
+independent in the optimal setup of the wealth of the
+perpetrator. Recall, again, the analogy to the criminal activity (A)
+being what the criminal buys for the price of the fine $f$. Then, of
+course, the price will be independent of the wealth of the criminal
+and will instead depend on the dis-utility of the victim and the costs
+of transaction (namely, the C(p,A)).\\ 
+Note that with the example of (b) where the person does not have
+enough resources to pay out the harm of his actions (which would be
+the case for murder), the richer person might end up experiencing more
+punishment as his time is worth more. Here, however, the richer person
+is still expected to levy his resources to avoiding the jail time
+(through legal fees etc).  \pagebreak
+\section*{e}
+If the punishment is through fines, that system might not be
+considering the cost of enforcing the equilibrium level of policing
+(getting $p$) in society. Similarly, if the punishment is through
+additional means, this may be overlooking the costs to society of the
+actual punishment. \par 
+If, however, the costs to society for the imprisonment and the
+policing are nil, the system could indeed be optimal if it met the
+condition in (8). Do note that the expected fine should take into
+account the probability that the victim would not be convicted: $$ f =
+1/p \times (B(A_{opt})  + C(p,A_{opt})) $$ Also, the necessary and
+sufficient condition is for this to hold at the margin. Thus, we need
+the marginal level of crime to be such that the victim is compensated
+in expectation by the criminal.   
+\section*{f}
+We can view the added benefit to the perpetrator as a social
+externality. Then, the benefit to the perpetrators (and thus society)
+goes up by the level of crime. Thus, our previous level of societal
+harm gets a benefit equal to the aggregate benefit to criminals of the
+additional `utility' criminals experience through others' criminal
+activity. Say that $\epsilon(A)$ is the added benefit of others' criminal
+activity to the criminals. Then, we can define $\hat H(A)$ such that  
+ $$H(A) - B(A) + \epsilon(A) = \hat H(A) - B(A)$$ 
+ Here, the analysis is similar to before, with a greater benefit to
+ criminals in society, which would mean that there would be higher
+ levels of crime in equilibrium, and also possibly higher fines to
+ compensate the victims for the added benefit of the added crime (i.e
+ $B'(A) = H'(A) + \epsilon '(A) = f)$.
+ 
+\end{document}

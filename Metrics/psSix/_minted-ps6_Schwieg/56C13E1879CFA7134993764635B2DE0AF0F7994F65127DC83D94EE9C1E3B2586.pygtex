@@ -1,0 +1,55 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k}{using} \PYG{n}{Random}
+\PYG{k}{using} \PYG{n}{Latexify}
+\PYG{k}{using} \PYG{n}{Distributions}
+
+\PYG{n}{thetapos} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mf}{0.5}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{10}\PYG{p}{]}
+\PYG{n}{npos} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{l+m+mi}{5}\PYG{p}{,}\PYG{l+m+mi}{20}\PYG{p}{,}\PYG{l+m+mi}{100}\PYG{p}{]}
+
+\PYG{n}{Random}\PYG{o}{.}\PYG{n}{seed!}\PYG{p}{(} \PYG{l+m+mi}{235711} \PYG{p}{)}
+
+\PYG{c}{\PYGZsh{}This just allocates a bunch of arrays to fit all the data we\PYGZsq{}re asked to simulate}
+\PYG{n}{X} \PYG{o}{=} \PYG{n}{zeros}\PYG{p}{(} \PYG{n}{length}\PYG{p}{(}\PYG{n}{thetapos}\PYG{p}{),} \PYG{n}{length}\PYG{p}{(}\PYG{n}{npos}\PYG{p}{)} \PYG{p}{)}
+\PYG{n}{hatABS} \PYG{o}{=} \PYG{n}{zeros}\PYG{p}{(} \PYG{n}{length}\PYG{p}{(}\PYG{n}{thetapos}\PYG{p}{),} \PYG{n}{length}\PYG{p}{(}\PYG{n}{npos}\PYG{p}{)} \PYG{p}{)}
+\PYG{n}{tildeABS} \PYG{o}{=} \PYG{n}{zeros}\PYG{p}{(} \PYG{n}{length}\PYG{p}{(}\PYG{n}{thetapos}\PYG{p}{),} \PYG{n}{length}\PYG{p}{(}\PYG{n}{npos}\PYG{p}{)} \PYG{p}{)}
+\PYG{n}{hatMSE} \PYG{o}{=} \PYG{n}{zeros}\PYG{p}{(} \PYG{n}{length}\PYG{p}{(}\PYG{n}{thetapos}\PYG{p}{),} \PYG{n}{length}\PYG{p}{(}\PYG{n}{npos}\PYG{p}{)} \PYG{p}{)}
+\PYG{n}{tildeMSE} \PYG{o}{=} \PYG{n}{zeros}\PYG{p}{(} \PYG{n}{length}\PYG{p}{(}\PYG{n}{thetapos}\PYG{p}{),} \PYG{n}{length}\PYG{p}{(}\PYG{n}{npos}\PYG{p}{)} \PYG{p}{)}
+\PYG{n}{ind} \PYG{o}{=} \PYG{n}{zeros}\PYG{p}{(} \PYG{n}{length}\PYG{p}{(}\PYG{n}{thetapos}\PYG{p}{),} \PYG{n}{length}\PYG{p}{(}\PYG{n}{npos}\PYG{p}{)} \PYG{p}{)}
+
+\PYG{n}{tempx} \PYG{o}{=} \PYG{n}{zeros}\PYG{p}{(}\PYG{l+m+mi}{10000}\PYG{p}{,}\PYG{n}{maximum}\PYG{p}{(}\PYG{n}{npos}\PYG{p}{))}
+\PYG{n}{tempHatTheta} \PYG{o}{=} \PYG{n}{zeros}\PYG{p}{(}\PYG{l+m+mi}{10000}\PYG{p}{)}
+\PYG{n}{tempTildeTheta} \PYG{o}{=} \PYG{n}{zeros}\PYG{p}{(}\PYG{l+m+mi}{10000}\PYG{p}{)}
+
+\PYG{k}{for} \PYG{n}{i} \PYG{k+kp}{in} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{length}\PYG{p}{(}\PYG{n}{thetapos}\PYG{p}{)}
+    \PYG{n}{theta} \PYG{o}{=} \PYG{n}{thetapos}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}
+    \PYG{n}{dist} \PYG{o}{=} \PYG{n}{Uniform}\PYG{p}{(} \PYG{n}{theta}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{theta}\PYG{p}{)}
+    \PYG{k}{for} \PYG{n}{j} \PYG{k+kp}{in} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{length}\PYG{p}{(}\PYG{n}{npos}\PYG{p}{)}
+        \PYG{n}{n} \PYG{o}{=} \PYG{n}{npos}\PYG{p}{[}\PYG{n}{j}\PYG{p}{]}
+        \PYG{k}{for} \PYG{n}{k} \PYG{k+kp}{in} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{l+m+mi}{10000}
+            \PYG{n}{tempx}\PYG{p}{[}\PYG{n}{k}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{n}\PYG{p}{]} \PYG{o}{=} \PYG{n}{rand}\PYG{p}{(} \PYG{n}{dist}\PYG{p}{,} \PYG{n}{n}\PYG{p}{)}
+            \PYG{n}{tempHatTheta}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]} \PYG{o}{=} \PYG{n}{maximum}\PYG{p}{(}\PYG{n}{tempx}\PYG{p}{[}\PYG{n}{k}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{n}\PYG{p}{])}\PYG{o}{/}\PYG{l+m+mf}{2.0}
+            \PYG{n}{tempTildeTheta}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]} \PYG{o}{=} \PYG{p}{(}\PYG{l+m+mf}{2.0}\PYG{o}{/}\PYG{l+m+mf}{3.0}\PYG{p}{)}\PYG{o}{*}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{tempx}\PYG{p}{[}\PYG{n}{k}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{n}\PYG{p}{])}
+        \PYG{k}{end}
+
+        \PYG{n}{tempHatABS} \PYG{o}{=} \PYG{n}{abs}\PYG{o}{.}\PYG{p}{(} \PYG{n}{tempHatTheta} \PYG{o}{.\PYGZhy{}} \PYG{n}{theta}\PYG{p}{)}
+        \PYG{n}{hatABS}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{n}{j}\PYG{p}{]} \PYG{o}{=} \PYG{n}{mean}\PYG{p}{(} \PYG{n}{tempHatABS} \PYG{p}{)}
+
+        \PYG{n}{tempTildeABS} \PYG{o}{=} \PYG{n}{abs}\PYG{o}{.}\PYG{p}{(} \PYG{n}{tempTildeTheta} \PYG{o}{.\PYGZhy{}} \PYG{n}{theta}\PYG{p}{)}
+        \PYG{n}{tildeABS}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{n}{j}\PYG{p}{]} \PYG{o}{=} \PYG{n}{mean}\PYG{p}{(}\PYG{n}{tempTildeABS}\PYG{p}{)}
+
+        \PYG{n}{tempHATMSE} \PYG{o}{=} \PYG{n}{tempHatABS} \PYG{o}{.*} \PYG{n}{tempHatABS}
+        \PYG{n}{hatMSE}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{n}{j}\PYG{p}{]} \PYG{o}{=} \PYG{n}{mean}\PYG{p}{(}\PYG{n}{tempHATMSE}\PYG{p}{)}
+
+        \PYG{n}{tempTildeMSE} \PYG{o}{=} \PYG{n}{tempTildeABS} \PYG{o}{.*} \PYG{n}{tempTildeABS}
+        \PYG{n}{tildeMSE}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{n}{j}\PYG{p}{]} \PYG{o}{=} \PYG{n}{mean}\PYG{p}{(} \PYG{n}{tempTildeMSE}\PYG{p}{)}
+
+        \PYG{n}{temp} \PYG{o}{=} \PYG{n}{tempTildeMSE} \PYG{o}{.\PYGZgt{}} \PYG{n}{tempHATMSE}
+        \PYG{n}{ind}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{n}{j}\PYG{p}{]} \PYG{o}{=} \PYG{n}{mean}\PYG{p}{(}\PYG{n}{temp}\PYG{p}{)}
+    \PYG{k}{end}
+\PYG{k}{end}
+\PYG{n}{latexify}\PYG{p}{(} \PYG{n}{hatABS} \PYG{p}{)}
+\PYG{n}{latexify}\PYG{p}{(} \PYG{n}{tildeABS} \PYG{p}{)}
+\PYG{n}{latexify}\PYG{p}{(} \PYG{n}{hatMSE} \PYG{p}{)}
+\PYG{n}{latexify}\PYG{p}{(} \PYG{n}{tildeMSE} \PYG{p}{)}
+\PYG{n}{latexify}\PYG{p}{(} \PYG{n}{ind} \PYG{p}{)}
+\end{Verbatim}

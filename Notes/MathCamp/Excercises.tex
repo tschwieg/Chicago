@@ -1,0 +1,301 @@
+\documentclass[12pt, letterpaper]{paper}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{Schwieg}
+
+
+\author{Timothy Schwieg}
+\date{\today}
+\title{Math Camp Exercises}
+
+
+\begin{document}
+
+\maketitle
+
+\section{Basic Topology and Linear Algebra}
+
+
+\begin{question}
+  Show that the \emph{Kullback-Leibler distance} is not a valid metric
+
+  \begin{proof}
+    Note that a valid metric must have the property that: $\met{f,g} =
+    \met{g,f}$. This is not true.
+
+    Let $f \sim exp(1), g \sim exp(2)$. 
+    \begin{align*}
+      \met{f,g} &= \int_{\setR} \log \left ( \frac{ \exp (  -x )}{ 2 \exp ( -2x  )} \right ) \exp (  -x ) dx\\
+                &= \int_{\setR} x \exp (  -x ) \log \left ( \frac{1}{2} \right ) dx\\
+      \met{g,f} &= \int_{\setR} \log \left ( \frac{2 \exp ( -2x )}{\exp ( -x )}
+                  \right ) 2 \exp (  -2x  )\\
+                &= \int_{\setR} \frac{2 \exp ( -2x )}{x} \log ( 2 ) dx\\      
+    \end{align*}
+
+    Clearly those integrands, and therefore the integrals are not equal.
+  \end{proof}
+\end{question}
+
+\begin{question}
+  \begin{enumerate}
+  \item Give an example of a set that is both open and closed
+  \item Give an example of a set that is neither open nor closed
+  \end{enumerate}
+
+  \begin{proof}
+    \begin{enumerate}
+    \item $\setR$ is both open and closed, as all convergent sequences
+      in $\setR$ have their limits in $\setR$ by definition of being
+      convergent, and clearly any neighborhood in $\setR$ is a subset
+      of $\setR$.
+    \item Consider the set $E = \set{ \frac{1}{n} | n \in \setN}$. We may
+      first note that this set has a limit point of $0$, but $0 \notin
+      E$. Therefore $E$ is not closed.
+
+      Consider any neighborhood of any point in $E$. This neighborhood
+      contains a point not contained in $E$. As $E$ is countable and
+      any neighborhood is uncountable. Therefore it cannot be that the
+      neighborhood is a subset of $E$.
+    \end{enumerate}
+  \end{proof}
+\end{question}
+
+\begin{question}
+  Give an example to show that a set can be open in one metric space
+  but not open in another.
+
+  \begin{proof}
+    Consider the segment $(a,b)$. This segment is clearly open in
+    $\setR$, however, if the embedded set is $\setR^2$ it is not open,
+    as any neighborhood would contain points with $y$ coordinates
+    that are not equal to zero, and therefore is not a subset of $(a,b)$.
+  \end{proof}
+\end{question}
+
+\begin{question}
+  Show that $C([0,1])$ is complete.
+
+  \begin{proof}
+    Consider any Cauchy sequence $\seq{f_n}$ in $C([0,1])$. For some
+    $\epsilon > 0$, $\met{f_m, f_n} < \epsilon \quad \forall m,n \geq N(\epsilon)$. For any $x_0 \in
+    [0,1]$
+    \begin{equation*}
+      \epsilon > \sup_{x \in [0,1]} \abs{ f_m(x) - f_n(x)} > \abs{ f_m(x_0) -
+        f_n (x_0)}
+    \end{equation*}
+
+
+    Note that $f_n(x_0)$ is a sequence in $\setR$ instead of
+    $C([0,1])$. Since $\setR$ is complete, this implies that
+    $f_n(x_0)$ converges to a point in $\setR$. Collect these limits
+    into a function $f(x_0)$.
+
+    We must now show that $f(x)$ is continuous. Consider any point
+    $x_0 \in [0,1]$. Choose
+    $n \geq \ceil{ \sup_{x \in [0,1]} N( \frac{\epsilon}{3}, x)}$. That is, let
+    $N$ be the supremum of $N$ taken for all the convergent sequences
+    $\seq{f_n(x)}$ when $\epsilon= \frac{\epsilon}{3}.$ Applying the definition of
+    continuity of $f_n(x)$ at $x_0$ for $\frac{\epsilon}{3}$, for any
+    $x$ such that: $\met{x,x_0} < \delta( \frac{\epsilon}{3}, x_0)$.
+    \begin{align*}
+     \abs{ f(x) - f(x_0)} &= \abs{f(x) - f(x_0) + f_n(x) - f_n(x) +
+                            f_n(x_0) -f_n(x_0)}\\
+                          &= \abs{ \brak{ f_n(x_0) - f(x_0)} - \brak{f_n(x_0) -
+                              f_n(x)} + \brak{f(x) - f_n(x)}}\\
+                          &\leq \abs{ f_n(x_0) - f(x_0)} + \abs{ f_n(x_0)
+                            - f_n(x)} + \abs{ f(x) - f_n(x)}\\
+                          &< \frac{\epsilon}{3} + \frac{\epsilon}{3} + \frac{\epsilon}{3}\\
+                          &< \epsilon\\
+    \end{align*}
+
+    As $[0,1]$ is compact, and $f$ is continuous, it is compact
+    valued, and therefore the supremum is obtained.
+    \begin{equation*}
+      \sup_{x \in [0,1]}\abs{ f_n(x) - f(x)}  = \max_{x \in [0,1]} \abs{
+        f_n(x) - f(x)} < \epsilon
+    \end{equation*}
+  \end{proof}
+\end{question}
+
+\begin{question}
+  Let $(X,\met{.})$ be a metric space, show that the collection of
+  open sets in $X$ is a topology.
+
+  \begin{proof}
+    \begin{enumerate}
+    \item The empty set is an open set vacuously.
+
+      Consider any point $x_0$ in $X$. A neighborhood of $x_0$
+      consists of points $x \in X$ such that $\met{x,x_0} < \delta$. Clearly
+      this is a subset of $X$ and $X$ is therefore open.
+    \item Consider a collection $\seq{O_k}_{k=1}^n \in X$. Take any
+      point $x \in \cap_{k=1}^n O_k$. As each $O_k$ is open, there exists
+      $\delta_k$ that defines a neighborhood of $x$ such that $N_{\delta_k} \subset
+      O_k$. Taking $\delta = \min \{ \delta_k\}$ we have a neighborhood with a
+      strictly positive radius, as it is the minimum of a finite set
+      of real numbers. All the points in $N_{\delta}(x) \subset \cap_{k=1}^n O_k$ and
+      therefore that set is open.
+    \item Consider a cover $\mathcal{F}$, Take any point $x \in \cup_{O \in
+        \mathcal{F}} O$. $x$ belongs to at least one of the sets $E \in
+      \mathcal{F}$. As this set is open, there is a neighborhood of
+      $x$ that is a subset of $E$. As this neighborhood is contained
+      in E, it is contained in $\cup_{O \in \mathcal{F}} O$ and therefore
+      $\cup_{O \in \mathcal{F}} O$ is open.
+    \end{enumerate}
+  \end{proof}
+\end{question}
+
+\begin{question}
+  Let $\succeq$ be a preference relation on $\setR_+^n$ that is complete and
+  transitive. Show that: $\{ (x,y) \in \setR_+^n x \setR_+^n | x \succeq y \}$
+  is closed is equivalent to $\succeq$ is continuous.
+
+  \begin{proof}
+    Assume that $\succeq$ is continuous. Let $A = \{ (x,y) \in \setR_+^{2n} |
+    x \succeq y\}$. Then $\compl{A} = \{ (x,y) \in \setR_+^{2n} | y \succ x
+    \}$. Note that $\compl{A} = \cup_{x \in \setR_+^n} ( x, \compl{\succeq(x)} )$. Take a
+    point in $\compl{A}$, $(x,y)$. 
+
+    Since $y \in \compl{\succeq(x)}$, and that set is open, there is an
+    uncountable number of other $y'$ such that: $y' \succ x$. Fix such a
+    $y'$. Note that $y' \succ x$. Note that $x$ is in the complement of
+    the lower contour set of $y'$.  Which is an open set, so there
+    must be a neighborhood of points where $\met{x', x} < \delta_x$ and
+    $y' \succ x'$.
+
+    
+  \end{proof}
+\end{question}
+
+\begin{question}
+  Prove:
+  \begin{enumerate}
+  \item $f$ is continuous at $x_0 \in X$
+  \item For any $\seq{x_n}$ such that $\seq{x_n} \to x_0$, $\lim f(x_n)
+    = f(x_0)$.
+  \item For any $\epsilon > 0$, $\exists \delta > 0$ such that $\met{x,y} < \delta \Rightarrow
+    \met{f(x), f(y)} < \epsilon$.
+  \end{enumerate}
+  \begin{proof}
+    \begin{itemize}
+    \item $(1) \Rightarrow (3)$: Let $f$ be continuous at $x_0$, Fix
+      $\epsilon > 0$, take the neighborhood of $f(x_0)$ with radius
+      $\epsilon$. Since this set is open, the pre-image of $N_{\epsilon}(f(x_0))$,
+      $\inv{f}( N_{\epsilon}(f({x_0})))$ is an open set. Therefore it
+      contains a neighborhood as a subset of itself. Let $\delta$ be the
+      radius of this neighborhood. Every point in that neighborhood
+      satisfies $\met{x_0,y} < \delta$ and $\met{f(x_0),f(y)} < \epsilon$.
+      
+    \item $(3)\Rightarrow(2)$. Fix $\epsilon > 0$, apply $(3)$ to obtain a
+      $\delta > 0$. Consider any sequence $\seq{x_n} \to x_0$. Apply the
+      definition of convergence of a sequence to obtain $N(\delta)$ such that
+      $\forall n \geq N, \met{x_n, x_0} < \delta$. By $(3)$, for each of these
+      $x_n, \met{f(x_n), f(x_0)} < \epsilon$. Thus this $N(\delta)$ is exactly the
+      $N$ for $\seq{f(x_n)}$ to converge, and $(2)$ is satisfied.
+      
+    \item $(2)\Rightarrow(3)$. Approach by contrapositive.  Assume that
+      $(3)$ is false, then there exists some $\epsilon > 0$ such that
+      $\forall \delta > 0, \exists x \in E$ where
+      $\met{x,x_0} < \delta$ but $\met{f(x), f(x_0)} \geq \epsilon$. This is true for
+      all $\delta$. So for $\delta_n = \frac{1}{n}$, apply this rule at each
+      $n$ to obtain an $x_n$. Clearly $x_n \to x_0$, but since
+      $\met{f(x_n),f(x_0)} > \epsilon \quad \forall n$, the sequence
+      $f(x_n)$ cannot converge to $f(x_0)$.
+    \item $(3)\Rightarrow(1)$. Consider any open set $V$. Take $x_0$ such that
+      $f(x_0) \in V$. As $V$ is open, $\exists \epsilon > 0$ such that $\met{f(x_0),
+        v } < \epsilon \Rightarrow v \in V$. Using $(3)$, $\exists\delta > 0$ such that
+      $\met{f(x), f(x_0)} < \epsilon$ if $\met{x,x_0} < \delta$. This implies that
+      $x \in \inv{f}(V)$. This is true for all $x$ such that
+      $\met{x,x_0} < \delta$ and thus there is a neighborhood of $x_0$ that
+      is a subset of $\inv{f}(V)$.
+    \end{itemize}
+  \end{proof}
+\end{question}
+
+\begin{question}
+  Consider a Betrand competition game. That is, there are two firms,
+  both of them are facing a market with perfectly inelastic demand
+  and firm $i$ has a marginal cost of production $c_i$. Suppose that
+  firms are competing by setting lower prices. That is, if $p_i <
+  p_j$ then firm $i$ wins the whole market and gets profit $(p_i -
+  c_i)$ and firm $j$ loses and gets zero. Suppose also that whenever
+  there is a tie, each gets half the market. Show:
+  \begin{enumerate}
+  \item When $c_1 = c_2 = c > 0$ there exists a unique pure strategy
+    Nash equilibrium under which $p_1 = p_2 = c$.
+    
+  \item When $0 < c_1 < c_2$ there is no pure strategy
+    equilibrium. What went wrong? Is there any assumption you can make
+    to get around this?
+  \end{enumerate}
+  \begin{proof}
+    \begin{enumerate}
+    \item Approach by cases:
+      \begin{itemize}
+      \item Case: $p_1$ or  $p_2 < c$. At least one firm is making a loss, and
+        have an incentive to raise their prices to at least $c$.
+      \item Case: $p_1 = p_2 > c$. Either firm has an incentive to
+        reduce their price by $\epsilon > 0$ and obtain the entire market
+        while still making profit. So this cannot be a Nash
+        Equilibrium.
+      \item $p_1, p_2 \geq c, p_1 \neq p_2$ The firm with the lower price
+        wishes to raise its price to some number between $p_1, p_2$ in
+        order to increase its profit. This cannot be a Nash
+        equilibrium then.
+      \item $p_1 = p_2 = c$. Both firms are indifferent between
+        raising their prices and earning zero profit and maintaining
+        prices and earning zero profit. Both are strictly averse to
+        lowering their prices as they would then earn negative
+        profit. This means that both prices are a best response to the
+        other prices, and this is a Nash Equilibrium.
+      \end{itemize}
+    \item When $0 < c_1 < c_2$, Firm 1 now wishes to lower his price
+      from $c_2$, and Firm 2 has no desire to drop their price below
+      $c_2$ as they would earn negative profit. However Firm 1 would
+      like to have as high of a profit as possible, but when $p_1 =
+      p_2$ they will earn less profit than $p_1 = p_2 - \epsilon$. This means
+      that there is no maximum to their profit function, and they can
+      always raise their price and earn more profit, but must keep
+      their price below $c_2$. 
+
+      One assumption to avoid this pitfall is to discretize the price
+      space. If the prices are forced to be in whole cents, then Firm
+      1 will wish to charge $c_2 - .01$ and this will be the maximum
+      profit that they are capable of earning.
+    \end{enumerate}
+  \end{proof}
+\end{question} 
+
+\begin{question}
+  Let $X$ be a compact topological space. Suppose that $W : C(X) \to
+  C(X)$ is a self map on $C(X)$, the collection of continuous
+  functions under the norm $\norm{f}_{\infty} := \max_{x \in X} \abs{
+    f(x)}$. Show that $W$ is a contraction if:
+  \begin{itemize}
+  \item $W$ is increasing. That is, for any $f,g \in X, f \geqq g, W(f) \geq
+    W(g)$.
+  \item For any $f \in X, \alpha \in \setR_+$: $W(f+\alpha) \leq W(f) + \beta \alpha$ for some
+    $\beta \in (0,1).$ Furthermore, use this to show that the Bellman
+    operator $(3)$ is a contraction.
+  \end{itemize}
+  \begin{proof}
+    We wish to show that $\norm{W(f)-W(g)} \leq r \norm{ f,g}$ where $r
+    \in [0,1)$. 
+  \end{proof}
+\end{question}
+
+
+\section{Integration and Differentiation}
+
+
+
+\end{document}

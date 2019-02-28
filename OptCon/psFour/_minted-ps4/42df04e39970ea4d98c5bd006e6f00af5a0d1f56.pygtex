@@ -1,0 +1,24 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k}{function} \PYG{n}{GurobiQuantReg}\PYG{p}{(} \PYG{n}{X}\PYG{o}{::}\PYG{k+kt}{Matrix}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},}
+                         \PYG{n}{Y}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},}
+                         \PYG{n}{τ}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{,}
+                         \PYG{n}{p}\PYG{o}{::}\PYG{k+kt}{Int64}\PYG{p}{,} \PYG{n}{M}\PYG{o}{::}\PYG{k+kt}{Int64}\PYG{p}{,} \PYG{n}{N}\PYG{o}{::}\PYG{k+kt}{Int64}\PYG{p}{)}
+
+
+    \PYG{n}{m} \PYG{o}{=} \PYG{n}{Model}\PYG{p}{(}\PYG{n}{solver} \PYG{o}{=} \PYG{n}{GurobiSolver}\PYG{p}{())}
+    \PYG{n+nd}{@variable}\PYG{p}{(} \PYG{n}{m}\PYG{p}{,} \PYG{n}{β⁺}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{p}\PYG{p}{]} \PYG{o}{\PYGZgt{}=} \PYG{l+m+mi}{0}\PYG{p}{)}
+    \PYG{n+nd}{@variable}\PYG{p}{(} \PYG{n}{m}\PYG{p}{,} \PYG{n}{β⁻}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{p}\PYG{p}{]} \PYG{o}{\PYGZgt{}=} \PYG{l+m+mi}{0}\PYG{p}{)}
+    \PYG{n+nd}{@variable}\PYG{p}{(} \PYG{n}{m}\PYG{p}{,} \PYG{n}{u}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{M}\PYG{p}{]} \PYG{o}{\PYGZgt{}=} \PYG{l+m+mi}{0}\PYG{p}{)}
+    \PYG{n+nd}{@variable}\PYG{p}{(} \PYG{n}{m}\PYG{p}{,} \PYG{n}{v}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{M}\PYG{p}{]} \PYG{o}{\PYGZgt{}=} \PYG{l+m+mi}{0}\PYG{p}{)}
+    \PYG{n+nd}{@constraint}\PYG{p}{(} \PYG{n}{m}\PYG{p}{,} \PYG{n}{fit}\PYG{p}{[}\PYG{n}{i}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{M}\PYG{p}{],}
+                 \PYG{n}{sum}\PYG{p}{(} \PYG{n}{X}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{n}{j}\PYG{p}{]}\PYG{o}{*}\PYG{n}{β⁺}\PYG{p}{[}\PYG{n}{j}\PYG{p}{]} \PYG{k}{for} \PYG{n}{j} \PYG{k+kp}{in} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{p} \PYG{p}{)}
+                 \PYG{o}{\PYGZhy{}} \PYG{n}{sum}\PYG{p}{(} \PYG{n}{X}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{n}{j}\PYG{p}{]}\PYG{o}{*}\PYG{n}{β⁻}\PYG{p}{[}\PYG{n}{j}\PYG{p}{]} \PYG{k}{for} \PYG{n}{j} \PYG{k+kp}{in} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{p}\PYG{p}{)}
+                 \PYG{o}{+} \PYG{n}{u}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{v}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{==} \PYG{n}{Y}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{p}{)}
+    \PYG{n+nd}{@objective}\PYG{p}{(} \PYG{n}{m}\PYG{p}{,} \PYG{n}{Min}\PYG{p}{,} \PYG{n}{τ}\PYG{o}{*}\PYG{n}{sum}\PYG{p}{(} \PYG{n}{u}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{k}{for} \PYG{n}{i} \PYG{k+kp}{in} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{M} \PYG{p}{)}
+                \PYG{o}{+} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{\PYGZhy{}}\PYG{n}{τ}\PYG{p}{)}\PYG{o}{*}\PYG{n}{sum}\PYG{p}{(}\PYG{n}{v}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{k}{for} \PYG{n}{i} \PYG{k+kp}{in} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{M}\PYG{p}{)} \PYG{p}{)}
+    \PYG{n}{status} \PYG{o}{=} \PYG{n}{solve}\PYG{p}{(}\PYG{n}{m}\PYG{p}{)}
+    \PYG{n}{println}\PYG{p}{(}\PYG{n}{getvalue}\PYG{p}{(}\PYG{n}{β⁺}\PYG{p}{))}
+    \PYG{n}{println}\PYG{p}{(}\PYG{n}{getvalue}\PYG{p}{(}\PYG{n}{β⁻}\PYG{p}{))}
+    \PYG{k}{return} \PYG{p}{[}\PYG{n}{getvalue}\PYG{p}{(}\PYG{n}{β⁺}\PYG{p}{),} \PYG{n}{getvalue}\PYG{p}{(}\PYG{n}{β⁻}\PYG{p}{),} \PYG{n}{getvalue}\PYG{p}{(}\PYG{n}{u}\PYG{p}{),} \PYG{n}{getvalue}\PYG{p}{(}\PYG{n}{v}\PYG{p}{)]}
+\PYG{k}{end}
+\end{Verbatim}

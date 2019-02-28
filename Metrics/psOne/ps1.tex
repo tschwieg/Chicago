@@ -1,0 +1,587 @@
+\documentclass[12pt, letterpaper]{paper}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usepackage{bm}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{Schwieg}
+
+\begin{document}
+
+\author{
+{Timothy Schwieg}\\
+{Paulo Henrique Ramos}\\
+{Samuel Barker}\\
+{Ana Vasilj}
+}
+
+\date{\today}
+\title{Empirical Analysis I -  Problem Set 1}
+
+
+\maketitle
+
+\begin{question}
+  Let $F$ be the cdf of a random variable $X$ on the real line. A cdf
+  must satisfy the following three properties:
+  \begin{itemize}
+  \item $\Lim_{x \to -\infty} F(x) = 0$ and $\Lim_{x \to \infty} F(x) = 1$
+  \item $F$ is non-decreasing
+  \item F is right continuous, i.e., $\lim_{y \downarrow x} F(y) = F(x)$
+  \end{itemize}
+  Define $\inv{F}(u) = \inf\{ x \in \setR : F(x) \geq u\}$.
+  \begin{enumerate}
+  \item Show that $\inv{F}(u) \leq x$ if and only if $u \leq F(x)$
+  \item Let $U \sim \unif(0,1)$. Show that $\inv{F}(U) \overset{d}{=} X$.
+  \end{enumerate}
+
+  \begin{proof}
+    (1) Assume that $x \geq \inv{F}(u)$. By $\inv{F}(u)$ being the
+    greatest lower bound, for any $x' > x$, $x'$ cannot be a lower
+    bound, and is therefore contained in the set:
+    $\{ x \in \setR | F(x) \geq u \}$ as $F$ is non-decreasing. Thus
+    $F(x') \geq u$, and since $F$ is right-continuous:
+    $F(x) = \Lim_{x' \downarrow x}F( x') \geq \lim_{x' \downarrow x} u = u$. Evidently,
+    $F(x) \geq u$.
+
+    Assume $F(x) \geq u$. Consider the set
+    $E = \{ x \in \setR | F(x) \geq u\}$. We can see that $x$ is contained
+    in this set. Since this set is bounded below, it has an infimum,
+    and that infinimum cannot be greater than $x$ which is contained
+    in the set, or $x$ would be the greatest lower bound. Therefore:
+    $\inv{F}(u) \leq x$.
+
+    \vspace{.25in}
+
+    (2)
+    $\Pr( \inv{F}(U) \leq u) = \Pr \left( U \leq F(u) \right ) = F(u) = P(X
+    \leq u)$, where the first equality comes from item (1) and the second
+    equality from the uniform distribution. Thus the distribution
+    functions of $F(U)$ and $X$ are the same for every possible value
+    of $u$.
+  \end{proof}
+\end{question}
+
+
+\begin{question}
+  Let $X_1, ..., X_n$ be iid random variables with distribution
+  $P$. Write $X_i = X_i^+ - X_i^-.$ Suppose $\exV{X_i^-} < \infty$ and
+  $\exV{X_i^+} = \infty$. Show that $\mean{X} \plim \infty$.
+
+  \begin{proof}
+    Construct $Y_i^B = X_i \indicate{X_i \leq B}$. We can immediately see
+    that for any fixed $B$, $Y_i^B$ is bounded above by $B$ and that
+    $Y_i^B \leq X_i$.
+
+    \vspace{.15in}
+
+    Note that there exists a $B > 0$ such that:
+    \begin{equation*}
+      \exV{Y_i} = \exV{Y_i^+} - \exV{Y_i^-} < \infty
+    \end{equation*}
+    Applying the Weak Law of Large Numbers to $\mean{Y}^B$:
+    \begin{equation*}
+      \mean{X} \geq \mean{Y}^B \to \exV{Y_i^B} 
+    \end{equation*}
+
+    However, As $\exV{Y_i^B} \to \infty$ as
+    $B \to \infty$, for any $M \in \setR$, $\exists B^{*}$ such that: $\exV{Y_i^B} >
+    M$ for every B>B$^{*}$. Also, for such B:  
+
+    \begin{equation*}
+      \forall \epsilon > 0, \Pr( \abs{\mean{Y}^B - \exV{Y_i^B}} > \epsilon) \to 0  
+    \end{equation*}
+    
+    In particular, take $\epsilon = \exV{Y_i^B} - M$.  Consider two possible
+    outcomes of $\mean{Y}^B$:
+    \begin{itemize}
+    \item $\mean{Y}^B \geq \exV{Y_i^B} > M$
+    \item $\mean{Y}^B < \exV{Y_i^B}$. Then:
+      \begin{align*}
+        1 \leftarrow \Pr\left(\abs{ \mean{Y}^B - \exV{Y_i^B}} < \epsilon \right) = \Pr\left( \exV{Y_i^B} - \mean{Y}^B
+        < \exV{Y_i^B} - M
+        \right) = \Pr\left( \mean{Y}^B > M \right)\\  
+      \end{align*}
+    \end{itemize}
+    So for any realization of $\mean{X}, \exists B \in \setR$ such that:
+    $\Pr \left( \mean{Y}^B > M \right ) \rightarrow 1$ as $n \rightarrow \infty$.
+
+    \begin{align*}
+      1 = \Pr \left(  \mean{Y}^B > M  \right ) \leq \Pr \left(  \mean{X} > M \right ) \leq 1
+    \end{align*}
+    By the Policeman's lemma, $\Pr \left( \mean{X} > M \right ) = 1$
+    and $\mean{X} \plim \infty$.
+  \end{proof}
+\end{question}
+
+\begin{question}
+  Let $X_1, ..., X_n$ be an i.i.d. sequence of random variables with
+  c.d.f. $F$. The empirical c.d.f. of $X_i$ is defined as:
+  \begin{equation*}
+    \est{F}(x) = \frac{1}{n} \sum_{i = 1}^n \indicate{X_i \leq x}
+  \end{equation*}
+  1. Show that for any $x \in \setR, \est{F}(x) \plim F(x)$
+
+  \vspace{.25in}
+  
+  Suppose that the median is unique, i.e. for any
+  $\epsilon > 0, \Pr( X_i \leq \theta_0 + \epsilon) > .5$. Define an estimator
+  $\est{\theta}$ of $\theta_0$ by replacing cdf $F$ in the definition of
+  $\theta_0$ with the empirical cdf $\est{F}(x)$
+  \begin{equation*}
+    \est{\theta} = \inf\{ x \in \setR | \est{F}(x) \geq .5 \}
+  \end{equation*}
+  2. Show that $\est{\theta} \plim \theta_0$.
+
+    \begin{proof}
+      1. Fix $x \in \setR$. For any fixed $x$, Note that:
+      $\exV{\indicate{X_i \leq x}} = \Pr \left( X_i \leq x \right ) \in
+      [0,1]$. Since it takes the form of the arithmetic mean of a
+      random variable whose expected value is finite, we may apply The
+      Weak Law of Large Numbers.
+
+      \begin{equation*}
+        \est{F}(x) = \frac{1}{N} \sum_{i=1}^N \indicate{ X_i \leq x} \plim \Pr \left(  X_i \leq x \right ) = F(x)
+      \end{equation*}
+
+      2.
+      We want to show that $\mathbb{P}(|\theta_n-\theta_0|>\epsilon)\rightarrow 0$ for every $\epsilon>0$. We know that $\mathbb{P}(|\theta_n-\theta_0|>\epsilon)=\mathbb{P}(\theta_n>\theta_0+\epsilon)+\mathbb{P}(\theta_n<\theta_0-\epsilon)$, because they are disjoint sets.
+
+Let's consider first $\mathbb{P}(\theta_n>\theta_0+\epsilon)$. Because $\theta_n$ is the
+infimum of $\{x\in\setR|\hat{F}_n\ge 0.5\}$, $\theta_n>\theta_0+\epsilon$ implies that we must have $\hat{F}_n(\theta_0+\epsilon)<0.5$ Thus, we have:
+\begin{equation}
+    \begin{split}
+        \Pr(\theta_n>\theta_0+\epsilon)&\le \Pr(\hat{F}_n(\theta_0+\epsilon)<0.5)\\
+        &=\Pr(\hat{F}_n(\theta_0+\epsilon)-F(\theta_0+\epsilon)<0.5-F(\theta_0+\epsilon))\\
+        &=\Pr(F(\theta_0+\epsilon)-\hat{F}_n(\theta_0+\epsilon)>F(\theta_0+\epsilon)-0.5)\\
+        &\le \Pr(|F(\theta_0+\epsilon)-\hat{F}_n(\theta_0+\epsilon)|>F(\theta_0+\epsilon)-0.5)\to 0,
+    \end{split}
+\end{equation}
+\noindent where we know that $F(\theta_0+\epsilon)-0.5>0$ by the assumption of uniqueness, and thus we can put absolute values on the expression and use the result of item (i) to conclude that $\Pr(\theta_n>\theta_0+\epsilon)\to 0$.
+
+Similarly, if $\theta_n<\theta_0-\epsilon$, we must have $\hat{F}_n(\theta_0-\epsilon)\ge 0.5$, because $\hat{F}_n(\theta_0-\epsilon)\ge\hat{F}_n(\theta_n)$ by $\hat{F}_n()$ being nondecreasing, and $\hat{F}_n(\theta_n)\ge 0.5$ by the definition of infimum (if $\hat{F}_n(\theta_n)< 0.5$, we could take $\epsilon>0$ small enough such that $\hat{F}_n(\theta_n+\epsilon)<0.5$, contradicting $\theta_n$ as an infimum). Thus we have:
+\begin{equation}
+    \begin{split}
+        \Pr(\theta_n<\theta_0-\epsilon)&\le \Pr(\hat{F}_n(\theta_0-\epsilon)\ge 0.5)\\
+        &=\Pr(\hat{F}_n(\theta_0-\epsilon)-F(\theta_0-\epsilon)\ge 0.5-F(\theta_0-\epsilon))\\
+        &\le \Pr(|\hat{F}_n(\theta_0-\epsilon)-F(\theta_0-\epsilon)|> (0.5-F(\theta_0-\epsilon))/2)\to 0,
+    \end{split}
+\end{equation}
+\noindent where $0.5-F(\theta_0-\epsilon)>0$, otherwise $\theta_0$ would not be a lower bound to $\{x\in\setR|F(x)\ge 0.5\}$. Thus we can also conclude, by using item (i), that $\Pr(\theta_n<\theta_0-\epsilon)\to 0$.
+
+Thus, because $\mathbb{P}(|\theta_n-\theta_0|>\epsilon)=\mathbb{P}(\theta_n>\theta_0+\epsilon)+\mathbb{P}(\theta_n<\theta_0-\epsilon)$, we have $\mathbb{P}(|\theta_n-\theta_0|>\epsilon)\to 0$ as we wanted.
+
+    \end{proof}
+  \end{question}
+
+\begin{question}
+  Let $X_1, ..., X_n$ be a sequence of independent random variables
+  with $X_i \sim P_i$. Let $\exV{X_i} = \mu_i$ and $\Vari{X_i} =
+  \sigma_i^2$. Suppose:
+  \begin{equation*}
+    \frac{1}{n^2} \sum_{i=1}^n \sigma_i^2 \to 0
+  \end{equation*}
+
+  Show that $\mean{X} - \bar{\mu}_n \plim 0$ where $\bar{\mu}_n =
+  \frac{1}{n}\sum_{i=1}^n \mu_i$. Show further that $\mean{X} \plim \mu$ if
+  $\bar{\mu}_n \to \mu$.
+
+  \begin{proof}
+    Note that: $\exV{\mean{X}} = \frac{1}{N}\sum_{i=1}^N \exV{X_i} =
+    \frac{1}{N} \sum_{i=1}^N \mu_i = \mean{\mu}$
+    \begin{align*}
+      \Pr\left(\abs{\mean{X} - \mean{\mu}} > \epsilon \right) &\leq \frac{\exV{
+              \abs{\mean{X} - \mean{\mu}}^2}}{\epsilon^2}\\
+      &= \frac{\Vari{\mean{X}}}{\epsilon^2}\\
+      &= \frac{1}{\epsilon^2} \frac{1}{N^2} \sum_{i=1}^N \sigma_i^2\\
+    \end{align*}
+    Since $\frac{1}{\epsilon^2}$ is constant in $N$, and $\frac{1}{N^2}
+    \sum_{i=1}^N \sigma_i^2 \to 0,  \frac{1}{\epsilon^2} \frac{1}{N^2} \sum_{i=1}^N \sigma_i^2
+    \to 0$
+
+    \vspace{.25in}
+
+Second, we will show that $\Pr(|\overline{X}_n-\mu|>\epsilon)\to 0$ if $\Pr(|\overline{\mu}_n-\mu|>\epsilon)\to 0$. This can be seen below:
+\begin{equation}
+    \begin{split}
+        \Pr(|\overline{X}_n-\mu|>\epsilon)&=\Pr(|\overline{X}_n-\overline{\mu}_n+\overline{\mu}_n-\mu|>\epsilon)\\
+        &\le \Pr(|\overline{X}_n-\overline{\mu}_n| + |\overline{\mu}_n-\mu|>\epsilon)\\
+        &\le \Pr(\{|\overline{X}_n-\overline{\mu}_n|>\epsilon/2\}\cup\{|\overline{\mu}_n-\mu|>\epsilon/2\})\\
+        &\le \Pr(|\overline{X}_n-\overline{\mu}_n|>\epsilon/2)+\Pr(|\overline{\mu}_n-\mu|>\epsilon/2),
+    \end{split}
+\end{equation}
+\noindent where the first inequality comes from the triangle
+inequality; the second inequality comes from the sum being greater
+than $\epsilon$ implying at least one of the elements being summed being
+greater than $\epsilon/2$; and the third inequality comes from the
+subadditivity of the probability measure.
+
+Now we know that $\Pr(|\overline{X}_n-\overline{\mu}_n|>\epsilon/2)\to 0$. Thus, if $\Pr(|\overline{\mu}_n-\mu|>\epsilon/2)\to 0$, we must have that $\Pr(|\overline{X}_n-\mu|>\epsilon)\to 0$, as we wanted.
+
+
+  \end{proof}
+\end{question}
+
+\begin{question}
+  Let $\{ X_n | n \geq 1\}$ be a sequence of random variables and $X$ be
+  another random variable such that $X_n \convDist X$ and that the
+  sequence $\{X_n | n \geq 1 \}$ is uniformly integrable, i.e.,
+  \begin{equation*}
+    \lim_{M \to \infty} \limsup_{n \to \infty} \exV{ \abs{ X_n} \indicate{ \abs{X_n}
+        > M}} = 0
+  \end{equation*}
+
+  \begin{enumerate}
+  \item Show that $\exV{ X_n} \to \exV{X}$
+  \item Show that a sufficient condition for uniform integrability is
+    that $\exV{ \abs{X_n}^{1+\delta}} \leq B$ for some $\delta > 0$ and all
+    $n \geq 1$.
+  \item Show by example that the result fails if it is only assumed
+    that $\exV{\abs{X_n}} \leq B$ for all $n \geq 1$
+  \end{enumerate}
+
+  \begin{proof}
+   We want to show that $\exV{X_n}\to\exV{X}$. For that, we can show
+   that $\exV{X_n^{+}}\to\exV{X^{+}}$ and $\exV{X_n^{-}} \to \exV{X^{-}}$,
+   because if this holds, we have $\exV{X_n}= \exV{X_n^{+}-X_n^{-}} =
+   \exV{X_n^{+}} - \exV{X_n^{-}} \to \exV{X^{+}} - \exV{X^{-}} = \exV{X}$.
+
+   First, let's show a useful result. For given $M>0$ and $n\in\setN$:
+
+   \begin{align*}
+        \abs{\exV{X_n^+} - \exV{X}^+} &= \big| \exV{X_n^+} +
+                                        \exV{\min\{X_n^+,M\}} -
+                                        \exV{\min\{X_n^+,M\}}\\
+                                      & \quad \quad + \exV{\min\{X^+,M\}} - \exV{\min\{X^+,M\}}- \exV{X^+} \big
+                                        |\\
+                                      &\leq \abs{\exV{X_n^+} - \exV{\min\{X_n^+,M\}} } \\
+                                      &\quad\quad+ \abs{\exV{\min\{X_n^+,M\}}-
+                                        \exV{\min\{X^+,M\}}}\\
+                                      &\quad\quad+\abs{\exV{\min\{X^+,M\}} - \exV{X^+} }\\
+      \end{align*}
+
+    For the first term: Note that
+    \begin{equation*}
+      0 \leq \abs{\exV{X_n^+}-\exV{\min\{X_n^+,M\}}} \leq
+      \exV{\abs{X_n^+}\indicate{\abs{X_n^+}> M}}\le
+      \exV{\abs{X_n}\indicate{\abs{X_n}> M}}\rightarrow 0
+    \end{equation*}
+
+    Where the convergence of the last term is occurring due to uniform integrability,
+    and thus by the Policeman's lemma, the first term converges to
+    0. Also, the last inequality holds because, when $X_{n}^{+}\ne
+    X_{n}$, then $X_{n}$ is non positive, thus $\abs{X_{n}}\indicate{\abs{X_n}> M}\ge0=X_{n}^{+}$
+    in this case.
+
+    For the second term, we note that $\min\{X_n^+, M\}$ is a bounded
+    and continuous function. Since $X_n \convDist X$, Portmanteau
+    lemma implies that for any bounded
+    and continuous function, $\exV{f(X_n)} \rightarrow \exV{f(X)}$. This implies
+    that:
+    \begin{equation*}
+      \abs{ \exV{\min\{X_n^+, M\}} - \min\{X^+, M \}} =
+      \abs{\exV{f(X_n)} - \exV{f(X)}} \rightarrow 0 
+    \end{equation*}
+
+
+    For the third part, Note that
+    \begin{align*}
+     \abs{\exV{\min\{X^+,M\}}-\exV{X^+}} &=
+                                           \abs{\exV{X^+}-\exV{\min\{X^+,M\}}}\\
+                                         &\leq
+                                           \exV{\abs{X^+}\indicate{\abs{X^+}
+                                           > M}} \rightarrow 0\\
+    \end{align*}
+
+To see that the convergence of the last term above holds, first notice that uniform integrability of $X_n$ implies that $\limsup_{n\to\infty}{\exV{\abs{X_n}}}<\infty$. Due to the uniform integrability, there exists $M<\infty$ large enough such that $\limsup_{n\to\infty}{\exV{\abs{X_n}\indicate{\abs{X_n}> M}}}\le 1$. Thus, we have that, for every $n$ and this $M$:
+\begin{equation}
+\begin{split}
+	\exV{\abs{X_n}}=\exV{\abs{X_n}\indicate{\abs{X_n}> M}}+\exV{\abs{X_n}\indicate{\abs{X_n}\le  M}}\le 1+M < \infty
+\end{split}
+\end{equation}
+Because it holds for every $n$, $\limsup_{n\to\infty}{\exV{\abs{X_n}}}<\infty$. Using this result, Fatou's lemma for convergence in distribution\footnote{Suppose $X_n\ge 0$ and $X_n\overset{d}{\to}X$. Then $\exV{X}\le \liminf{\exV{X_n}}$.} and the fact that $\abs{X_n}\overset{d}{\to}\abs{X}$ (due to CMP), we can see that $\exV{\abs{X}}\le \liminf{\exV{\abs{X_n}}}\le \limsup{\exV{\abs{X_n}}} <\infty$. As an immediate consequence, we also have $\exV{\abs{X^{+}}}<\infty$.
+
+    Because $\exV{\abs{X^{+}}}<\infty$ and $|X^+|
+    \indicate{|X^+| \leq M} \overset{d}{\to} |X^+|$ as
+    $M \rightarrow \infty$, the dominated convergence theorem for convergence in distribution
+    implies $\exV{|X^+| \indicate{|X^+| \leq M}} \to \exV{|X^+|}$. Thus, because  $\exV{|X^+|} = \exV{|X^+|\indicate{|X^+| \leq M}} + \exV{|X^+|\indicate{|X^+| > M}}$, the last term above must go to zero.
+
+    These three combined imply that $\exV{X_n^+} \rightarrow \exV{X^+}$. The
+    same arguments apply for $\exV{X_n^-} \rightarrow \exV{X^-}$, because
+    $X_{n}^{-}$ is also a non negative continuous and bounded function
+    of $X_n$. We can conclude then:
+
+    \begin{equation*}
+      \exV{X_n} = \exV{X_n^+} - \exV{X_n^-} \rightarrow \exV{X^+} - \exV{X^-} = \exV{X} 
+    \end{equation*}
+
+    2. Let $\exV{\abs{X_n}^{1+\delta}} \leq B$. Note that: $\indicate{
+      \abs{X_n} > M} \leq \frac{\abs{X_n}^{\delta}}{M^{\delta}}$. Then:
+    \begin{alignat*}{3}
+      0 \leq \abs{X_n}\indicate{\abs{X_n} < M} &\leq
+      \frac{\abs{X_n}^{1+\delta}}{M^{\delta}}  \\
+      0 \leq \exV{\abs{X_n}\indicate{\abs{X_n} < M}} &\leq
+      \exV{\frac{\abs{X_n}^{1+\delta}}{M^{\delta}}} \leq \frac{B}{M^{\delta}}\\
+      0 \leq \Lim_{M\rightarrow\infty}\limsup_{n\rightarrow\infty}\exV{\abs{X_n}\indicate{\abs{X_n} < M}} &\leq
+      \lim_{M\rightarrow\infty}\limsup_{n\rightarrow\infty}\exV{\frac{\abs{X_n}^{1+\delta}}{M^{\delta}}}
+      \leq \lim_{M\rightarrow\infty}\limsup_{n\rightarrow\infty}\frac{B}{M^{\delta}} = 0\\
+    \end{alignat*}
+
+    This leads us to conclude:
+    \begin{equation*}
+      \Lim_{M\rightarrow\infty}\limsup_{n\rightarrow\infty}\exV{\abs{X_n}\indicate{\abs{X_n} < M}} = 0
+    \end{equation*}
+
+
+    3. Consider the example of
+    \begin{equation*}
+      X_n =
+      \begin{cases}
+        n \text{ with probability }\frac{1}{n}\\
+        0 \text{ otherwise}
+      \end{cases}
+    \end{equation*}
+
+    We can verify that: $\exV{X_n}  = 1$. So this implies:
+    $\exV{\abs{X_n}} \leq 1$. However, $X_n \convDist 0$ as $X_n \plim
+    0$, and $\exV{0} = 0 \neq \Lim_{n \rightarrow \infty}\exV{X_n}$. This implies that
+    $X_n$ is not uniformly integrable, as if it were, by part (1) we
+    would have convergence of the expected value.
+  \end{proof}
+
+\end{question}
+
+\begin{question}
+  Let $\{ X_n | n \geq 1 \}$ be a sequence of random variables and $X$ be
+  another random variable. Suppose for every $n \geq 1 $ that $X_n$
+  possesses a discrete distribution supported on the integers. Suppose
+  further that $X$ possess a discrete distribution supported on the
+  integers. Show that $X_n \convDist X$ as $n \to \infty$ if and only if
+  $\Pr \left(  X_n = j \right ) \to \Pr \left(  X = j \right )$ as $n \to \infty$ for every integer $j$.
+  \begin{proof}
+    ($\Longleftarrow$) Let`s show first that $\Pr\{X_n=j\}\to\Pr\{X=j\}$, for every
+    integer $j$, implies that $\Pr
+    (X_n\le x)\to\Pr(X\le x)$ for every $x$ a continuity point of $F_X()$.
+
+Because $X_n,X$ are discrete random variables supported on the integers (i.e., the integers, and only them, have strictly positive probability), the integers are discontinuity points (where the distribution function jumps). Thus we need to check that $\Pr(X_n\le x)\to\Pr(X\le x)$ only for $x$ not a integer. In this case, we have:
+\begin{equation}
+    \begin{split}
+        |\Pr(X_n\le x)-\Pr(X\le x)|&=|\Pr(\cup_{j\in\{(-\infty,x]\cap\setZ\}}{\{X_n=j\}})-\Pr(\cup_{j\in\{(-\infty,x]\cap\setZ\}}{\{X=j\}})|\\
+        &=|\sum_{j\in\{(-\infty,x]\}\cap\{\setZ\}}{\Pr\{X_n=j\}}-\sum_{j\in\{(-\infty,x]\}\cap\{\setZ\}}{\Pr\{X_n=j\}}|\\
+        &=|\sum_{j\in\{(-\infty,x]\}\cap\{\setZ\}}{(\Pr\{X_n=j\}-\Pr\{X=j\})}|\\
+        &\le \sum_{j\in\{(-\infty,x]\}\cap\{\setZ\}}{|\Pr\{X_n=j\}-\Pr\{X=j\}|}\\
+        &\le \sum_{j\in\setZ}{|\Pr\{X_n=j\}-\Pr\{X=j\}|}\\
+        &=\int{|\Pr\{X_n=j\}-\Pr\{X=j\}|}\to 0.
+    \end{split}
+\end{equation}
+\noindent The second equality is due to the sets being disjoint. The conclusion that the last term goes to zero is due to the dominated convergence theorem and the assumption that $\lim_{n\to\infty}{\Pr\{X_n=j\}}=\Pr\{X=j\}$. We can use the dominated convergence theorem because $\Pr\{X_n=j\}$ is a function bounded below by zero and above by an integrable function (itself, since $\sum_{j\in\setZ}{\Pr\{X_n=j\}}=1$). Thus, we can conclude that $|\Pr(X_n\le x)-\Pr(X\le x)|\to 0$ for every continuity point (non-integers).
+
+($\Longrightarrow$) Now Let's show that, if $X_n\overset{d}{\to}x$, we have $\lim_{n\to\infty}{\Pr\{X_n=j\}}=\Pr\{X=j\}$ for every $j\in\setZ$.
+
+This can be seen below. For every integer $j$, we have:
+\begin{equation}
+    \begin{split}
+       \lim_{n\to\infty}{\Pr\{X_n=j\}}&=\lim_{n\to\infty}{\Pr\Big(X_n\in (j-\frac{1}{2},j+\frac{1}{2})\Big)}\\
+       &=\Pr\Big(X\in (j-\frac{1}{2},j+\frac{1}{2})\Big)=\Pr\{X=j\},
+    \end{split}
+\end{equation}
+\noindent where the first and last equalities are due to the distributions having support only on the integers, and $j$ being the only one in that open interval; and the middle equality is due to the last part of Portmanteau lemma, which is applicable because $X_n\overset{d}{\to}X$ and every open interval is a Borel set (in the $\sigma$-algebra $\mathcal{B}(\setR)$), with an empty boundary.
+  \end{proof}
+\end{question}
+
+\begin{question}
+  Let $X_n \sim Bin( n, p_n )$ and $Y \sim Po(\lambda)$. Suppose that $p_n n \to \lambda$
+  as $n \to \infty$. Show that for every integer $j \geq 0$ that
+  \begin{equation*}
+    \Pr \left(  X_n = j \right ) \to \Pr \left(  Y = j \right )
+  \end{equation*}
+  \begin{proof}
+    \begin{align*}
+      P(X_n = j) &= \frac{n!}{j! (n-j)!} p_n^j ( 1 - p_n)^{n-j}\\
+      &= \frac{n!}{j! (n-j)!} \left( \frac{p_n n}{n} \right)^j \left(
+        1 - \frac{p_n n}{n} \right)^{n - j}\\
+                 &= \frac{n!}{n^{j} (n-j)!} \frac{1}{j!} ( p_n n )^j
+                   \left( 1 - \frac{p_n n}{n} \right)^{n-j}\\
+      &= \left( \frac{n}{n} \right) \left( \frac{n-1}{n} \right)
+        ... \left( \frac{n-j +1}{n} \right) \frac{(p_n n)^j}{j!}
+        \left( 1 - \frac{p_n n}{n} \right)^n \left( 1 - p_n
+        \right)^{-j}\\
+    \end{align*}
+
+    Note that, because $np_n\to\lambda$, for any $\epsilon>0$, we can find $N$ large enough such that $-\lambda+\epsilon>-np_n>-\lambda-\epsilon$ for all $n\ge N$. This implies that, for such $n$:
+\begin{equation}
+\begin{split}
+    (1+\frac{-\lambda-\epsilon}{n})^{n}<(1+\frac{-np_n}{n})^{n}<(1+\frac{-\lambda+\epsilon}{n})^{n}\\
+    \Longleftrightarrow e^{-\lambda-\epsilon}\le \lim_{n\to\infty}{(1+\frac{-np_n}{n})^{n}}\le e^{-\lambda+\epsilon}
+\end{split}
+\end{equation}
+\noindent Therefore, since we make $\epsilon$ arbitrarily small, we must have that $\lim_{n\to\infty}{(1+\frac{-np_n}{n})^{n}}=e^{-\lambda}$.
+
+
+   Also, since $np_n\to\lambda<\infty$ and $\frac{1}{n}\to 0$, we must have $\frac{np_n}{n}\to 0$, which implies $\Lim_{n \to \infty} \left(  1 - p_n \right)^{-j} = 1$. 
+
+   \begin{align*}
+     P(X_n = j) &\rightarrow  (1) (1) ... (1) \frac{\lambda^j}{j!} \exp(-\lambda) (1)\\
+                &= \frac{\lambda^j}{j!} \exp( - \lambda) = P( Y = j)
+   \end{align*}
+    
+
+  \end{proof}
+\end{question}
+
+\begin{question}
+  Let $\{ X_n | n \geq 1\}$ and $\{ Y_n | n \geq 1 \}$ be sequences of
+  random vectors converging in distribution to random vectors $X$ and
+  $Y$ respectively as $n \to \infty$. Suppose further that $X_n$ is
+  independent of $Y_n$ for all $n \geq 1$. Show that $(X_n, Y_n)$ then
+  converges in distribution to $(X,Y)$ with $X,Y$ independent.
+
+  \begin{proof}
+    We wish to show that $\Lim_{N \to \infty} F_{X_n Y_n}(x,y) = F_{XY}(x,y)$
+    at all points where $F_{XY}(x,y) := F_X(x)F_Y(y)$ is continuous.
+
+    Case 1. $F_{XY}(x,y)$ is continuous at $(x,y)$ and so are $F_X$ and $F_Y$ at $x$ and $y$. Thus, we have:
+    \begin{equation*}
+      \Lim_{N \to \infty} F_{X_n Y_n}(x,y) = \Lim_{N \to
+        \infty}F_{X_n}(x)\Lim_{N \to \infty}F_{Y_n}(y) = F_X(x) F_Y(y) = F_{XY}(x,y)
+    \end{equation*}
+    Case 2. Either $F_X$ or $F_Y$ are discontinuous. WLOG assume $F_X$
+    has a discontinuity at $x$, but $F_y$ is continuous at $y$. Since
+    a cdf must be right-continuous, the discontinuity must be an increasing jump.
+
+    If $F_Y(y)$ is a positive number at this point, then $F_{XY}$ will
+    have a jump as well, so for $F_{XY}$ to be continuous, $F_Y(y) =0$
+    \begin{equation*}
+      0 \leq \Lim_{N \to \infty} F_{X_n Y_n}(x,y) = \lim_{N\rightarrow\infty}F_{X_n}(x)F_{Y_n}(y) \leq \Lim_{N\to\infty}F_{Y_n}(y) = F_Y(y) = 0
+    \end{equation*}
+    By the policeman's lemma. $\Lim_{N \to \infty}F_{X_n Y_n}(x,y) = 0
+    = F_X(x) F_Y(y) = F_{XY}(x,y)$.
+
+    Case 3. If both $F_X$ and $F_Y$ are discontinuous, because $F_{XY}=F_X F_Y$ and discountinuity are jumps, then $F_{XY}$ cannot be continuous.
+
+    Thus, at all continuous points of $F_{XY}(x,y)$ we have show that
+    $\Lim_{N \to \infty}F_{X_n Y_n}(x,y) = F_{XY}(x,y)$,  using the facts that $X_n$ and $Y_n$ are independent for each $n$ and also $X$ and $Y$ are independent.
+  \end{proof}
+\end{question}
+
+\begin{question}
+  True or False. Provide a formal justification of your answer. All
+  limits are as $n \to \infty$.
+  \begin{enumerate}
+  \item If $X_n \convDist X$ and $Y_n \convDist Y$ then $X_n + Y_n
+    \convDist X + Y$
+  \item If $X_n \plim 0$ and $\Pr \left(  X_n \geq 0 \right ) = 1$ then $\exV{X_n} \to 0$
+  \item Suppose that $X_n$ has a continuous cdf on $\setR$ for all $n
+    \geq 1$. If $X_n \convDist X$, then $X$ has a continuous cdf on
+    $\setR$.
+  \item If $X_1, ..., X_n$ are i.i.d. and $\epsilon > 0$ then
+    \begin{equation*}
+      \Pr \left( \abs{\frac{1}{n} \sum_{i = 1}^n \brak{ \indicate{ X_i \leq
+              x} - \Pr \left(  X_i \leq x \right )}} > \sqrt{\epsilon} \right) \leq \frac{1}{4 n \epsilon}
+    \end{equation*}
+  \item Answer the previous question if they are independent, but not
+    identically distributed.
+  \item If $\exV{X_n^k} \to \exV{X^k}$ for all $k \geq 1$, then $X_n \plim X$.
+
+  \end{enumerate}
+  
+  \begin{proof} $\\$
+    \begin{enumerate}
+    \item Let $X_n \overset{d}{=} X \sim \normal(0,1)$ and $Y_n
+      \overset{d}{=} X \sim \normal(0,1)$. Let $Y = -X$. As the normal is symmetric, $Y_n \convDist
+      Y$. Clearly $X_n \convDist X$. The sum of two independent normal random variables is normal,
+      so $X_n + Y_n \sim \normal( 0, 2)$. However, $X+Y = 0$.
+    \item Consider the example given in class.
+      \begin{equation*}
+        X_n =
+        \begin{cases}
+          n \text{ with probability: } \frac{1}{n}\\
+          0 \text{ otherwise.}
+        \end{cases}
+      \end{equation*}
+      Clearly $X_n \plim 0$, and $\Pr \left( X_n \geq 0  \right ) = 1$, but $\exV{X_n} =
+      1 \nrightarrow \exV{0} = 0$. 
+    \item Consider the following random variable:
+      \begin{equation*}
+        P(X_n \leq x)  =
+        \begin{cases}
+          0 \text{ if } x < 0\\
+          (nx)^2 \text{ if } x \in [0,\frac{1}{n}]\\
+          1 \text{ otherwise}
+        \end{cases}
+      \end{equation*}
+      This cdf is continuous on $\setR$. However, $X_n \convDist X$
+      where the cdf of $X$ is given by:
+      \begin{equation*}
+        P(X \leq x ) = \indicate{ X \geq 0}
+      \end{equation*}
+      But $X$ is not continuous at $x = 0$ so this statement is false.
+    \item
+      \begin{align*}
+        \Pr \left ( \abs{ \frac{1}{N} \sum_{i = 1}^N \indicate{X_i \leq x} - \Pr(
+        x_i \leq x)} > \sqrt{\epsilon} \right ) &\leq \frac{\exV{\abs{\frac{1}{N}\sum_{i=1}^N
+                                \indicate{X_i \leq x} - \Pr( X_i \leq
+                                x)}^2}}{\epsilon}\\
+        \text{ Using:  } \exV{\indicate{A}} = \Pr \left( A \right ) \quad
+                                      &= \frac{\exV{\abs{\frac{1}{N}\sum_{i=1}^N
+                                \indicate{X_i \leq x} - \exV{ \indicate{ X_i \leq
+          x}}}^2}}{\epsilon}\\
+        \text{ Definition of Variance and } X_i \text{ iid} \quad&= \frac{\Vari{\frac{1}{N}\sum_{i=1}^N
+                                \indicate{ X_i \leq x}}}{\epsilon} =
+                                \frac{\Vari{\indicate{X_i \leq x}}}{N \epsilon}\\
+        \text{Variance of Bernoulli r.v.} \quad&= \frac{\Pr \left( X_i \leq x \right ) \brak{ 1 - \Pr \left(  X_i \leq x  \right )}}{N \epsilon}\\
+        \text{ Maximum of }x(1-x) \text{ on }[0,1] \quad&\leq \frac{1}{4 N \epsilon}\\
+      \end{align*}
+    \item
+      \begin{align*}
+        \Pr \left ( \abs{ \frac{1}{N} \sum_{i = 1}^N \indicate{X_i \leq x} - \Pr(
+        x_i \leq x)} > \sqrt{\epsilon} \right ) &\leq \frac{\exV{\abs{\frac{1}{N}\sum_{i=1}^N
+                                \indicate{X_i \leq x} - \Pr( X_i \leq
+                                x)}^2}}{\epsilon}\\
+        \text{ Using:  } \exV{\indicate{A}} = \Pr \left( A \right ) \quad
+                                      &= \frac{\exV{\abs{\frac{1}{N}\sum_{i=1}^N
+                                \indicate{X_i \leq x} - \exV{ \indicate{ X_i \leq
+                                        x}}}^2}}{\epsilon}\\
+        \text{ Triangle inequality} \quad
+        &\leq \frac{\sum_{i=1}^N \exV{ \abs{ \indicate{X_i \leq x} -
+          \exV{\indicate{X_i \leq x}}}^2}}{N^2 \epsilon}\\
+        \text{Definition of Variance and Independence} \quad
+                              &= \frac{\sum_{i=1}^N \Vari{\indicate{X_i \leq
+                                x}}}{N^2 \epsilon}\\
+        \text{Variance of Bernoulli r.v.} \quad
+        &= \frac{\sum_{i=1}^N \brak{ \Pr \left(  X_i \leq x \right ) \left( 1 - \Pr(X_i \leq
+          x) \right)}}{N^2 \epsilon}\\
+        \text{ Maximum of }x(1-x) \text{ on }[0,1] \quad  &\leq \frac{1}{4 N \epsilon}\\
+      \end{align*}
+      
+    \item Let $X_n \sim \unif( 0,1 )$ and let $X \sim \unif( 0,1)$ where $X_n$ are
+      all iid and independent of $X$. Note that $\Pr \left(  X_n \leq x \right ) = \Pr( X
+      \leq x)$ so $\exV{X_n^k} = \exV{X^k}, \forall k \in \setN$.
+
+      \begin{align*}
+        \Pr \left(  \abs{ X_n - X} > \epsilon \right )  &= 1 - \Pr \left(  \abs{ X_n - X } < \epsilon \right )\\
+        &= 1 - \int_0^{\epsilon} \int_0^{x+\epsilon} dydx - \int_{\epsilon}^{1-\epsilon}\int_{x - \epsilon}^{x + \epsilon}dydx -
+          \int_{1-\epsilon}^{1}\int_{x-\epsilon}^1dydx\\
+        &= 1 - 2\epsilon + \epsilon^2 \nrightarrow 0 
+      \end{align*}
+
+    \end{enumerate}
+
+  \end{proof}
+
+\end{question}
+
+\end{document}

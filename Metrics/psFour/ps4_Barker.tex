@@ -1,0 +1,235 @@
+\documentclass[12pt]{paper}
+
+\usepackage{Schwieg}
+\usepackage[margin=1in]{geometry}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{dsfont}
+\newcommand{\E}{{\rm I\kern-.3em E}}
+\newcommand{\Var}{{\rm \textbf{V\kern-.3em ar}}}
+\newcommand{\Cov}{{\rm \textbf{C\kern-.3em ov}}}
+\usepackage{graphicx}
+\newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
+
+\begin{document}
+\section*{Question 1}
+First, we need to show that:
+\begin{align*}
+\rho^2=\frac{(\Cov[X,Y])^2}{\Var[X]\Var[Y]}=1-\frac{\Var[U]}{\Var[Y]}.
+\end{align*}
+Further, given $Y=\beta_0+\beta_1 X+U$,
+\begin{align*}
+\Var[Y]=&\Var[\beta_0+\beta_1 X+U]\\
+=& \beta_1^2 \Var[X]+\Var[U]+2\Cov[X,U]\\
+=& \left( \frac{\Cov[X,Y]}{\Var[X]} \right)^2\Var[X]+\Var[U]\\
+=&  \frac{(\Cov[X,Y])^2}{\Var[X]}+\Var[U].
+\end{align*}
+This implies that:
+\begin{align*}
+\Var[U]=& \Var[Y]-\frac{(\Cov[X,Y])^2}{\Var[X]}\\
+\end{align*}
+Since we are interested in $\rho^2$, and since $\rho^2=\frac{\Var[U]}{\Var[Y]}$, we need to divide by $\Var[Y]$.
+\begin{align*}
+\frac{\Var[U]}{\Var[Y]}=& 1-\frac{(\Cov[X,Y])^2}{\Var[X]}\\
+=& 1-\rho^2\\
+\rho^2=& 1-\frac{\Var[U]}{\Var[Y]}.
+\end{align*}\\
+
+
+Next, we need to actually determine $\Var[U]$ and $\Var[Y]$. We have shown earlier in lectures that $\beta=\E[XX']\E[XY]$. Given the vector $(1,X)$, and $Y=\gamma X + X^2]$, we can say:
+
+\begin{align*}
+\beta=\E \left[
+\begin{pmatrix} 
+1\\
+X
+\end{pmatrix}
+\begin{pmatrix}
+1 & X
+\end{pmatrix}
+\right]
+\E \left[
+\begin{pmatrix}
+Y\\
+YX
+\end{pmatrix}
+\right]\\
+=\E \left[
+\begin{pmatrix}
+1 & X\\
+X & X^2
+\end{pmatrix}
+\right]
+\E \left[
+\begin{pmatrix}
+\gamma X+X^2\\
+\gamma X^2 +X^3
+\end{pmatrix}
+\right].
+\end{align*}
+
+Since we know $\E[1]=1$, $\E[X]=0$, $\E[X^2]=1$, and $\E[X^3]$, the above is equal to:
+\begin{align*}
+\begin{pmatrix}
+1 & 0\\
+0 & 1
+\end{pmatrix}
+\begin{pmatrix}
+1\\
+\gamma
+\end{pmatrix}
+=
+\begin{pmatrix}
+1\\
+\gamma
+\end{pmatrix}=\beta.
+\end{align*}
+
+It is given that $U=Y-\beta_0+\beta_1X$. Using the $\beta$ above, we can plug in for $U=\gamma X+X^2-1-\gamma X= X^2-1$. Thus, we have
+\begin{align*}
+\Var[U]=\Var[X^2-1]=2.
+\end{align*}
+Next, consider $Y=\gamma X+X^2$.
+\begin{align*}
+\Var[Y]=\gamma \Var[X]+\Var[X^2]+\gamma \Cov[X,X^2].
+\end{align*}
+$\Cov[X,X^2]=0$, since $\Cov[X,X^2]=\E[X^3]-\E[X]\E[X^2]$, and we know that both right hand side terms are zero. Further, since $\Var[X]=1$, and $\Var[X^2]=2$, we have
+\begin{align*}
+\Var[Y]=\gamma^2+2.
+\end{align*}
+Using our previous result that $\rho^2=1-\frac{\Var[U]}{\Var[Y]}$ and substituting in from above,
+\begin{align*}
+\rho^2=1-\frac{\Var[U]}{\Var[Y]}=1-\frac{2}{\gamma^2+2}=\frac{\gamma^2}{\gamma^2 +2}.
+\end{align*}
+
+
+
+\section*{Question 5}
+
+\subsection*{A)} Simply by the Delta Method we get:
+\begin{align*}
+n^{\frac{1}{2}}(f(\hat{\beta_n})-f(\beta))\convDist N(0,D_{\beta}f(\beta)\Omega D_{\beta}f(\beta)').
+\end{align*}
+
+
+\subsection*{B)}
+With $\hat{\beta_n}$ and $\hat{\Omega_n}$ being a consistent estimators of $\beta$ and $\Omega$ respectively, using the CMT, we have:
+
+\begin{align*}
+\frac{\sqrt{n}(f(\hat{\beta_n})-f(\beta))}{\sqrt{D_{\hat{\beta_n}}f(\hat{\beta_n})\Omega D_{\hat{\beta_n}}f(\hat{\beta_n})'}} \convDist N(0,1).
+\end{align*}
+
+Since our test is one-sided we only want to reject the null ($H_0$: $f(\beta) \leq 0$) in one direction. The critical value is based on the standard normal distribution:
+
+\begin{align*}
+c_n:=\Phi^{-1}(1-\alpha):=z_{1-\alpha},
+\end{align*}
+
+where $\Phi$ is the CDF of $N(0,1)$. We want our $c_n$ to be such that the probability of $z$ being less than $c_n$ is $1-\alpha$. Thus, out test is:
+
+\begin{align*}
+\Phi_n=\textbf{1}_{\{T_n>c_n\}}.
+\end{align*}
+
+To show that this test is consistent in level, we have to show that, under the null:
+
+\begin{align*}
+\lim_{n \to \infty} \sup \E_P[\Phi_n] \leq \alpha
+\end{align*}
+
+Consider,
+
+\begin{align*}
+\E_P[\Phi_n]=\textbf{Pr}(T_n>c_n)=\textbf{Pr}\left(\frac{\sqrt{n}f(\hat{\beta_n})}{\sqrt{D_{\hat{\beta_n}}f(\hat{\beta_n}) \hat{\Omega_n} D_{\hat{\beta_n}}f(\hat{\beta_n})'}}>z_{1-\alpha} \right).
+\end{align*}
+
+Add and subtract $f(\beta)$,
+
+\begin{align*}
+\textbf{Pr}\left(
+\frac{\sqrt{n}(f(\hat{\beta_n})-f(\beta))}{\sqrt{D_{\hat{\beta_n}}f(\hat{\beta_n}) \hat{\Omega_n} D_{\hat{\beta_n}}f(\hat{\beta_n})'}}
++
+\frac{\sqrt{n}f(\beta)}{\sqrt{D_{\hat{\beta_n}}f(\hat{\beta_n}) \hat{\Omega_n} D_{\hat{\beta_n}}f(\hat{\beta_n})'}}
+>
+z_{1-\alpha}
+\right).
+\end{align*}
+
+Under the null, we have that $f(\hat{\beta_n})\leq0$, and so
+
+\begin{align*}
+\E[\Phi_n]
+\leq
+\textbf{Pr}\left(
+\frac{\sqrt{n}(f(\hat{\beta_n})-f(\beta))}{\sqrt{D_{\hat{\beta_n}}f(\hat{\beta_n}) \hat{\Omega_n} D_{\hat{\beta_n}}f(\hat{\beta_n})'}}
+>
+z_{1-\alpha}
+\right)
+\leq
+\textbf{Pr}\left(
+\frac{\sqrt{n}(f(\hat{\beta_n})-f(\beta))}{\sqrt{D_{\hat{\beta_n}}f(\hat{\beta_n}) \hat{\Omega_n} D_{\hat{\beta_n}}f(\hat{\beta_n})'}}
+\geq
+z_{1-\alpha}
+\right),
+\end{align*}
+
+where the weak inequality is so that we can apply the Portmanteau Lemma. Thus, taking lim sup of both sides,
+
+\begin{align*}
+\lim_{n \to \infty}\sup \E[\Phi_n] 
+\leq
+\lim_{n \to \infty} \sup \textbf{Pr}\left(
+\frac{\sqrt{n}(f(\hat{\beta_n})-f(\beta))}{\sqrt{D_{\hat{\beta_n}}f(\hat{\beta_n}) \hat{\Omega_n} D_{\hat{\beta_n}}f(\hat{\beta_n})'}}
+\geq
+z_{1-\alpha}
+\right)
+\end{align*}
+
+We already know that the inside the probability on the RHS converges in distribution to a standard normal. Thus,
+
+\begin{align*}
+\lim_{n \to \infty} \sup \E[\Phi_n]  \leq& ~\textbf{Pr}\left(Z \geq z_{1-\alpha} \right)\\
+=&~1-\textbf{Pr}(Z<z_{1-\alpha})\\
+=&~1-\Phi(z_{1-\alpha})\\
+=&~1-(1-\alpha)\\
+=&~\alpha.
+\end{align*}
+
+
+Our test is consistent in level.
+
+
+
+\subsection*{C)}
+
+
+We can easily construct a confidence region with the result from \textbf{B)}.
+
+\begin{align*}
+C_n:=\left \{ 
+x \in \mathbb{R}|
+\textbf{Pr}\left(
+\frac{\sqrt{n}(f(\hat{\beta_n})-x)}{\sqrt{D_{\hat{\beta_n}}f(\hat{\beta_n}) \hat{\Omega_n} D_{\hat{\beta_n}}f(\hat{\beta_n})'}}
+\geq
+z_{1-\alpha}
+\right)
+\right \}.
+\end{align*}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}

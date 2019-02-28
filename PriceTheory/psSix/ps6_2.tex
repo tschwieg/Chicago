@@ -1,0 +1,460 @@
+\documentclass[12pt]{paper}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{bbm}
+
+
+\DeclareMathOperator{\diam}{diam}
+\DeclareMathOperator{\interior}{int}
+\DeclareMathOperator{\close}{cl}
+\DeclareMathOperator*{\argmin}{arg\,min}
+\DeclareMathOperator*{\argmax}{arg\,max}
+
+\newcommand{\met}[1]{d \left ( #1 \right )}
+\newcommand{\brak}[1]{ \left [ #1 \right ] }
+\newcommand{\cbrak}[1]{ \left \{ #1 \right \}}
+\renewcommand{\vec}[1]{ \bm{ #1 }}
+\newcommand{\abs}[1]{\left \lvert #1 \right \rvert}
+\newcommand{\seq}[1]{{\left \{ #1 \right \}}}
+\newcommand{\conj}[1]{ \overline{ #1 } }
+%\newcommand{\close}[1]{ \bar{ #1 } }
+\newcommand{\set}[1]{\left \{ #1 \right \}}
+\newcommand{\Lim}{\lim\limits}
+\newcommand{\compose}{\circ}
+\newcommand{\inv}[1]{{#1}^{-1}}
+\newcommand{\compl}[1]{{#1}^{c}}
+
+
+
+\newcommand{\setR}{ \mathbb{R} }
+\newcommand{\setQ}{ \mathbb{Q} }
+\newcommand{\setZ}{ \mathbb{Z} }
+\newcommand{\setN}{ \mathbb{N} }
+
+\newcommand{\plim}{ \overset{p}{\to} }
+\newcommand{\mean}[2][N]{ \overline{ #2 }_{#1}}
+\newcommand{\exV}[1]{\mathbb{E} \left [ #1 \right ]}
+\newcommand{\Vari}[1]{\mathbb{V} \left ( #1 \right )}
+\newcommand{\est}[2][N]{ \widehat{ #2 }_{#1}}
+\newcommand{\indicate}[1]{ \mathbbm{1}_{\{#1\}}}
+\newcommand{\convDist}{ \overset{d}{\to}}
+\newcommand{\unif}{\emph{U}}
+\newcommand{\normal}{\mathcal{N}}
+
+\newcommand{\deriv}[2]{\frac{ \partial #1}{ \partial #2}}
+
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
+
+
+
+\title{Problem Set 6 - Question 2}
+\author{ Timothy Schwieg \and Daniel Noriega \and Samuel Barker \and
+  Rafeh Qureshi}
+
+\begin{document}
+
+\maketitle
+
+\section*{What can you say about the relationship between prevalence
+  and new infections? Separate your answer into a mechanical
+  component, related to random pairings of partners and a behavioral
+  component.}
+
+We shall consider a model of the dynamics in which there are three
+types of actors.  Actors who do not have syphilis, actors who have
+contracted syphilis but are not yet contagious, and actors who have
+syphilis and are still contagious. Any individual actor knows which
+state he is in, but not the state of whomever he is pairing
+with. All individuals are aware of the amount of contagious
+individuals. All actors are aware of $y_t$. Let us normalize the
+number of people in the world to $1$. In this way, if all people
+sought the same amount of encounters, the probability of obtaining
+syphilis would be given by $p = \frac{y_t}{N} = y_t$.
+
+Every individual therefore has a state, $1$ for healthy,
+$i \in \{ 2,3,... x, x+1 \}$ for individuals with the disease that are
+not yet contagious, and $x+2$ for contagious. All information about
+the individual is summarized by these states. Individuals in state $1$
+move to state $2$ if they contract the disease, and otherwise remain
+in state $1$. All individuals in state $2$ through $x+1$ move to the
+next state with probability $1$. Contagious individuals in state $x+2$
+remain there with probability $1-r$ and move to the healthy state with
+probability $r$.
+
+All actors in the model receive the same benefit from a sexual
+encounter, and individuals only differ between the costs they face for
+this encounter. Each individual does face a constant cost per
+encounter taken as a monetary amount. This can be rationalized either
+in time spent in seduction, or in actual costs spent on dates. This is
+just a fixed cost among dates, and ensures that individuals that bear
+no risk of obtaining the disease would not desire infinite
+hook-ups. Healthy individuals face some cost $\beta$ if they contract the
+disease, which is the time discounted present cost of obtaining the
+disease. This $\beta$ accounts for all the utility and costs associated
+with having the disease, in expectation. 
+ 
+This cost function is state dependent, as individuals that have
+syphilis cannot obtain the disease a second time. These individuals
+still face the costs of an encounter, but not the disease risk. Let us
+believe that there is some guilt factor associated with giving
+syphilis to another person. Call this level $\gamma$. This guilt is only
+felt if syphilis is translated to another person. In expectation, this
+is $\alpha ( 1 - p)\gamma$.  Non-contagious individuals that have the disease do
+not bear the guilt, while contagious individuals do. This means that
+non-contagious diseased actors have the least costs to
+copulation. 
+
+The benefit of $\alpha$ sexual encounters is given by $u(\alpha)$ which is an
+increasing and concave function. Individuals in equilibrium will
+copulate to the point where marginal benefit equals marginal
+cost. Note that the benefit is the same for every individual
+regardless of state. All that differs between individuals is the
+marginal cost.
+
+% What is interesting is that in the dynamics of this system, the
+% choices of the infected individuals are irrelevant to the dynamics of
+% who gets sick. A healthy person's does not observe the utility
+% functions of all other people, and has no idea how often sick people
+% are copulating. He only observes $y_t$ and from that calculates his
+% chance of obtaining the disease from a random encounter. That
+% information is not based on the decisions made by sick individuals, as
+% once they contract the disease, they become a statistic in $x$ time
+% periods. Their behavior cannot affect this probability.
+
+% The guilt parameters do affect the choices of the number of encounters
+% for the contagious individuals. However there is no way for a person
+% to screen for the disease ahead of time. this means the only
+% information he has for the probability of contracting the disease is
+% the percentage of contagious people.
+
+The healthy individuals' choice does not depend on what the sick
+people are doing. They have no knowledge of the choices made by the
+sick parties, and only observe the quantity of infected
+individuals. They do not even discover the costs of their actions
+until $x$ periods into the future. 
+
+When they decide to engage in the sexual marketplace, they
+face a different probability of contracting the disease. The
+contagious, and not yet contagious sick individuals will choose
+different levels of copulation in general than the healthy
+individuals. The probability of them actually obtaining the disease is
+then a mixture of each groups' choice of copulation. Let us call this
+endogenous probability $P^{*}$
+
+There are $y_t$ contagious people, who choice to fornicate $a_c$
+times. The healthy individuals fornicate $\alpha$ times, and the
+non-contagious but infect individuals fornicate $a_n$ times.  These
+choices are given by:
+\begin{align*}
+  \alpha &= \argmax_{\alpha} \quad u(\alpha) - \delta\alpha - \beta*( 1 - (1-p)^{\alpha})\\
+  a_c &= \argmax_{a_c} \quad u( a_c) - \delta a_c - \alpha ( 1 - p)\gamma\\
+  a_n &= \argmax_{a_n} \quad u( a_n) - \delta a_n                   
+\end{align*}
+
+The probability that a healthy individual contracts the disease from a
+single encounter is given by
+
+
+\begin{equation*}
+  P^{*} = \frac{a_c y_t}{a_c y_t + \alpha h_t + a_n (1 - y_t - h_t)}
+\end{equation*}
+
+where $h_t$ is the number of healthy individuals at the time $t$. This
+is not simply the number of contagious people, as we see each group of
+people make different choices about the amount of people they choose
+to sleep with.
+
+We can see that the choices of the sick individuals is only present in
+the level of $P^{*}$, as the dynamics of sick people are completely
+irrelevant of their choice of fornication. People who are not
+contagious will become contagious with probability one, and the
+contagious individuals become healthy with probability $r$. Neither
+are endogenous to their choices, and they can only affect the dynamics
+of healthy individuals.
+
+For $x = 3$, the transition probability matrix for this system is
+given below:
+
+\begin{equation*}
+\begin{pmatrix}
+  (1-P^{*})^{\alpha^{*}} & 1 - (1-P^{*})^{\alpha^{*}} & 0 &0 &0\\
+  0 & 0 & 1 & 0 & 0\\
+  0 & 0 & 0 & 1 & 0\\
+  0 & 0 & 0 & 0 & 1\\
+  r & 0 & 0 & 0 & 1 -r
+\end{pmatrix}
+\end{equation*}
+
+Where $P^{*}$ is given as above, and $\alpha^{*}$ is the choice for only
+the healthy individuals. 
+
+
+% As we can see, this depends only on the choices of the healthy
+% individual, those in state $1$. All of the further dynamics are
+% determined exogenously. However, $p$ does change between states, as it
+% is the number of people in the final state divided by the total number
+% of people. Thus we cannot simply take the right eigenvalues to compute
+% the steady-state distribution of this matrix.
+
+\section*{How many prevalence steady states are there?}
+
+There always exists the trivial steady state, where $y_{ss} = 0$. If
+there are no infected individuals, nobody can obtain the disease, and
+individuals will copulate without fear of disease.
+
+In steady state, individuals always make the same choices. $P^{*} =
+P_{ss}$, $\alpha = \alpha_{ss}$ and $y_t = y_{t+1} = y_{ss}$.
+
+Under these assumptions, the transition probability matrix is constant
+over time in the steady state. We can apply the balance equations to
+obtain the steady state distribution. This can be done by calculating
+the left eigenvalues of the transition probability matrix, and taking
+the eigenvector corresponding to $\lambda = 1$. Normalizing this eigenvector
+gives us the stationary distribution. This stationary distribution is
+given by
+
+\begin{align*}
+  \pi_1 &= \frac{r}{r+xr (1-P_{ss})^{\alpha_{ss}} + (1-P_{ss})^{\alpha_{ss}}}\\
+  \pi_i &= \frac{r (1-P_{ss})^{\alpha_{ss}} }{r+xr (1-P_{ss})^{\alpha_{ss}}
+            +(1-P_{ss})^{\alpha_{ss}} }\\
+  \pi_{x+2} &= \frac{(1-P_{ss})^{\alpha_{ss}}}{r+xr (1-P_{ss})^{\alpha_{ss}}
+            +(1-P_{ss})^{\alpha_{ss}} }
+\end{align*}
+
+Regardless of the value of $P_{ss}$, the probability of obtaining the
+disease in steady state is, there is a single non-trivial steady
+state. This Markov process is irreducible and therefore it makes sense
+to compute the steady state in the way we have done.
+
+There are always two steady states, the trivial steady state and the
+disease-ridden steady state.
+
+% For there to be a non-trivial steady state, the amount of people
+% leaving a state needs to be equal to the amount of people entering a
+% state. This is trivially true for all states except the first and the
+% last. These conditions are known as the balance equations and they
+% dictate that:
+
+% % \begin{align*}
+% %   ry_{ss} = 1-(1-y_{ss})^{\alpha_{ss}} + (1-r)y_{ss} \\
+% %   r y_{ss} + (1-y_{ss})^{\alpha_{ss}} = 1 - (1-y_{ss})^{\alpha_{ss}}
+%     %   \end{align*}
+% \begin{align*}
+%   r y_{ss} + (1-y_{ss})\left(1-P^{*}\right) &= (1-y_{ss})P^{*}\\
+%   (1-y_{ss})\left(1-P^{*}\right) + (1-r)y_{ss} &= r y_{ss}
+% \end{align*}
+
+% These equations can be algebratized into:
+% \begin{align*}
+%   P^{*} &= \frac{1 - 2r y_{ss}}{1 - y_{ss}}\\
+%   y_{ss} &= \frac{1}{3r -1}\\
+% \end{align*}
+
+% For this steady state to make sense, we need $3r+1 > 0$. 
+
+% % This tells us the number of steady state solutions for $y_{ss}$. If $r
+% % = \frac{1}{2}$, then the only solution is $y =
+% % \frac{2}{3}$. Otherwise, however, there are two solutions for
+% % $y_{ss}$.
+
+
+% This tells us that there are $3$, or rarely, $2$ steady states to this system.
+
+\section*{Can incentives explain why prevalence follows a cycle?}
+
+The incentives in this problem are strange in the sense that once an
+individual contracts the disease, he does not become contagious for
+several periods. This means that the probability of being infected is
+based in part by the probability of being infected in the past.
+
+Note that changes in the probability of being infected disincentivise
+the healthy individuals from fornicating, and incentivise the
+contagious to procreate more. Those that do not have syphilis are at
+more risk with a random fornication, and the contagious feel less
+guilt, so they will procreate more. This acts to increase the
+probability of being infected from a random encounter as a secondary
+effect. Both of these combine to ensure that the costs of sexual
+encounters increase for healthy individuals.
+
+As the probability of being infected rose in the past, healthy
+individuals changed their behavior to fornicate less. However, this
+could not affect the amount of infected individuals for $x$
+years. Imagine a shock occurs where there are suddenly $10$ percent
+more infected people at a time $t$. Suddenly the probability of being
+infected has risen, but for the next $x-1$ years, the people who were
+infected previously are the only people who become contagious. The
+growth of the system is unaffected until $x$ years later, where less
+people become infected. This causes the chance of being infected to
+decrease, but the behavior based on this decrease will not be shown in
+the dynamics for $x$ years.
+
+For the years until this behavioral change is made apparent, the
+contagious rate will continue along its previous trajectory. 
+
+This $x$ year delay distortion in the incentives will cause the
+prevalence to cycle. Once the rate has decreased to a certain amount,
+more people will copulate, and it will take $x$ years for the
+prevalence to begin to increase. This will lead to another decrease
+and so on.
+
+The larger the value of $x$, the greater the cyclical behavior, as it
+takes longer for changes in behavior to reflect back into the
+incentives. Incentives always change $x$ years after the behavior
+does. Therefore for there to be a cycle and any sense of delay, we
+need $x$ to at least be $1$ or greater. If $x$ is zero, people are
+able to react instantly, and the question is trivial.
+
+\section*{How is your answer different if you recognize that people
+  differ in terms of the number of partners that they have?}
+
+Let us believe that individuals are heterogeneous across the benefit that
+they receive from a fornication session. The individuals that receive
+more benefit will choose to plunder more booty, and the individuals
+that receive less benefit will choose to fornicate less. 
+
+If people differ in the number of partners that they have, more
+sexually active people are more likely to contract the disease. This
+manifests itself as different choices of $\alpha$ for different
+people. This means that the people more likely to contract the
+disease, denoted $w$, are more likely to be the ones infected. As the
+infection rate rises, these people are more disproportionately
+infected. The remaining people are less likely to do deed already, and
+seeing the higher infection rates, become even less likely to
+fornicate.
+
+
+This does not change the behavioral trends being cyclical. The effect
+caused by heterogeneity is still delayed by $x$ time periods. The
+expected number of healthy individuals that become diseased has
+decreased, but any change in this number takes $x$ years to impact the
+actual number of infected individuals. Regardless of whether or not
+this change is effected by a change in the distribution of the healthy
+individuals or the choices that the healthy individuals are
+making. This simply makes the effects sharper within the cycles. As
+the number of infected people rises, there is a larger decrease in the
+expected quantity of hook-ups. This is caused by the behavioral
+response just as in the homogeneous case, but also because the
+remaining healthy people are less likely to hook up. This leads to a
+larger decrease in sexual actions than under homogeneity. When
+the infected number begins to drop, it will drop by more than if the
+population was homogeneous, and likewise when it increases again.
+
+There is no change in the qualitative behavior of the dynamic
+system. Only the magnitude of deviations during each period have
+changed, the behavior is still periodic with the same pattern of
+increasing and decreasing. 
+
+
+
+\section*{What would have been different about the prevalence series
+  if prostitution had been legal?}
+
+% We will treat prostitutes as incapable of screening their clients for
+% diseases. In this framework, they can be viewed as individuals that
+% have a very high number of partners. Let us model their behavior as
+% unaffected by whether or not they have contracted the disease. They
+% continue to be in business if they have contracted syphilis, and
+% potential customers are unaware if they have syphilis, or the
+% probability of prostitutes having syphilis. That is, their information
+% has not changed. 
+
+Let us believe that people are capable of screening prostitutes for
+syphilis. This is the only real distinction that occurs when
+legalizing prostitutes, as illegal prostitutes still exist
+regardless. But now they have access to a legal system and rights to
+ensure their ability to screen. This allows prostitutes to become a
+substitute for hook-ups which presumably cost more money, but do not
+run the risk of carrying the disease.
+
+This means that when there are high amounts of syphilis, demand for
+the prostitutes will be high, and when the disease is low, demand for
+the prostitutes will be relatively lower.
+
+Assuming that the benefit of fornication is equal between hookups and
+prostitutes, the decision is made where the cost premium of a
+prostitute is equal to the monetary cost of the disease times the
+probability of being infected. Healthy individuals are then
+indifferent between dating and using prostitutes, so there will be
+some supply of prostitutes at the given price.
+
+Individuals in general will face a lower risk of obtaining the
+disease, as they are indifferent between a prostitute and a hook-up,
+and there is some supply of prostitutes at the given price level. The
+individuals that utilize the prostitutes will face no risk of the
+disease where they once had a risk, so the overall level of the
+disease will fall.
+
+This will reduce the price of the prostitutes, decreasing the quantity
+supplied. This will lead to less individuals using the prostitutes
+than before, but still less diseases overall than when prostitution
+was not an institution. We would still expect a cyclical behavior, but
+the existence of prostitutes mutes its magnitude. There is an effect
+of less prostitutes being available at low levels of the disease
+causing the muting to be less than initially expected. However this
+secondary effect cannot dominate the primary effect of there being
+less disease-sharing hookups.
+
+\section*{Does the emergence of AIDS help explain why syphilis prevalence dropped to new lows?}
+
+Yes. The cost of a random hookup increases when there is another
+disease in play. AIDS is also considered to have a much more negative
+effect on the health of an individual than syphilis. This means that
+individuals would be much more sensitive to hooking up with people, as
+the cost of contracting AIDS was very high.
+
+Each individual now faces some probability $\phi$ of obtaining AIDS from
+a possible hookup. This cost is faced by all parties, as regardless of
+having syphilis, one can still contract AIDS. As there is no cure for
+AIDS, the dynamics do not allow for people to become healthy again,
+and the present cost of obtaining that disease is much higher.  Denote
+this cost by $\Theta$
+
+\begin{align*}
+  \alpha &= \argmax_{\alpha} \quad u(\alpha) - \delta\alpha - \beta( 1 - (1-p)^{\alpha}) - \Theta ( 1 - (1-\phi)^{\alpha})\\
+  a_c &= \argmax_{a_c} \quad u( a_c) - \delta a_c - \alpha ( 1 - p)\gamma - \Theta ( 1 - (1-\phi)^{a_c})\\
+  a_n &= \argmax_{a_n} \quad u( a_n) - \delta a_n  - \Theta ( 1 - (1-\phi)^{a_n})
+\end{align*}
+
+We can see that the cost for all groups has increased, so there will
+be less quantity of hook ups provided by all three groups. We cannot
+justify that the probability of obtaining the disease from a single
+hook-up has increased. Since the utility function is concave,
+non-contagious infected individuals decrease their fornication the
+most. It may be that healthy individuals reduce their hook ups less
+than contagious individuals, but either way the probability of
+obtaining the disease is indeterminate.
+
+Though it is likely that the decrease in the amount of copulation by
+the healthy individuals would offset this lowered probability, it
+cannot be shown to occur in all cases. Consider very concave utility
+functions, high costs of syphilis, AIDS, and guilt. This would mean
+that the non-contagious individuals reduce their fornication by a
+large amount, and the other two groups reduce it by little. Now the
+probability of obtaining the disease from a random hook-up is much
+higher. This would lead to a higher amount of syphilis, despite every
+group desiring less hook ups. 
+
+We do know that the amount of copulation has decreased for a
+certainty. However, because every group responds to this added cost of
+possibly obtaining AIDS in a different way, it can be that healthy
+individuals are more at risk of obtaining the disease. The existence
+of non-contagious infected individuals allowed for healthy individuals
+to be shielded from the contagious individuals, but since that group
+responds most strongly to the presence of AIDS, healthy individuals
+can be at more risk.
+
+However, if all groups respond near the same proportion, we would
+expect the presence of AIDS to reduce the prevalence of syphilis, as
+all groups change their amount of copulation, and the probability of a
+healthy individual obtaining the disease would not change by much. In
+this case, syphilis cases reduce, and we get the behavior noted in the
+time series data give.
+
+
+\end{document}

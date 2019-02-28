@@ -1,0 +1,110 @@
+using CSV
+
+using Plots
+gr()
+
+data = CSV.File( "downloads_v1_lexorder.txt", header=["ID","w1","w2","w3","w4","w5","w6","w7","w8","ind"]) |> DataFrame
+
+#Do :ind seperately so the plotting goes easier
+cols = [:w1,:w2,:w3,:w4,:w5,:w6,:w7,:w8]
+
+#Calculate Market Share as described in the paper
+for col in cols
+    data[col] = data[col] ./ sum( data[col])
+end
+
+data[:ind] = data[:ind] ./ sum( data[:ind])
+
+function GenerateMarketSharePlots( data )
+    plot( xlims=(0, .05), ylims = (0,.2))
+    for col in cols
+        plot!( data[:ind], data[col], seriestype=:scatter, show = true)
+    end
+
+    ident = range(0,stop=.2,length=500)
+    plot!( ident, ident, color=:grey, linestyle = :dot )
+
+
+    #Now we need to get the third degree polynomial fit
+    #We will accomplish this with least squares regression.
+
+    #He omits the constant in order to have a y-intercept of 0.
+    #I'm not sure I agree but I don't see any discussion of it.
+
+    X = ones( nrow(data)*8, 3 )
+    Y = ones(nrow(data)*8)
+
+    #There is probably a cleaner way to fill this matrix, but this works
+    for i in 1:nrow(data)
+        X[(8*(i-1)+1):8*i,1] .= data[:ind][i]
+        X[(8*(i-1)+1):8*i,2] .= data[:ind][i]^2
+        X[(8*(i-1)+1):8*i,3] .= data[:ind][i]^3
+        for j in 1:8
+            Y[(8*(i-1)+j)] = data[cols[j]][i]
+        end
+    end
+
+    F = cholesky( X'*X )
+
+    #F.L * F.U = X' * X
+    #β = (X' X) \ ( X' Y)
+
+    β = F.U \ (F.L \ X' * Y)
+
+    polyfit( x ) = β'*[x,x*x,x*x*x]
+
+    newident = range( 0, stop=maximum(data[:ind]),length=500)
+
+    plot!( newident, polyfit.( newident) )
+end
+
+function GenerateMarketRankPlots( data )
+
+    # header = repeat( ["song"], 48 )
+    # for i in 1:48
+    #     header[i] *= string(i)
+    # end
+
+    # pop = ones(9,48)
+
+    # for i in 1:9
+    #     df = CSV.File( "dynamics_ratings_w" * string(i) * "_v1.txt", header= vcat(["ID", "world"], header), comment="%" ) |> DataFrame
+
+        
+    #     for j in 1:48
+    #         pop[i,j] = sum(df[:,j+2]) / length( findall(!iszero, df[:,j+2]) )
+    #     end
+    # end
+
+    # for i in 1:9
+    #     popRank = sort( copy( pop[i,:]), rev = true)
+    #     for j in 1:48
+    #         pop[i,j] = findfirst( isequal(pop[i,j]), popRank)
+    #     end
+    # end
+    
+    
+    # plot( xlims=(0, 49), ylims = (0,49), legend = false)
+    # for i in 1:8
+    #     plot!( pop[9,:], pop[i,:], seriestype=:scatter, show = true)
+    # end
+
+    df = copy(data)
+    for col in vcat( cols, :ind)
+        popRank = sort( copy( df[col]), rev = true)
+        for i in 1:nrow(data)
+            df[col][i] = findfirst( isequal( df[col][i]), popRank)
+            
+         
+        end
+    end
+    
+    plot( xlims=(0, 49), ylims = (0,49), legend = false)
+
+    for j in 1:nrow(df)
+        plot!( repeat( [df[:ind][j]], 8), [df[j,col] for col in cols], seriestype=:scatter, show = true)
+    end
+    
+    # for col in cols
+    #     plot!( df[:ind], df[col], seriestype=:scatter, show = true)
+    # end

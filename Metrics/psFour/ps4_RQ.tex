@@ -1,0 +1,143 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+
+\title{ps4}
+\author{rafehq }
+\date{November 2018}
+\usepackage{amsmath}
+\usepackage{bbm}
+\begin{document}
+
+\maketitle
+
+\section*{Question 3}
+\subsection*{a}
+$\Rightarrow$ \\
+Take $\mathbbm{A}\mathbbm{X} = \mathbbm{I}$
+\begin{align}
+    E(\tilde \beta | X_1,...,X_n) & = E(\mathbbm{A} \mathbbm{Y}|X_1,...,X_n ) \\
+&=  \mathbbm{A} E(\tilde \beta | X_1,...,X_n)
+\end{align}
+Note, this follows as $E(f(x)y|x) = E(f(x))E(y|x)$
+Now, we have that this becomes
+\begin{align*}
+ & = \mathbbm{A'}(E(Y_1|X_1,...,X_n) \dots E(Y_n|X_1,...,X_n))' \\
+&=  \mathbbm{A'}(E(Y_1|X_1) \dots E(Y_n|X_n))' \\
+&=  \mathbbm{A'}(X_1\beta \dots X_n\beta)' \\
+&=  \mathbbm{A'}\mathbbm{X}\beta \\
+&=  \mathbbm{I}\beta = \beta \\
+\end{align*}
+The second equality above follows from the fact that $(X_i,Y_i)$ is iid so $Y_i$ is independent of all of the $X_j$ for $j \neq i$. \\
+$\Leftarrow$ \\
+Suppose $ E(\tilde \beta | X_1,...,X_n) = \beta$. Then, we have, from the equalities above, that  
+$$E(\tilde \beta | X_1,...,X_n) =  \mathbbm{A'}\mathbbm{X}\beta $$
+Thus,
+\begin{align*}
+     & \mathbbm{A'}\mathbbm{X}\beta - \beta = 0  \Rightarrow \\
+    & (\mathbbm{A'}\mathbbm{X} - \mathbbm{I})\beta = 0
+\end{align*}  
+As this must hold true for all $\beta$, we must have that $\mathbbm{A}\mathbbm{X} = \mathbbm{I}$ (i.e the only eigenvalue is $\lambda = 1$ for all $\beta \in \mathbbm{R}^{k+1}$)
+
+\subsection*{b}
+\begin{align*}
+    Var(\tilde \beta | X_1,...,X_n) & = E((\mathbbm{A} \mathbbm{Y})^2|X_1,...,X_n ) - E(\mathbbm{A} \mathbbm{Y}|X_1,...,X_n )^2 \\
+&= \mathbbm{A}'(E( \mathbbm{Y})^2|X_1,...,X_n )\mathbbm{A} - \mathbbm{A}'E( \mathbbm{Y}|X_1,...,X_n )) \mathbbm{A} \\
+\end{align*}
+Note, again, $(X_i,Y_i)$ is iid so $Y_i$ is independent of all of the $X_j$ for $j \neq i$ and thus $E(Y_i|X_1,...,X_N) = E(Y_i|X_i)$. Furthermore, we have that $Y_i$ is
+independent of all of the $Y_j$ for $j \neq i$. Thus, $E(Y_jY_i) = 0 $ for $i \neq j$ and thus:
+\begin{align*}
+&= \mathbbm{A}'(diag(E( Y_1^2|X_1 ),...,E( Y_n^2|X_n ) - E( Y_1|X_ 1)^2...E( Y_n|X_n )^2)) \mathbbm{A} \\
+&= \mathbbm{A}'(diag(Var( Y_1|X_1 )...Var( Y_n|X_n )) \mathbbm{A} \\
+& = \mathbbm{A}'diag(\sigma^2(X_1 )...\sigma^2(X_n )) \mathbbm{A} \\ 
+& = \mathbbm{A}'\mathbbm{D} \mathbbm{A}
+\end{align*}
+
+\subsection*{c}
+We take
+\begin{align*}
+    \mathbbm{X}' \mathbbm{D}^{-1} \mathbbm{X} &= (X_1 ... X_n) diag(\frac{1}{\sigma^2(X_1)},...,\frac{1}{\sigma^2(X_n)})(X_1 ... X_n)'\\
+    & =\frac{X_1'X_1}{\sigma^2(X_1)}+...+\frac{X_n'X_n}{\sigma^2(X_n)} \\
+\end{align*}
+Now, note that as $\mathbbm{X}$ has all its columns linearly independent, $\mathbbm{X}a \neq 0 \Leftrightarrow a \neq 0$. 
+Take such an a$\neq 0$: 
+\begin{align*}
+    a^T \mathbbm{X}' \mathbbm{D}^{-1} \mathbbm{X}a &= \frac{a^2_1X_1'X_1}{\sigma^2(X_1)}+...+\frac{a^2_nX_n'X_n}{\sigma^2(X_n)} \\
+\end{align*}
+We have that $a_i^2\geq 0$ (and, by definition, $a_i^2>0$ for some $i$). Thus, the above sum is strictly positive. This shows that $\mathbbm{X}' \mathbbm{D}^{-1} \mathbbm{X}$ is positive definite, which in turn establishes that it is invertible.
+
+\subsection*{c}
+Take\footnote{for a diagonal matrix D, D' = D}
+\begin{align*}
+ Var(\tilde \beta |X_1,...,X_n] &= \mathbbm{A}'\mathbbm{D}\mathbbm{A} \\
+    &= (\mathbbm{X}'\mathbbm{D}^{-1}\mathbbm{X})^{-1} \mathbbm{X}'\mathbbm{D}^{-1}\mathbbm{D}
+    \mathbbm{D}^{-1}\mathbbm{X}(
+    \mathbbm{X}\mathbbm{D}'^{-1}\mathbbm{X})^{-1} \\
+    &= (\mathbbm{X}'\mathbbm{D}^{-1}\mathbbm{X})^{-1} \mathbbm{X}'
+    \mathbbm{D}^{-1}\mathbbm{X}(
+    \mathbbm{X}\mathbbm{D}'^{-1}\mathbbm{X})^{-1} \\
+    &= (\mathbbm{X}'\mathbbm{D}^{-1}\mathbbm{X})^{-1}  \\
+\end{align*}
+Also, clearly:
+\begin{align*}
+  ((\mathbbm{X}'\mathbbm{D}^{-1}\mathbbm{X})^{-1} \mathbbm{X}'\mathbbm{D}^{-1})\mathbbm{X} = (\mathbbm{X}'\mathbbm{D}^{-1}\mathbbm{X})^{-1} (\mathbbm{X}'\mathbbm{D}^{-1}\mathbbm{X}) = \mathbbm{I} 
+\end{align*}
+By (a), the estimator $\tilde \beta_n$ is then unbiased
+
+\subsection*{e}
+Take $\tilde{ \mathbbm{A}} \mathbbm{Y}$ as
+another unbiased estimator of $\beta$ wherein $\gamma_n \equiv \tilde{\mathbbm{A}}\mathbbm{Y}$. As 
+$E(\gamma_n|X_1,...,X_n) = \beta$, we have that $\tilde{\mathbbm{A}'}\mathbbm{X} = \mathbbm{I}$.
+Now, we rum through the argument used in the Gauss-Markov theorem:
+Take $C = \mathbbm{A} - \tilde{\mathbbm{A}}$, then:
+\begin{align*}
+Var(\gamma_n|X_1,...,X_n) - Var(\tilde \beta_n|X_1,...,X_n) & = (C+ \mathbbm{A})' \mathbbm{D} (C + \mathbbm{A}) - \mathbbm{A}'\mathbbm{D}\mathbbm{A} \\
+& = C'\mathbbm{D}C + \mathbbm{A'}\mathbbm{D}C + C'\mathbbm{D}\mathbbm{A} \\
+& = C'\mathbbm{D}C +(\mathbbm{X}'\mathbbm{D}^{-1}\mathbbm{X})^{-1}\mathbbm{X}'\mathbbm{D}^{-1}\mathbbm{D}C + C'\mathbbm{D}\mathbbm{D}^{-1}\mathbbm{X}(\mathbbm{X}'\mathbbm{D}^{-1}\mathbbm{X}) \\
+& = C'\mathbbm{D}C +(\mathbbm{X}'\mathbbm{D}^{-1}\mathbbm{X})^{-1}\mathbbm{X}'C + C'\mathbbm{X}(\mathbbm{X}'\mathbbm{D}^{-1}\mathbbm{X}) \\
+& = C'\mathbbm{D}C +(\mathbbm{X}'\mathbbm{D}^{-1}\mathbbm{X})^{-1}\mathbbm{X}'(\mathbbm{A} - \tilde{\mathbbm{A}}) + (\mathbbm{A} - \tilde{\mathbbm{A}})\mathbbm{X}(\mathbbm{X}'\mathbbm{D}^{-1}\mathbbm{X}) \\
+&= C'\mathbbm{D}C
+\end{align*}
+Again, using the above argument in (c), we see that the differences in the variances is a positive semidefinite matrix s.t
+
+$$a^T C' \mathbbm{D} C a = \sum_{i=1}^n \frac{a_i^2}{\sigma^2(X_i)} \geq 0$$
+This establishes that the estimator in the previous part is \textit{best} as the variance of any other predictor is the same or greater.
+
+
+\section*{Question 7}
+\subsection*{a}
+Note that this follows simply from the random assignment. Because individuals are not aware of their assignment before the experiment and have equal likelihood of being assigned to treatment or control groups, their probability of being assigned to the treatment is independent of their $\alpha_i$ and $\beta_i$. Thus, $D_i$ is independent of $(a_i,\beta_i)$
+\subsection*{b}
+Note, that we can write down the $\beta$ (i.e from class) as $Var(D_i,D_i')^{-1}Cov(D_i,Y_i)$ for the special case of a bivariate regression. 
+\begin{align*}
+    \beta &= Var(D_iD_i')^{-1}Cov(D_iY_i) \\
+    &= Var(D_iD_i')^{-1}Cov(D_i\alpha_i + \beta_i D_i) \\
+    &= Var(D_iD_i')^{-1}(Cov(D_i\alpha_i) + Cov(\beta_i D_iD_i)) 
+\end{align*}
+Since $(\alpha_i,\beta_i)$ are independent of $D_i$, the first term is just 0, and the second term is $E(\beta_i)E(D_iD_i')$. Thus, we have:
+\begin{align*}
+    & = Var(D_iD_i')^{-1} E(\beta_i)Cov(D_iD_i') \\
+    & = Var(D_iD_i')^{-1} E(D_iD_i')E(\beta_i)\\
+    & = E(\beta_i)
+\end{align*}
+Using the above, note we can also solve for $\alpha$:
+$$ \alpha = E(y-\beta D_i)$$
+\begin{align*}
+    \alpha & = E(Y_i) - \beta E(D_i) \\
+    & = E(\alpha_i + \beta_i D_i) - \beta E(D_i) \\
+    & = E(\alpha_i) + E(\beta_i D_i) - \beta E(D_i) \\
+\end{align*}
+Again, by the independence of $\beta_i$ and $D_i$, we get that this equals
+\begin{align*}
+    & = E(\alpha_i) + E(\beta_i) E(D_i) - \beta E(D_i) \\
+    & = E(\alpha_i) + \beta E( D_i) - \beta E(D_i) \\
+    & = E(\alpha_i)  \\
+\end{align*}
+\subsection*{c}
+Note that since we aren't given homoskedasticity\footnote{In fact, in this setup it is probable that $Var(\epsilon_i)$ is not constant as $\alpha_i$ and $\beta_i$ depend on $i$, and indeed, $Var(\epsilon_i|D_i) = (1-D_i)Var(\alpha_i) + D_iVar(\alpha_i + \beta_i)$}, we can use robust standard errors:
+\begin{align*}
+    \hat \Omega &= (\frac{1}{n}\sum_{i=1}^n X_i X_i')^{-1}(\frac{1}{n}\sum_{i=1}^n X_i X_i' \hat \epsilon_i)(\frac{1}{n}\sum_{i=1}^n X_i X_i')^{-1} \\
+    & \rightarrow \Omega
+\end{align*}
+Now, note that the errors in $\beta$ are just the component of $\Omega$ in position (2,2). As $\hat \Omega$ is a consistent estimator of $\Omega$ (from class and delineated above), we can construct the confidence region:
+$$C_n = [\hat \beta_n - \Phi^{-1}({1-\alpha/2})\times \sqrt{\frac{\hat \Omega_{2,2}}{n}}, \hat \beta_n +  \Phi^{-1}({1-\alpha/2})\times \sqrt{\frac{\hat \Omega_{2,2}}{n}}]  $$
+\end{document}

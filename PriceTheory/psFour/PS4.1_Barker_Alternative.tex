@@ -1,0 +1,151 @@
+\documentclass[12pt]{paper}
+
+\usepackage{Schwieg}
+\usepackage[margin=1in]{geometry}
+\usepackage{tikz}
+\usepackage{verbatim}
+\title{Price Theory I: Problem Set 4 Question 1}
+\author{Samuel Barker\and Timothy Schwieg\and Rafeh Qureshi\and Daniel Noriega}
+\begin{document}
+\maketitle
+
+\subsection*{Description}
+
+
+There is a society with people who have the same preferences over houses, but differ in income levels. These people can rent (or buy--the results are the same unless otherwise noted) a house either from an existing stock of old houses or from a market for new houses with are produced with constant returns to scale in a competitive market.
+
+
+\subsection*{Assumptions and Givens}
+
+
+We are given that new houses are of ``high quality." We will assume that this high quality is the same for all new houses, and that it is the highest quality--no older house from the existing stock has a higher quality. We can say that the highest quality (the quality of the new houses, i.e. $q_N$) is one, and denote this by $q_N=1$. Further, since all old houses must have lower quality, say $q_{Oi} \in [0,1]$, where $i$ denotes the $ith$ house in the set of old houses ordered from lowest to highest quality. Meaning, for the set of old houses, $\{1,...,H\}$ where there are $H$ old houses, the quality for house $i$ is strictly less than the quality for house $i+1$.\\
+
+
+We also order individuals by income. Say there are $M$ people, and that they are indexed by income by the set $\{1,...,M\}$, where the income of person $j$ is strictly less than the income of person $j+1$. Notice that for both income and for old houses, we have assumed strict inequalities. This will be helpful by eliminating some odd cases from our analysis moving forward.\\
+
+
+We also note that all new houses have the same price by the fact that they are produced in a competitive industry with constant returns to scale.\\
+
+
+Finally, we are assuming some auxiliary good $X$ that people have the same preferences over--this is obviously needed, because without it everyone would just buy the house feasible in their income--not an interesting case.\\
+
+
+\section*{Part A}
+\subsection*{Equilibrium}
+
+
+The fundamental point of equilibrium is that the quality of houses are going to correspond to incomes. Meaning, if person $j$ rents a house of quality $i$, then we know that person $j+1$--the richer person--is going to have a house of higher quality (unless both have new houses), and in particular a house of quality $i+1$ (i.e., the next best house--unless they both get new houses, of course). It is obvious now why we have assumed strict inequality for income and quality--otherwise our analysis could be bogged down by explaining how the prices of the houses must line up for the difference in quality to be offset by the ability to purchase some auxiliary good $X$.\\
+
+
+The fact that richer people have nicer houses is intuitive, and follows immediately from the fact that everyone has the same preferences. It is obvious that for any normal sort of utility function, the rich person would be willing to pay more to have a higher quality house than a poor guy. This is true by the fact that an increase in income would shift a person's budget line outward. Thus for given prices, a richer person would always demand higher quality (in the hedonic model) houses and more $X$ than a poorer person. Hence, the price of the house would be bid up until it was at the willingness to pay of the next poorer person. Meaning, person $i+1$ would pay person $i$'s willingness to pay for a house. This would be true for all individuals ranging up until the income levels are high enough that the optimal level of housing quality for a person is one--which we said was the highest quality, and so they buy/rent a new house. After the richest person that finds it optimal to buy an old house, call her person $i^*$, all richer people would buy new houses. Thus, they would have houses of the same quality (because we have assumed that all new houses have the highest quality level possible--one). Of course, being richer than a person with the same quality house still makes you better off, because you can afford additional $X$.\\
+
+
+Person $i^*+1$ is an interesting case. Notice that her decision to buy a new house is only made in light of given prices. Meaning, if a sufficient number of people immediately poorer than her left the country or something, then she may choose to NOT buy a new house, opting instead for an old house and higher consumption of $X$. (This could even cause people richer than her to change their decisions as well!) The reason being that the price of a lower quality house would have dropped because the willingness to pay of the next poorer person is less than it was before. We must always keep this in mind--a person's optimizing choice is always in light of given prices of alternative houses.
+
+
+\subsection*{Note}
+
+
+For the following section, notice that given our person $i^*$ from above that $M-i^*$ people buy new houses and $i^*$ people buy (or rent--again, this does not matter unless otherwise noted) old houses. Recall that this works because of how we indexed people.\\
+
+
+Since we have a given number of people, and a given number of houses, there is potential for both homelessness and for empty houses.\\
+
+
+Proof that homelessness could occur is easy: consider a world where the cost of new houses exceeds the income for anyone, and where the number of existing houses ($H$) is less than the number of people ($M$). Clearly, the poorest people will go without a home ($M-H$ people). Notice that the analysis doesn't change substantially if we allow some people to optimally purchase new houses. In this case, we could still have that $i^*>H$, thus $i^*-H$ people go without a home. In this case, the prices are still determined by the willingness to pay of the next poorest person, but the poorest person with a house pays the willingness to pay of person $i^*-H$, i.e. the willingness to pay of the richest homeless person.\\
+
+
+The case where $i^*<H$ is substantially less interesting, and also less likely to be relevant to real life. Prices of old houses are determined the same way, and unless there is an alternative use for houses, the poorest person would get a free house. Thus, we will restrict our attention to when $i^*>H$.\\
+
+
+\section*{Part B}
+
+
+Suppose there was an income increase for a given income range. First notice that if this income shock is for those that are already buying new homes, there is no change--they just all buy more $X$ and everyone else keeps on keeping on. Further, they are unaffected by other people also buying new houses. Thus, from here on in Part B, we will be speaking only about people in the market for old houses.\\
+
+
+There are two cases after an income boost to a specific range of people: Case 1 the ordering of people by income changes (the increase in income for a person may be greater than the difference between his old income and a richer person that did not receive a boost); Case 2 and the converse--ordering of income is unchanged. We will consider Case 2 first, and it will be apparent that the changes are essentially the same.
+
+
+\subsection*{Case 2}
+
+
+Noticed that we argued in Part A that the willingness to pay for a house increases with income. Since we claimed that people in the market for old homes pay the next poorest person's willingness to pay, we would have to say that people richer than those receiving the income boost would pay more for their house! Because the cost of such a person's house has gone up, his willingness to pay for a house of higher quality has also increased. This in turn would cause the person immediately richer than him to have to pay more for her house, and therefore her willingness to pay for a higher quality house would also increase. This increase in prices (and therefore willingness to pay for a house of higher quality) would be transmitted up through the income levels, and if the price increase is high enough, person $i^*$ may be willing to rent a new house now. Notice that this is exactly the argument we made about person $i^*+1$ renting an old house if the price was sufficiently lowered except in reverse.\\
+
+
+Importantly, if $E$ number of people start renting new houses rather than old houses after the income shock, then people living in old houses will move $E$ houses up in quality. Meaning, the person living in house $j$ before the shock, will be living in house $j+E$ after the shock. Further, if there was homelessness, $E$ fewer people are homeless.\\
+
+
+Also interestingly, all people below the income shock level range will pay more for their house. This is true because the poorest person renting a house (before the shock), which would be house $1$, prefers higher quality to lower quality. We also already established that he will be inhabiting house $E+1$ after the shock. And because he prefers higher quality to lower quality, his willingness to pay for house $2$ is going to be less than his willingness to pay for house $E+2$. Thus, by the argument made above prices, all people making more than him would pay more for their house.\\
+
+
+There are a few important distinctions, however. Those poorer than those receiving the income boost are strictly better after the boost (after all, nothing is keeping them from staying in the houses where they were). Those receiving the income boost are strictly better off (as is obvious). Those inhabiting old houses richer than the range receiving the boost are strictly worse off. That last bit is especially obvious if you take a look at the people who chose to change their house to a new one. They could have done that before (the price of a new house is unchanged), but they didn't. Thus, it is clear that they are worse off. A similar argument holds for everyone else. Their willingness to pay for a higher quality house went up in light of the new prices they would be facing in their old house. They could have had a higher willingness to pay before the shock, but they didn't--they are also worse off. As argued at the beginning of this Part, the people renting new homes from the start are indifferent.\\
+
+
+There is also a case where the change in price is not great enough to cause person $i^*$ to rent a new house. In this case, all the results from above hold, except that those poorer than the income boost group are left unchanged. The people receiving the income boost are richer even though they have the same house, they can afford more $X$. Those richer than the income boost group stay in the same house, but face higher rents the house and therefore they can afford less of $X$.
+
+
+\subsection*{Case 1}
+
+
+Notice that this case is not fundamentally different. Even if the income shock causes them to change in an ordinal sense, the general effect is the same. There is an increase in willingness to pay that will travel up and, if the effect is large enough, cause some people to rent new houses instead of old ones. The reason we know that there will be an increase in willingness to pay is because willingness to pay is always in light of other prices (which, in this case, are other people's willingness to pay). Consider just one person receiving an increase to income and jumping a few income levels--call his new position $W$. This fellow now has an income between two people who previously didn't have anyone between them. Thus, the guy making more $W-1$, and less than $W+1$. We know that before $W+1$ was paying the willingness to pay of $W-1$, but now since the income for guy $W$ is greater than $W-1$, $W+1$ has to pay $W$'s willingness to pay. And it is trivial to see that $W$'s willingness to pay will be higher than $W-1$--thus basically all the arguments from above hold. The only thing different is the people who fall in the income rankings--they are worse off. Clearly, they could have afforded the cheaper house had they wanted to earlier.\\
+
+
+It is important to point out that \textbf{buying vs renting} matters here. In a world where everyone owns their house, those receiving the income boost may want to buy a more quality house that was suboptimal earlier. If the people owning the houses of higher quality can then sell them for a higher price to those receiving the income boost than they could before, then they may buy a higher quality house as well. By the argument above, this will travel up some people may buy new houses, and the people owning the worst houses will sell them and buy the houses vacated by those above them (by the same argument above). Thus in this case, everyone is strictly better off.\\
+
+
+Note that this also implies that landlords in the renting story usually benefit as well, with the exception of the landlords who own the oldest houses, and the houses vacated by the group who received the income boost. They will be getting lower rents than they were before. If they weren't, then that would mean that people of a higher income level had the same willingness to pay as people of a lower income level--not possible under identical preferences and reasonable utility curves.\\
+
+
+\section*{Part C}
+
+
+If the government replaced the oldest houses with new houses, then this is effectively causing a decrease in the stock of old houses since the new houses provided by the government would have the same cost or rent as the new houses created in the competitive industry. Suppose that the government replaced the $G$ worst houses with new ones. In this case, the $G$ poorest people living in homes (not the homeless people) more people would become homeless because all of the new homes created by the government will be rented out or sold to the people who would have previously demanded them from the competitive industry (we are assuming that $G$ is less than the number of people who find it optimal to buy new houses, i.e. $G<M-i^*$).\\
+
+
+Obviously, those who are now homeless are worse off than they were before (they could always have chosen to be homeless). The question is, are they worse off being homeless than they would be paying a higher price for (what would have been before the urban renewal) a suboptimal house of higher quality than their previous house? It is reasonable (it is unlikely that they would all face a corner solution) to assume that at least some of them would be better paying for a house than they would be on the street. This implies that their willingness to pay increased, and therefore all the arguments from Part B follow. Everyone (except those already renting new houses) would be strictly worse off because they would either be facing higher prices for the same house as before, or renting a house that was they could have selected before but didn't.\\
+
+
+If they all owned houses, then they would all be better off (we assume that those displaced from their house were compensated at an above market rate--otherwise they wouldn't have sold to the government since they chose not to sell before at the market rate). By the same reasoning, landlords are better off as well. Owners of new houses are left unchanged, just as before.\\
+
+
+If we allow $G>M-i^*$, then things get a bit messy. First, all the people who buy the $G$ houses will pay the willingness to pay of the $(G-1)^{th}$ richest person, and no one will buy from the competitive industry. Further, once this occurs, everyone below those people will move up into the old houses vacated by them, and all of the arguments from the people poorer than the group receiving the income boost from Part B holds--nearly everyone is better off (including those who were perviously buying new houses--which has not happened yet until now). There is one major exception--those who may be homeless. There were initially $M-i^*$ people in willing to buy new homes, and after the urban renewal, there are $G$, where $G>M-i^*$. Notice that the $G$ poorest people living in houses were displaced and the $M-i^*$ poorest of them will not be able to get a home anymore because there are no new houses being built, the number of houses is the same as the number of the existing stock. Thus, the amount of people who would have previously demanded a new house ($M-i^*$ ) now do not, thereby pricing the $M-i^*$ poorest people out of the housing market.\\
+
+Presumably, if the government is having to buy the houses from the poor people, the poor people would only be willing to take a price that would allow them to either consume enough $X$ to be better off, or to buy a house of higher quality despite the price increase. Thus, they would be better off. And, by the arguments above, all owners (landowners as well) would be better off.\\
+
+
+\section*{Part D}
+
+First notice that a lump sum tax maintains the ordering of people according to their income. This ordering drives nearly everything, but there is an important component as well and we will explore in the next paragraph. We can imagine that police service is a normal good. Thus we can imagine this increase in police service up to the highest quality resulting in a higher willingness to pay for each house, except the one that already had it, naturally. Since prices of old houses are determined by willingness to pay, this would result in higher prices for each old house. There is also the fact that a tax is taken up. Recall the poorest person renting a new house from Part A, person $i^*+1$. This person receives a both a fall in income (the tax) and faces a relatively more attractive alternative in an old house (because it has better police protection than it used to have). Depending on the size of the tax, and his utility as a function of police services (which is relevant, because the difference in police services before the policy may have explained his choice of a new house over an old house), he may find it beneficial to take the old house over a new house. This could occur for a number of people who would have previously purchased new houses--suppose this number is $F_R$.\\
+
+
+Thus, we can immediately see that if this occurs, then $F_H=F_R$ people will become homeless. Further (under an assumption I will detail in a second), we can tell that the richest homeless person after the new police policy will have a higher willingness to pay for the oldest house than the richest homeless person before the police policy. This is true for two reasons: the house has better police protection, and the richest homeless person after the policy has a higher income--thus, by our argument in our setup, he will have a higher willingness to pay. The assumption that guarantees this, is that the \textbf{tax amount is not so great that it counteracts both the initial higher income, and the increased police service.} This assumption seems safe for With this assumption in place, we can see that this will send prices up and it will travel up through the houses until some people decide to pay for a new house again (some of the initial $F_R$ who decided to rent an old house after the policy). Then, an equal amount of the $F_H$ people who became homeless will be able to rent houses again, causing the prices to fall, and then some more people will move back to renting an old house instead of new houses, causing some people to be priced out of the market, etc... Eventually they will settle on some $F^*=F^*_R=F^*_H$ in equilibrium.\\
+
+
+Thus, in equilibrium, there will be more homeless people--these people are worse off, unless we assume some police services for homeless people as well in which case, they fit into the following analysis. It is difficult to say whether anyone is better or worse off except for the richest people. They are definitely worse off because they are getting no change in police service, but are suffering a decrease in income through taxation, and some are finding it optimal to have a house that is of a lower quality than before. For people not paying for new homes before the policy change, we can only say that they are taking a fall in income, a fall in the quality of their housing, but an increase in the police services they receive. We would need to know their marginal utility for policing, income, and housing quality. If we knew the reasons behind why there was higher police services for higher quality houses, we could maybe say something. However, since we are just exogenously given that police services differ, and quality of houses (an independent feature) are perfectly related, we cannot say anything about a person's indifference curves between police services and housing quality.\\
+
+
+As homeowners, the result is unambiguous, but depends on the quality of the house a person owns, and therefore the income level of that person. The most wealthy are still worse off--by the same reasons as above--their houses are not worth more and they now pay a tax. Everyone else will see the value of their homes rise, and will suffer a fall in effective income because of the tax. They may choose to sell their house (initiated by the fact that a person who was previously owning a new house may want to switch to an old house), but they would only do so if they were better off--this would have to end up with more people homeless, but even the homeless guy would be homeless by choice--he would be able to consume enough $X$ from the sale of his house to make up for it. Further, it seems that the owners of the worst houses actually benefit the most since they receive the greatest increase in police services. We could imagine a scenario where, if these people has decreasing marginal returns to utility inputs, the tax causes a greater fall in utility for a poor person than for a rich person. But, but by the same argument, we could say that the return for a \textbf{given} increase in police services would cause a greater increase in utility for poor people than richer people. Since a poor person receives even more additional police services than others (not just a given amount, as with the taxes), we assume that this increase is greater than the cost of the tax. It is possible that the tax outweighs this, but it is more likely that the tax will outweigh the benefits for people in higher income ranges. Meaning, there is a house, call it house $Q_H$, where owner (call him owner $Q_O$) is worse off, because the benefit from the increase in police services is less than the cost of the tax. Thus, $Q_O$ and any homeowner richer than him is made worse off by the policy change, and any homeowner poorer than him is better off.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}

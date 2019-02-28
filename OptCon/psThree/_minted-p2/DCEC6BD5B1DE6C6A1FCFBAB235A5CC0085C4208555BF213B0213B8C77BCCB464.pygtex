@@ -1,0 +1,38 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k}{function} \PYG{n}{PseudoMarginalMCMC}\PYG{p}{(} \PYG{n}{startVal}\PYG{p}{,} \PYG{n}{N}\PYG{o}{::}\PYG{k+kt}{Int64}\PYG{p}{,} \PYG{n}{S}\PYG{o}{::}\PYG{k+kt}{Int64}\PYG{p}{,} \PYG{n}{qFun}\PYG{p}{,} \PYG{n}{pFun}\PYG{p}{,} \PYG{n}{pArgs}\PYG{p}{)}
+    \PYG{n}{β} \PYG{o}{=} \PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{}(}\PYG{n}{undef}\PYG{p}{,}\PYG{n}{N}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{)}
+    \PYG{n}{τ} \PYG{o}{=} \PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{}(}\PYG{n}{undef}\PYG{p}{,}\PYG{n}{N}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{)}
+    \PYG{n}{α} \PYG{o}{=} \PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{}\PYGZcb{}(}\PYG{n}{undef}\PYG{p}{,}\PYG{n}{N}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{)}
+    \PYG{n}{coinFlips} \PYG{o}{=} \PYG{n}{rand}\PYG{p}{(}\PYG{n}{Uniform}\PYG{p}{(),}\PYG{n}{N}\PYG{p}{)}
+    \PYG{n}{β}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{n}{startVal}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}
+    \PYG{n}{τ}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{n}{startVal}\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{]}
+    \PYG{n}{α}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{n}{ones}\PYG{p}{(}\PYG{n}{S}\PYG{p}{)}\PYG{o}{*}\PYG{n}{startVal}\PYG{p}{[}\PYG{l+m+mi}{3}\PYG{p}{]}\PYG{c}{\PYGZsh{}rand(Normal(0,τ[1]),S)}
+    \PYG{k}{for} \PYG{n}{i} \PYG{k+kp}{in} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{N}
+        \PYG{n}{betaStar} \PYG{o}{=} \PYG{n}{betaSimFun}\PYG{p}{(} \PYG{n}{β}\PYG{p}{[}\PYG{n}{i}\PYG{p}{])}
+        \PYG{n}{tauStar} \PYG{o}{=} \PYG{n}{tauSimFun}\PYG{p}{(}\PYG{n}{τ}\PYG{p}{[}\PYG{n}{i}\PYG{p}{])}\PYG{c}{\PYGZsh{}qSimFun( τ[i], qArgs )}
+        \PYG{n}{alphaStar} \PYG{o}{=} \PYG{n}{rand}\PYG{p}{(}\PYG{n}{Normal}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{n}{tauStar}\PYG{p}{),}\PYG{n}{S}\PYG{p}{)}
+
+        \PYG{n}{p1} \PYG{o}{=} \PYG{n}{mean}\PYG{p}{(}\PYG{n}{pFunStandard}\PYG{p}{(} \PYG{n}{betaStar}\PYG{p}{,} \PYG{n}{tauStar}\PYG{p}{,} \PYG{n}{alphaStarZ}\PYG{p}{,} \PYG{n}{Y}\PYG{p}{,}\PYG{n}{X}\PYG{p}{,} \PYG{n}{σ²} \PYG{p}{)} \PYG{k}{for} \PYG{n}{alphaStarZ} \PYG{k+kp}{in} \PYG{n}{alphaStar}\PYG{p}{)}
+        \PYG{c}{\PYGZsh{}p1 = mean(pFunLogit( betaStar, tauStar, alphaStarZ, Y,X ) for alphaStarZ in alphaStar)}
+        \PYG{c}{\PYGZsh{}println(p1)}
+        \PYG{n}{p2} \PYG{o}{=} \PYG{n}{qFun}\PYG{p}{(}\PYG{n}{β}\PYG{p}{[}\PYG{n}{i}\PYG{p}{],} \PYG{n}{τ}\PYG{p}{[}\PYG{n}{i}\PYG{p}{],} \PYG{n}{betaStar}\PYG{p}{,} \PYG{n}{tauStar}\PYG{p}{)}
+        \PYG{n}{p3} \PYG{o}{=} \PYG{n}{mean}\PYG{p}{(}\PYG{n}{pFunStandard}\PYG{p}{(}\PYG{n}{β}\PYG{p}{[}\PYG{n}{i}\PYG{p}{],} \PYG{n}{τ}\PYG{p}{[}\PYG{n}{i}\PYG{p}{],} \PYG{n}{alphaStarZ}\PYG{p}{,} \PYG{n}{Y}\PYG{p}{,}\PYG{n}{X}\PYG{p}{,} \PYG{n}{σ²} \PYG{p}{)} \PYG{k}{for} \PYG{n}{alphaStarZ} \PYG{k+kp}{in} \PYG{n}{α}\PYG{p}{[}\PYG{n}{i}\PYG{p}{])}
+        \PYG{c}{\PYGZsh{}p3 =mean(pFunLogit(β[i], τ[i], alphaStarZ, Y,X ) for alphaStarZ in α[i])}
+        \PYG{n}{p4} \PYG{o}{=} \PYG{n}{qFun}\PYG{p}{(}\PYG{n}{betaStar}\PYG{p}{,} \PYG{n}{tauStar}\PYG{p}{,} \PYG{n}{β}\PYG{p}{[}\PYG{n}{i}\PYG{p}{],} \PYG{n}{τ}\PYG{p}{[}\PYG{n}{i}\PYG{p}{])}
+
+        \PYG{n}{quant} \PYG{o}{=} \PYG{n}{p1}\PYG{o}{*}\PYG{n}{p2}\PYG{o}{/}\PYG{p}{(}\PYG{n}{p3}\PYG{o}{*}\PYG{n}{p4}\PYG{p}{)}
+
+        \PYG{k}{if}\PYG{p}{(} \PYG{n}{coinFlips}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{\PYGZlt{}=} \PYG{n}{p1}\PYG{o}{*}\PYG{n}{p2}\PYG{o}{/}\PYG{p}{(}\PYG{n}{p3}\PYG{o}{*}\PYG{n}{p4}\PYG{p}{))}
+            \PYG{n}{β}\PYG{p}{[}\PYG{n}{i}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{n}{betaStar}
+            \PYG{n}{τ}\PYG{p}{[}\PYG{n}{i}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{n}{tauStar}
+            \PYG{n}{α}\PYG{p}{[}\PYG{n}{i}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{n}{alphaStar}
+        \PYG{k}{else}
+            \PYG{n}{β}\PYG{p}{[}\PYG{n}{i}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{n}{β}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}
+            \PYG{n}{τ}\PYG{p}{[}\PYG{n}{i}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{n}{τ}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}
+            \PYG{n}{α}\PYG{p}{[}\PYG{n}{i}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{n}{α}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}
+        \PYG{k}{end}
+    \PYG{k}{end}
+
+    \PYG{k}{return} \PYG{p}{[}\PYG{n}{β}\PYG{p}{,} \PYG{n}{τ}\PYG{p}{,} \PYG{n}{α}\PYG{p}{]}
+\PYG{k}{end}
+\end{Verbatim}

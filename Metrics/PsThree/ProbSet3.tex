@@ -1,0 +1,87 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage{bbm}
+\title{Ps3 questions $\in \{4i\}_{i=1}^4$}
+\date{October 2018}
+
+\begin{document}
+
+\maketitle
+\section*{q4}
+Suppose $\tau_n \uparrow \infty$ and for all $\epsilon>0$ and some $B>0$, we have $$\inf_n Pr(|\tau_n (\hat \theta - \theta)|\leq B) \geq 1-\epsilon $$
+Equivalently, we have $\inf_n Pr(|\hat \theta - \theta|\leq \frac{B}{|\tau_n|}) \geq 1-\epsilon$. Now, we can choose some N $\in \mathbbm{N}$ such that, for all $n>N$, $\frac{M}{\tau_n} < \epsilon$ as M is a constant and $\tau_n \uparrow \infty$. Thus
+\begin{align*}
+    1-\epsilon \leq & \inf(Pr(|\hat \theta - \theta)| \leq \frac{M}{|\tau_n|}) \\
+    \leq & \inf(Pr(|\hat \theta - \theta)| \leq \delta) \\
+\end{align*}
+%***************************
+%***************************
+\section*{q8}
+\subsection{a}
+Noting that $f(y|x) = 0$ if $f_X = 0$, we know the integral over $\mathbbm{R^k}\times \mathbbm{R}$ simplifies to the integral over the area where $f_X(x)>0$ (as it is 0 everywhere else).
+\begin{align*}
+    E[m^{*2}(X)] &= \int (\int yf(y|x)dy)^2 f_X(x)dx \\
+    & \leq \int (\int |y| \frac{f(y,x)}{f_X(x)}dy)^2 f_X(x)dx
+\end{align*}
+Knowing that $\int \frac{f(y,x)}{f_X(x)}dy = 1$, we know (i.e by Cauchy -Schwartz):
+\begin{align*}
+    E[{m^*}^2(X)] \leq & \int (\int y^2 \frac{f(y,x)}{f_X(x)})f_X(x)dx \\
+    = & \int \int (y^2 \frac{f(y,x)}{f_X(x)}f_X(x))dy dx \\
+    & \leq \int \int y^2 f(x,y) dy dx = E(Y^2) < \infty \\
+\end{align*}
+\subsection{b}
+Recall, from class that 
+\begin{align*}
+    E[(y-m(x))^2] = & E[(y - m(x) + m^*(x) - m^*(x))^2] \\
+    = & E[(y-m^*(x))^2] + 2E[(y-m^*(x))(m^*(x)-m(x))] + E[(m^*(x) - m(x))^2] \\ 
+    \geq & E[(Y-m^*(X))^2]
+\end{align*}
+Thus, we found that $\min E[(Y-m^*(X))] \Leftrightarrow E[(Y-m^*(X))m(X)] = 0 $
+Now, see that 
+\begin{align*}
+    E[(y-m^*(x))m(x)] = & \int \int (y-m^*(x))m(x)f(y,x)dw dx \\
+    = & \int (\int (y-m^*(x))m(x)f(y,x) dy) dx \\
+    = & \int m(x) f_X(x) (\int y f(y|x) - m^*(x) f(|x) dy dx) \\
+    = & m(x) m*(x) f_X (x) dx - \int m(x) m^*(x) (\int f(y|x) dy) f_X (x) dx \\
+    = & \int m(x) m^*(x) f_X d(x) - \int m(x) m^*(x) f_X(x) dx = 0
+\end{align*}
+
+%***************************
+%***************************
+\section*{q12}
+Consider 
+\begin{align*}
+    \beta_1 =& \frac{Cov(X,Y)}{\sigma_X} \\
+    =& \rho_{X,Y} \frac{\sigma_Y}{\sigma_X} \\
+\end{align*}
+Thus, the $|\beta_1|<1$ does not necessarily mean $\frac{Var(X)}{Var(Y)} <1$ as we need $\frac{\beta_1}{\rho_{X,Y}}<1$
+\subsection{b}
+As $\sigma_X = \sigma_Y$, the above equation implies that we have $\beta_1 = \rho_{X,Y}$, so $\beta_1 = 1$ iff $\rho_{X,Y}=1$. Also, as $\sigma^2_Y = \beta_1^2 \sigma^2_X + \sigma^2_U$, we requite that $\sigma^2_U=0$
+\subsection{c}
+Again, as we have 
+\begin{align*}
+    \beta_1  = \rho_{X,Y} \frac{\sigma_Y}{\sigma_X} \\
+    = \rho_{X,Y}\frac{\sigma_X}{\sigma_Y} \\
+    = \alpha_1
+\end{align*}
+as the distributions are equal. This equality requires, either $\rho_{X,Y} = 0$ or $\sigma_X = \sigma_Y$
+
+%***************************
+%***************************
+\section*{q16}
+Intuitively, we have that since E(V) = 0 and $V\in \{0,1\}$, we cannot have the measurement error to ``cancel out" as as V can never be below 0. \\
+Note that if E(V) = 0,
+\begin{align*}
+Cov(X,V) &= E((X-E(X))(V-E(V))) \\
+&= E(XV)-E(X)E(V) \\
+& = E(XV)
+\end{align*}
+Now, looking at variance of $\hat X$, we see that if $Cov(X,V) = E(XV) = 0$, $Var(\hat X) = Var(X)$ 
+\begin{align*}
+Var(\hat X) =& E(X^2) + E(V^2) + E(XV) - E(\hat X)^2 \\
+=& E(X^2) - E(X)^2 + E(V^2) \\
+=& Var(X) + Var(V)
+\end{align*}
+Herein, the $Var(V) = 0 $ so V= 0 and $\hat X $ is just $X$. 
+\end{document}

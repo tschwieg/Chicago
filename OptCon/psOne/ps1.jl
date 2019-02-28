@@ -1,0 +1,309 @@
+using Distributions
+using Plots
+using StatsBase
+using DataFrames
+using CSVFiles
+using Printf
+using LinearAlgebra
+pyplot() 
+
+#This can be ignored, just cleans the numbers for output
+function cln( x::Float64 )
+    return replace(@sprintf("%.5g",x), r"e[\+]?([\-0123456789]+)" => s" \\times 10^{\1}")  
+end
+
+#Start is the value for the initial position of the sampler
+#N is the number of iterations to perform
+#pFun is the function that evaluates p
+#qFun is the function that evaluations q
+#qSimFun is a function that simulates from the q-law
+#vargs are all the possible functon arguments that are passed to qFun and qSimFun
+
+function Metropolis( startVal, N::Int64, pFun, qFun, qSimFun, pargs, qargs )
+    #The uniforms are not conditional on any values of $\theta$
+    #So we might as well simulate them all up-front
+    coinFlips = rand( Uniform(), N)
+    #This allocates the vector for all the thetas.
+    #theta = ones(N+1)*startVal
+    theta = Vector{typeof(startVal)}(undef,N+1)
+    theta[1] = startVal
+    for i in 1:N
+        #First simulate from q
+        thetaStar = qSimFun( theta[i], qargs... )
+
+        #Now go through all the mess of calculating the ratio of p and q's
+        quotient = pFun( thetaStar, pargs...)*qFun(theta[i],thetaStar,qargs...) / ( pFun( theta[i], pargs...)*qFun(thetaStar,theta[i],qargs...))
+
+        #Decide if we are going to let this guy through or not.
+        if( coinFlips[i] < quotient)
+            theta[i+1] = thetaStar
+        else
+            theta[i+1] = theta[i]
+        end
+    end
+    #Return the entire vector of paths to do with however you please
+    return theta
+end
+
+function p( x::Float64, ::Nothing)
+    a = cos(x)
+    b = cos(1.5*x)
+    c = pdf( Normal(2,1), x)
+    return a*a*b*b*c
+end
+
+#This is just uniformly distributed $\alpha$ units away from $x$
+function q( xPrime::Float64, x::Float64, α::Float64)
+    return (1/(2*α))*( abs(xPrime - x) < α)
+end
+
+function simQ(  x::Float64, α::Float64)
+    return rand( Uniform( x - α, x + α ),1)[1]
+end
+
+
+function CalculateAcceptanceRate( theta::Vector{Float64}, N::Int64)
+    nDiff = 0.0
+    for i in 1:N
+        if( theta[i+1] != theta[i])
+            nDiff += 1
+        end
+    end
+    #return nDiff
+    return nDiff / convert(Float64,N)
+end
+
+#This function takes the sample and computes the relevant summaries
+function StatWaiter( s::Vector{Float64}, N, α)
+    a = round(CalculateAcceptanceRate( s, N)*100)/100.0
+    b = round((maximum(s) - minimum(s))*100)/100.0
+    c = mode( round.( s.*10) ./ 10)
+    #plot!(plt, autocov(s),label=@sprintf("%.2f",α))
+
+    #d = autocov(s)    
+    return [a,b,c]
+end
+
+function CompareAlphas( alphas::Vector{Float64})
+    N = 10000
+    #plt = plot( xlims=(0,51), ylims=(-.1,1.6), legend=:topright )#plot( autocov(Metropolis( 2.0, N, p, q, simQ, 4.0)), label="4.0");
+    AcceptanceRates = [StatWaiter(Metropolis( rand( Uniform(-1.0, 2.0 ),1)[1], N, p, q, simQ, [nothing], [α]), N, α) for α in alphas]
+    #display(plt)
+    #savefig( plt, "acf.png")
+
+    return AcceptanceRates
+end
+
+alphas = [.01, .05, .1, .2, .35, .5, .75, 1.0, 2.0, 3.0]
+accepted = mean( [CompareAlphas( alphas) for i in 1:100] )
+
+newMat = Matrix(undef,10,3)
+A = hcat([cln.(x) for x in accepted]...)
+for i in 1:(size(A)[1])
+    for j in 1:(size(A)[2])
+        newMat[j,i] = A[i,j]
+    end
+end
+
+vcat(["\\alpha" "Acceptance" "Range" "Mode" ], hcat( alphas, newMat)  )
+
+function PrintHistogramACF( α::Float64, title )
+    N = 50000
+    samples = Metropolis( 0.0, N, p, q, simQ, [nothing], [α] )
+    burnout = 10000
+
+    histogram( samples[burnout:end], normalize=:pdf, label="Sample", bins = 100 )
+
+    x = -1.0:.05:5.0#linspace(-1,5)
+    y = p.(x, nothing).*5
+    plot!( x, y, label="pdf")
+    savefig( "pdf" * title*".pdf")
+
+    #println( autocov(samples))
+    return autocov( samples)
+end
+
+
+autocovs1 = PrintHistogramACF( .05, "05" )
+autocovs2 = PrintHistogramACF( .5, "5" )
+autocovs3 = PrintHistogramACF( 1.0, "1" )
+autocovs4 = PrintHistogramACF( 2.0, "2" )
+
+
+plot( autocovs1, label="\$\\alpha = .05\$", seriestype=:scatter, markershape = :circle)
+plot!( autocovs2, label="\$\\alpha = .5\$", seriestype=:scatter, markershape =:diamond)
+plot!( autocovs3, label="\$\\alpha = 1.0\$", seriestype=:scatter, markershape = :star5)
+plot!( autocovs4, label="\$\\alpha = 2.0\$", seriestype=:scatter, markershape =:cross)
+savefig( "acf.png")
+
+# Let $\sigma_b^{-2} \sim \Gamma(\alpha_b, \beta_b)$
+# $\sigma_{\epsilon}^{-2} \sim \Gamma( \alpha_{\epsilon}, \beta_{\epsilon})$.
+# $\beta \sim \normal( \mu, \Sigma)$
+
+
+# $y_i \sim \normal\left( X_i \beta, \sigma_{\epsilon}^2 I + W_i \sigma_b^2 W_i' \right)$
+
+data = DataFrame(load("pset1q4.csv"))
+N = size(data)[1]
+
+X = Vector{Matrix}(undef,N)
+W = Vector{Vector}(undef,N)
+Y = Vector{Vector}(undef,N)
+for i in 1:N
+    X[i] = [data[i,:x11] data[i,:x12] data[i,:x13] data[i,:x14];
+            data[i,:x21] data[i,:x22] data[i,:x23] data[i,:x24]]
+    W[i] = [data[i,:w1], data[i,:w2]]
+    Y[i] = [data[i,:y1], data[i,:y2]]
+end
+
+
+function EvaluateLikelihood( Y::Vector{Vector}, X::Vector{Matrix}, W::Vector{Vector}, β::Vector{Float64}, σe²::Float64, σb²::Float64)
+    #Note that the likelihood function of a mutlivariate normal is:
+    # $\frac{1}{\sqrt{2 \pi \vert \Sigma \vert}} exp ( -.5 (x - \mu)' \Sigma^{-1} (x-\mu))$
+
+    #Because of numerical concerns we will exponentiate the sum of the logs
+    likelihood = (N/2.0)*log(2*pi)
+    for i in 1:N
+        μ = X[i]*β
+        Σ = σe²*I  + σb²*W[i]*W[i]'
+
+        #Sigma is positive definite, so we should invert it using the
+        #cholesky decomposition, especially as numerical concerns loom
+        F = cholesky(Hermitian(Σ))
+        invSigma = (F.U \ (F.L \ I))
+
+        likelihood += -.5*log( det(Σ)) - .5*(Y[i]-μ)'*invSigma*(Y[i]-μ)
+    end
+    #likelihood = exp(likelihood)
+    return likelihood
+end
+
+function EvaluatePriors( αe::Float64, αb::Float64, βe::Float64, βb::Float64, μ::Vector{Float64}, Σ::Matrix{Float64}, betaVal::Vector{Float64}, sigmaEVal::Float64, sigmaBVal::Float64 )
+    betaPrior = pdf( MvNormal( μ, Σ), betaVal)
+    sigmaEPrior = pdf( Gamma( αe, βe), sigmaEVal)
+    sigmaBPrior = pdf( Gamma( αe, βe), sigmaBVal)
+    #return exp( log(betaPrior) + log( sigmaEPrior) + log( sigmaBPrior))
+    return log(betaPrior) + log( sigmaEPrior) + log( sigmaBPrior)
+end
+
+function pBeta(β::Vector{Float64}, σe²::Float64, σb²::Float64, Y::Vector{Vector}, X::Vector{Matrix}, W::Vector{Vector}, αe::Float64, αb::Float64, βe::Float64, βb::Float64, μ::Vector{Float64}, Σ::Matrix{Float64} )
+    return exp( EvaluateLikelihood(Y,X,W,β,σe², σb²) +EvaluatePriors( αe, αb, βb, βb, μ, Σ, β, σe², σb²) )
+end
+
+function qBeta( β, βCond::Vector{Float64}, ::Nothing )
+    return 1.0#0.00390625 #1 / 256
+end
+
+function qBetaSim( βCond::Vector{Float64}, ::Nothing)
+    return [rand(Uniform(βCond[1]-.5, βCond[1]+.5),1)[1],
+            rand(Uniform(βCond[2]-.5, βCond[2]+.5),1)[1],
+            rand(Uniform(βCond[3]-.5, βCond[3]+.5),1)[1],
+            rand(Uniform(βCond[4]-.5, βCond[4]+.5),1)[1]]
+end
+
+#This is the same as pBeta except we have reordered the first 3 arguments
+function pSigmaE(σe²::Float64,β::Vector{Float64},  σb²::Float64, Y::Vector{Vector}, X::Vector{Matrix}, W::Vector{Vector}, αe::Float64, αb::Float64, βe::Float64, βb::Float64, μ::Vector{Float64}, Σ::Matrix{Float64} )
+    return exp( EvaluateLikelihood(Y,X,W,β,σe², σb²) +EvaluatePriors( αe, αb, βb, βb, μ, Σ, β, σe², σb²) )
+end
+
+
+#This is the same as pBeta except we have reordered the first 3 arguments
+function pSigmaB(σb²::Float64,β::Vector{Float64},  σe²::Float64, Y::Vector{Vector}, X::Vector{Matrix}, W::Vector{Vector}, αe::Float64, αb::Float64, βe::Float64, βb::Float64, μ::Vector{Float64}, Σ::Matrix{Float64} )
+    return exp( EvaluateLikelihood(Y,X,W,β,σe², σb²) +EvaluatePriors( αe, αb, βb, βb, μ, Σ, β, σe², σb²) )
+end
+
+function qSigma( σ::Float64, σCond::Float64, ::Nothing)
+    return pdf(Uniform(max(σCond - 2.0,0), σCond + 2.0),σ)
+end
+
+function qSigmaSim( σCond::Float64, ::Nothing)
+    return rand(Uniform(max(σCond - 2.0,0),σCond + 2.0),1)[1]
+end
+
+
+
+priorAe = 1.0
+priorBe = 1.0
+priorAb = 1.0
+priorBb = 1.0
+priorMu = [1.0,1.0,1.0,1.0]
+priorSigma = [1.0 0 0 0; 0 1.0 0 0; 0 0 1.0 0; 0 0 0 1.0]
+
+initBeta = [0,0,0,0]
+initSigmaE = 2.0
+initSigmaB = 2.0
+
+M = 20000
+U = rand(Uniform(), M)
+
+β = Vector{Vector{Float64}}(undef,M)
+β[1] = initBeta
+σE = Vector{Float64}(undef,M)
+σE[1] = initSigmaE
+σB = Vector{Float64}(undef,M)
+σB[1] = initSigmaB
+
+
+#This is my implementation of the Gibbs Sampler.
+for i in 2:M
+    #Simulate β:
+    β[i] = Metropolis( β[i-1], 1, pBeta, qBeta, qBetaSim, [σE[i-1],σB[i-1], Y, X, W, priorAe, priorAb, priorBe, priorBb, priorMu,priorSigma], [nothing])[2]
+    σE[i] = Metropolis( σE[i-1], 1, pSigmaE, qSigma, qSigmaSim, [β[i],σB[i-1], Y, X, W, priorAe, priorAb, priorBe, priorBb, priorMu,priorSigma], [nothing])[2]
+    σB[i] = Metropolis( σB[i-1], 1, pSigmaB, qSigma, qSigmaSim, [β[i],σE[i], Y, X, W, priorAe, priorAb, priorBe, priorBb, priorMu,priorSigma], [nothing])[2]
+    if( i % 1000 == 0)
+        println(i)
+    end
+end
+
+
+betaOne = Vector{Float64}(undef,M)
+betaTwo = Vector{Float64}(undef,M)
+betaThree = Vector{Float64}(undef,M)
+betaFour = Vector{Float64}(undef,M)
+for i in 1:M
+    betaOne[i] = β[i][1]
+    betaTwo[i] = β[i][2]
+    betaThree[i] = β[i][3]
+    betaFour[i] = β[i][4]
+end
+
+# histogram(betaOne[2000:end], normalize = true)
+
+p1 = histogram(σB[2000:end], normalize=true, title = "\$\\sigma_{b}\$")
+#savefig( "sigmaB.pdf" )
+p2 = histogram(σE[2000:end], normalize=true, bins = 100, title = "\$\\sigma_{\\epsilon}\$")
+p3 = plot( autocov( σE ), seriestype=:scatter, label="\$\\sigma_{\\epsilon}\$")
+plot!( p3, autocov( σB ), seriestype=:scatter, label="\$\\sigma_{\\b}\$")
+p4 = plot( autocov( betaOne ), seriestype=:scatter, label="\$\\beta_{1}\$")
+plot!( p4, autocov( betaTwo ), seriestype=:scatter, label="\$\\beta_{2}\$")
+
+plot!( p4, autocov( betaThree ), seriestype=:scatter, label="\$\\beta_{3}\$")
+
+plot!( p4, autocov( betaFour ), seriestype=:scatter, label="\$\\beta_{4}\$")
+plot(p1,p2,p3,p4,layout=(2,2), legend=false)
+#savefig( "sigmaE.pdf" )
+
+
+p1 = histogram(betaOne[2000:end], normalize=true, title = "\$\\beta_{1}\$")
+p2 = histogram(betaTwo[2000:end], normalize=true, title = "\$\\beta_{2}\$")
+p3 = histogram(betaThree[2000:end], normalize=true, title = "\$\\beta_{3}\$")
+p4 = histogram(betaFour[2000:end], normalize=true, title = "\$\\beta_{4}\$")
+plot(p1,p2,p3,p4,layout=(2,2), legend=false)
+savefig("betaHist.png" )
+
+CalculateAcceptanceRate( σE, M-1 )
+
+CalculateAcceptanceRate( σB, M-1 )
+
+CalculateAcceptanceRate( betaOne, M-1 )
+
+plot!( autocov( betaOne ), seriestype=:scatter)
+
+plot( autocov( σE ), seriestype=:scatter)
+
+plot!( autocov( σB ), seriestype=:scatter)
+plot!( autocov( betaTwo ), seriestype=:scatter)
+
+plot!( autocov( betaThree ), seriestype=:scatter)
+
+plot!( autocov( betaFour ), seriestype=:scatter)

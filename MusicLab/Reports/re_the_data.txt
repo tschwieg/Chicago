@@ -1,0 +1,279 @@
+I have Salganik's dissertation, but my search for papers that have modeled using his data has been less fruitful.  The closest I have found is a paper that uses a different source for online music downloads. 
+
+
+Most papers seem to not believe in the experimental approach, citing it as an example of one possible success, but not using it. Those that do take it seriously do not want to do any structural estimation. I will continue searching however. 
+
+-------------------------------------
+
+This is awesome. Next steps:
+1) let’s find Salganik’s dissertation
+2) has anyone else written a structural paper using this data? Looks like there’s a lot of good data to do choice modeling (“effect of download rank/ratings on song demand” etc) . The paper has a lot of cites, so we need to do a good Google Scholar search 
+
+-------------------------------------
+ 
+On Mon, Nov 26, 2018 at 11:59 PM Timothy Schwieg <timothyschwieg@uchicago.edu> wrote:
+The data are extremely split up in the different files. I have copy and pasted from the data release the relevant information about the contents of each file. 
+
+Basically the listensv_ and downloads_v_lexorder give the listen and download information for each song in the aggregate.
+
+The dynamics_ files give the user specific data for each separate world and the experiment. For each user, they give the world, and the remaining 48 fields will be the relevant information in the file, the listen time, the rating, or if they downloaded. 
+The weirdly named dynamics_downloads_download giving the download time, which is separate from the file denoting if they did download. 
+
+autoplay gives the play times, and screenorder_ the user specific ordering of the songs. The demographic files are a bunch of encoded questions that I am pasting at the bottom of the email. 
+
+
+Data files
+There are a variety of data files which store the information from the experiments in different ways. Some
+files contain information from an entire experiment while some files just contain information from a specific
+world within an experiment. There were 9 worlds in experiment 1, 9 worlds in experiment 2, 3 worlds in
+experiment 3, and 4 worlds in experiment 4. Descriptive statistics from these experiments are presented in
+tables 2 to 5.
+• listens v*.txt [4 files (1 from each experiment)]: These files contains the total listen counts for each
+song in each world in a particular experiment. The first column is the song id and the next columns
+are the listen counts in the different worlds. The final column is the listen count in the independent
+world. The songs are sorted in lexicographic order by song id. For example, consider the first line of
+listens v1.txt:
+100102, 61, 48, 60, 124, 64, 74, 92, 84, 164
+This says that song id 100102 (which table 7 tells us is “This Upcoming Winter” by Ember Sky) was
+listened to 61 times in world 1, 48 times in world 2, etc. It was listened to 164 in the independent
+world.
+• downloads v* lexorder.txt [4 files (1 from each experiment)]: These files contain the total download
+counts for each song in each world in a particular experiment. The first column is the song id and
+the next columns are the download counts in the different worlds. The final column is the download
+count in the independent world. The songs are sorted in lexicographic order by song id. For example,
+consider the first line of downloads v1 lexorder.txt:
+100102, 15, 10, 18, 40, 14, 25, 37, 28, 44
+This says that song id 100102 (which table 7 tells us is “This Upcoming Winter” by Ember Sky)
+was downloaded 15 times in world 1, 10 times in world 2, etc. It was downloaded 44 times in the
+independent world.
+• dynamics listens w* v*.txt [25 files (9 from experiment 1, 9 from experiment 2, 3 from experiment
+3, 4 from experiment 4)]: These files record whether each participant listened to each song in each
+world in each experiment. The first column is the user id, the second column is the world (this should
+be the same for everyone in each file), and the next 48 columns record whether the participant listened
+to the song. Songs are sorted in lexicographic order by song id. For example, consider the first line of
+dynamics listens w1 v1.txt:
+4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 1, 0, 0, 1, 0, 0, 0
+This says that the participant with user id 4 was in world 1 and listened to 7 songs: the 10th, 12th,
+26th, 29th, 30th, 42nd, and 45th (when the songs are sorted in lexicographic order by song id). By
+referring to table 7 we can see that this is “Father to Son” by Beerbong, “Til Death do us Part (I
+Don’t)” by The Fastlane, etc. Note that this file does not have information about the order in which a
+participant listened to the songs; for that information a research needs to look at autoplay w* v*.txt.
+• dynamics ratings w* v*.txt [25 files (9 from experiment 1, 9 from experiment 2, 3 from experiment
+3, 4 from experiment 4)]: These files record each participant’s ratings in each world in each experiment.
+The first column is the user id, the second column is the world (this should be the same for everyone
+in each file), and the next 48 columns record the participant’s rating: 0 means no rating is provided,
+1 is 1 star (“i hate it”), 2 is 2 stars (“i don’t like it”), 3 is 3 stars (“it’s OK”), 4 is 4 stars (“i like it”),
+and 5 is 5 stars (“i love it”). Songs are sorted in lexicographic order by song id. For example, consider
+the first line of dynamics ratings w1 v1.txt:
+4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 4, 3, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 2, 0, 0, 2, 0, 0, 0
+This says that the participant with user id 4 was in world 1 and listened to 7 songs: the 10th, 12th,
+26th, 29th, 30th, 42nd, and 45th (when the songs are sorted in lexicographic order by song id). By
+referring to table 7 we can see that this participant rated “Father to Son” by Beerbong 3 stars. This
+participant rated “Til Death do us Part (I Don’t)” by The Fastlane 2 stars, etc.
+14• dynamics downloads w* v*.txt [25 files (9 from experiment 1, 9 from experiment 2, 3 from experiment
+3, 4 from experiment 4)]: These files record whether each participant downloaded each song in each
+world in each experiment. The first column is the user id, the second column is the world (this should be
+the same for everyone in each file), and the next 48 columns record whether the participant downloaded
+the song. Songs are sorted in lexicographic order by song id. For example, consider the first line of
+dynamics download w1 v1.txt:
+4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+This says that the participant with user id 4 was in world 1 and download one song: the 29th (when
+the songs are sorted in lexicographic order by song id). By referring to table 7 we can see that this is
+“Out of the Woods” by Shipwreck Union.
+• screenorder w* v*.txt [25 files (9 from experiment 1, 9 from experiment 2, 3 from experiment 3, 4
+from experiment 4)]: These files record the order that songs appeared on the screen for each participant.
+The first column records the user id and the next 48 columns record the order that the songs were
+presented. In experiment 2, 3, and 4, the first song was presented in the top spot on the list, the second
+song in the second spot, etc. 2 In experiment 1, the 1st song was presented in the upper-left corner,
+the second song was presented in the 1st row, 2nd column, the 3rd song was presented in the 1st row,
+3rd column, the 4th song was presented in the 2nd row, 1st column, etc. For example, consider the
+first line of screenorder w1 v1.txt:
+4, 995601, 2814479, 765447, 4123311, 994601, 311089, 2814575, 3123313, 806122, 225647, 946646,
+8814579, 100102, 911789, 744601, 501405, 123111, 592645, 792647, 3124513, 641126, 331122, 395650,
+306121, 781123, 411241, 595655, 777561, 7014523, 165411, 144102, 165444, 911249, 440341, 523645,
+7814573, 846626, 995651, 744101, 806126, 241124, 881121, 865431, 646341, 5014503, 131405, 326122,
+4004513
+This says that the participant with user id 4 saw song 995601 (“Trapped in an Orange Peel” by The
+Calefaction) in the upper left corner of the grid, song 2814479 (“Went with the Count” by Simply
+Waiting) in the 1st row/2nd column, etc.
+• dynamics downloads download w* v*.txt [25 files (9 from experiment 1, 9 from experiment 2, 3 from
+experiment 3, 4 from experiment 4)]: These files record the time at which all downloads happened in
+each world in each experiment. The first column records the user id, the second column records the
+world (this should be the same for everyone in each file), the next 48 columns record whether the song
+was downloaded or not and the final column is a timestamp. For example, consider the first 6 records
+in dynamics downloads download w1 v1.txt:
+4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2004-10-07 13:37:24
+9, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2004-10-07 13:59:00
+62, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2004-10-07 18:51:06
+62, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2004-10-07 18:53:30
+62, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 2004-10-07 18:56:27
+62, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2004-10-07 19:21:48
+This shows that the participant with user id 4 was in world 1 and downloaded the 29th song (when the
+songs are sorted in lexicographic order by song id). By referring to table 7 we can see that this is “Out
+of the Woods” by Shipwreck Union. The download was initiated on October 7, 2004 at 1:37pm and 24
+seconds (all times are New York City times). The next line records the download of the participant
+with user id 9. The next 4 lines record the 4 songs that were downloaded by the participant with user
+2 Note that for an extremely small number of participants in experiments 2, 3, and 4 these screen locations may have actually
+changed slightly during the course of the visit if the song changed popularity while a user was participating. We do not think
+this is a cause for concern, but one could calculate this for sure using the files dynamics downloads download w* v*.txt.
+15id 62 and the times that these downloads occurred. Note that this file structure is somewhat inefficient
+because it stores lots of unnecessary 0’s, but it was an easy data structure to work with for analysis.
+• autoplay w* v*.txt [25 files (9 from experiment 1, 9 from experiment 2, 3 from experiment 3, 4 from
+experiment 4)]: These files record the time at which all listens happened in each world and experiment.
+The first column is the user id, the second column is the world (should be the same for everyone in
+each file), the third column is the song id, the fourth column is the band number when the songs are
+sorted in lexicographic order (ie the first column in table 7), and the fifth column is the timestamp.
+For example, consider the first record in autoplay w1 v1.txt:
+4, 1, 2814575, 10, 2004-10-07 13:29:32
+This shows that a participant with user id 4 was in world 1 and listened to song 2814575 (“Father to
+Son” by Beerbong) at 1:29pm and 32 seconds (all times are New York City times).
+• subject recruitment v*.txt [4 files (1 from each experiment)]: These files record the number of
+participants that were recruited on each day. The first column records the date, the second column
+records the day of the week (1 = Monday, 2 = Tuesday, etc.), the third column is the number of new
+participants. For example, consider the first record in subject recruitment v1.txt:
+2004-10-07, 4, 34
+This shows that the experiment began on Thursday, October 10, 2004 and 34 people participated.
+Note that because of a database error during experiment 1, we don’t know the date of registration
+for participants who registered after November 10, 2004. This error was corrected in subsequent
+experiments and did not affect any other data. 3
+• user demographics v*.txt [4 files (1 from each experiment)]: These files record the information that
+each participant reported during the registration survey. The first column records the user id, the
+second column is the world to which they were assigned, the third column is a timestamp. For the
+meaning of the rest of the columns, see appendix A.
+1,2,2004-10-07 12:50:40,2,United Kingdom,00000,59,1,3,0,0,1,0,0,0,0,0,0,1,2,3,2,1,0,1,1,1,3,1,1
+Note that the registration dates for all users in experiment 1 after November 10, 2004 are incorrect
+(see note about subject recruitment v* w*.txt).
+• downloads ic4 lexorder.txt [1 file]: This file records the initial conditions for the four worlds in
+experiment 4. The first column is the song id, the second column is the initial download count in
+world 1 (the unchanged world), the third column is the initial download count in world 2 (an inverted
+world), the fourth column is the initial download count in world 3 (another inverted world), and the
+fifth column is the initial download count in the independent world. For example, consider the first
+two records:
+100102, 13, 13, 13, 0
+123111, 10, 31, 31, 0
+This shows that song 100102 (“This Upcoming Winter” by Ember Sky) initially had 13 downloads
+in the unchanged world and 13 in the inverted worlds. Song 123111 (“It does what its Told” by Go
+Mordecai) had 10 downloads in the unchanged world and 31 in the inverted worlds.
+
+
+This is documentation for the demographics file.
+Field 1: User ID
+Field 2: World ID
+• Range 1-9 for experiments 1 and 2, 1-3 for experiment 3, and 1-4 for experiment 4
+• Highest group ID in given experiment is the independent condition (ie 9 in experiments 1 and 2, 3 in
+experiment 3, and 4 in experiment 4.
+Field 3: Creation timestamp
+Field 4: In which country do you currently live? (numerical code)
+• 1 = United States
+• 2 = United Kingdom
+• 3 = Canada
+• 4 = Brazil
+• 5 = Other
+Field 5: In which country do you currently live? (string)
+Field 6: If you live in the United States, please enter your zip code.
+• 00000 = missing value (non-US residents)
+Field 7: In what year were you born? (converted to age)
+Field 8: What is your gender? (numeric code)
+• 0 = female
+• 1 = male
+Field 9: Compared to your circle of friends, how likely are you to be asked for advice about music? (Opinion
+leader score)
+• 1 = much less likely
+• 2 = less likely
+• 3 = more likely
+• 4 = much more likely
+How did you hear about the experiment?
+Field 10: web site or blog (1 = yes, 0 = no)
+Field 11: internet ad (1 = yes, 0 = no)
+Field 12: email from musiclab (1 = yes, 0 = no)
+Field 13: one of the bands (1 = yes, 0 = no)
+Field 14: friend told me about a specific song (1 = yes, 0 = no)
+Field 15: friend told me about a specific band (1 = yes, 0 = no)
+Field 16: friend told me about the site in general (1 = yes, 0 = no)
+Field 17: search engine (1 = yes, 0 = no)
+Field 18: other (1 = yes, 0 = no)
+Field 19: What type of Internet connection are you currently using? (numerical code)
+25• 1 = broadband
+• 2 = dial-up
+Field 20: Where are you while you are participating in this experiment? (numerical code)
+• 1 = home
+• 2 = office
+• 3 = public computer at school
+• 4 = other
+Field 21: How would you rate your ability to use the World Wide Web? (numerical code)
+• 1 = excellent
+• 2 = good
+• 3 = fair
+• 4 = poor
+• 5 = very poor
+Field 22: In the past 30 days, how often have you visited a site for information about music or concerts?
+(numerical code)
+• 0 = never
+• 1 = 1 - 2 times
+• 2 = 3 - 5 times
+• 3 = more than 5 times
+Field 23: Have you ever purchased a record as a result of hearing it on the web? (numerical code)
+• 0 = no
+• 1 = yes
+Field 24: Approximately, how many songs have you downloaded in the past 30 days?
+• self-reported value
+How familiar are you with the following bands?
+Field 25: Guys on Couch (real) (1 = don’t know it at all, 2 = heard of it, 3 = know it pretty well)
+Field 26: Grover Dill (real) (1 = don’t know it at all, 2 = heard of it, 3 = know it pretty well)
+Field 27: Peter on Fire (fake) (1 = don’t know it at all, 2 = heard of it, 3 = know it pretty well)
+Field 28: U2 (real) (1 = don’t know it at all, 2 = heard of it, 3 = know it pretty well)
+Field 29: Remnant Soldier (real) (1 = don’t know it at all, 2 = heard of it, 3 = know it pretty well)
+Field 30: Please provide your email address so that we can tell you about the results of Music Lab (optional)
+• 0 = no email address given
+• 1 = email address given
+
+-------------------------------------
+
+
+From: Ali Hortacsu <hortacsu@gmail.com>
+Sent: Tuesday, November 27, 2018 12:39:13 AM
+
+To: Timothy Schwieg
+Subject: Re: Interested in RAin?
+ 
+Awesome, can you send me a variable list/brief description of variable for the data sets?
+
+Perhaps start a Dropbox folder and share with me; this way we don’t have to back and forth data files on email
+
+-------------------------------------
+
+On Mon, Nov 26, 2018 at 11:36 PM Timothy Schwieg <timothyschwieg@uchicago.edu> wrote:
+There is a lot of information in the data, mostly collected in the amount of listens, downloads and the ratings. For each world there is a record of the amount of downloads, listens, and the ratings. There is user data for which user listened to each song, their ratings that they gave to the songs that they rated, user data on downloads.There is a record of the order each song appeared for participants as well. Ratings were self reported 1-5, and not used by the author in the paper I believe. 
+
+
+For each user there is a time record of when they downloaded, as well as when they played any song. There is also when each subject was recruited, though they could return to the website to participate at different times later. Lastly there is some demographic data taken from the survey that they took. The demographics is age, location, then many fields about how they heard about the experiment, and some questions about how well they know musicians that were either real or fake. 
+
+-------------------------------------------------
+
+From: Ali Hortacsu <hortacsu@gmail.com>
+Sent: Tuesday, November 27, 2018 
+
+To: Timothy Schwieg
+
+thanks! Do the data only have market shares, or do they have user level downloading information, timing of downloads, etc. 
+
+-------------------------------------
+ 
+On Mon, Nov 26, 2018 at 10:30 PM Timothy Schwieg <timothyschwieg@uchicago.edu> wrote:
+The plots are split into two types, a market share plot and a market rank plot.
+
+
+The market share plot compares the market share of the control group (which were not shown any statistics on download frequency) on the x-axis against the trial groups which were shown download statistics. Market share is calculated as the number of downloads for a particular song divided by the total downloads in that world. Worlds are competing versions of the trial groups, each with their own download statistics. The market share for each world is calculated, and they are plotted on the y-axis. The dotted line in the background is then the identity line between the independent and trial groups.  The solid line is a cubic regression fit without a constant term. 
+
+The market rank plots just rank each of the songs by their number of downloads against their peers, which is the same as ranking them by their market share. The rank of the independent trial is then placed on the x-axis and the ranks of the 8 trial groups on the y-axis. In this plot I have one difference from the author. The author seems to have used some sort of tie-breaking rule for deciding rank. When a song has the same number of downloads in the control group, I treated it as the same rank for both, but he manages to sort between them. This is not obtained by using the ratings that were also collected. I am not sure how he chose to break the tie, and no mention of it is made in the paper, or any of the supporting documents with the data. As a result my plots on the right seem less noisy than his plots, and I suspect that he simply injected some noise to show the clumping of the data points better. 
+
+The difference between the two rows arises from the different experiments conducted. In the first experiment subjects were told the number of downloads, but the order was randomized. In the second experiment, the songs were sorted by downloads, and presented in a single column so that a user had to scroll down much further to see the less viewed songs. 

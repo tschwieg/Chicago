@@ -1,0 +1,208 @@
+\documentclass[12pt]{paper}
+
+\usepackage{Schwieg}
+\usepackage[margin=1in]{geometry}
+
+\title{Advanced Industrial Organization 2 Pset 2}
+\author{Timothy Schwieg \and Paulo Henrique Ramos}
+
+\begin{document}
+\maketitle
+
+\section{Berry, Levinsohn and Pakes (1995)}
+
+\subsection{1}
+
+
+
+The firms observe the characteristics of their products, as well as
+the characteristics of the products of all of their competitors. The
+prices in the market are observed by all. Only the $\epsilon_{ijt}$ remains
+unobserved by the firms. 
+
+A consumers utility is given by:
+\begin{equation*}
+  u_{ijt} = \alpha_i p_{jt} + x_{jt} \beta_i + \xi_{jt} + \epsilon_{ijt}
+\end{equation*}
+
+Let $\epsilon_{ijt} \sim T1EV$. Note that this distribution is in the
+location-scale family, so we may add deterministic components to it
+and only affect the mean.
+
+Note that the maximum of a set of $T1EV ( \alpha_j)$ random variables is
+distributed $T1EV\left[ \log \sum_{i=1}^n \exp (\alpha_i) \right]$.
+
+\begin{align*}
+  \Pr( i \rightarrow j) &= \Pr( u_{ijt} > u_{ikt} \quad \forall k \neq j)\\
+  &= \Pr( \alpha_i p_{jt} + x_{jt} \beta_i + \xi_{jt} + \epsilon_{ijt} > \alpha_i p_{kt} + x_{kt}
+    \beta_i + \xi_{kt} + \epsilon_{ikt} \quad \forall k \neq j )\\
+  &= \Pr( \alpha_i p_{jt} + x_{jt} \beta_i + \xi_{jt} + \epsilon_{ijt} > \max_{k \neq j} \{ \alpha_i p_{kt} + x_{kt}
+    \beta_i + \xi_{kt} + \epsilon_{ikt}\} )\\
+\end{align*}
+
+From the above note, we know that
+
+\begin{equation*}
+  \max_{k \neq j} \{ \alpha_i p_{kt} + x_{kt} \beta_i + \xi_{kt} + \epsilon_{ikt}\} \sim T1EV(
+  \log \sum_{k \neq j} \alpha_i p_{kt} + x_{kt} \beta_i + \xi_{kt}) 
+\end{equation*}
+
+For notational convenience, call this object $u_{i,-j,t}$. We may also
+note that
+\begin{equation*}
+  \alpha_i p_{jt} + x_{jt} \beta_i + \xi_{jt} + \epsilon_{ijt} \sim T1EV( \alpha_i p_{jt} + x_{jt} \beta_i + \xi_{jt} )
+\end{equation*}
+
+Lastly, the difference between two independent $T1EV$ distributions is
+distributed logistically. Since $\epsilon_{ijt}$ are all independent, and our
+transformations are simply adding to the location of each of the
+distributions, they will be independent as well.
+
+\begin{align*}
+  \Pr( \alpha_i p_{jt} + x_{jt} \beta_i + \xi_{jt} + \epsilon_{ijt} > u_{i,-j,t} )
+  &= \Pr( u_{i,-j,t} -\alpha_i p_{jt} +x_{jt}\beta_i +\xi_{jt} +\epsilon_{ijt} \leq 0)\\
+  &= \frac{\exp(\alpha_i p_{jt} + x_{jt} \beta_i + \xi_{jt})}{\sum \exp(\alpha_i p_{kt} +
+    x_{kt}\beta_i + \xi_{kt})}
+\end{align*}
+
+This is the probability that individual $i$ elects to purchase good $j$
+when the prices are the vector $p$ and the characteristics are $x$ and
+$\xi$.
+
+Assume that there is a unit mass of consumers, whose preferences are
+such that
+$(\alpha_i, \beta_i')' \sim \normal( \theta_1, diag(\theta_2^2))$. The demand for good
+$j$ in market $t$ is the expected number of consumers who choose good
+$j$. This can be computed as the integral over the distribution of
+parameters of the probability that consumer $i$ chooses good $j$.
+
+\begin{equation*}
+  D_{jt}(p,x,\xi,\theta) = \int_{\setR^4} \frac{\exp(\alpha p_{jt} + x_{jt} \beta +
+    \xi_{jt})}{\sum \exp(\alpha p_{kt} + x_{kt}\beta + \xi_{kt})} dF(\alpha,\beta)
+\end{equation*}
+
+\subsection{2}
+
+Ain't nobody got time for dis
+
+\subsection{3}
+
+Rather than Monte-Carlo Integration, which has relatively poor
+convergence rates, we shall employ Gauss-Hermite quadrature. As the
+dimension of the integral is only four, this is a reasonable exercise,
+though for larger dimensions it would be better to choose Monte-Carlo
+Integration.
+
+By this choice of quadrature, there is no error introduced by the
+random sampling from the integral. The Calculations are as follows:
+
+\subsection{MPEC Estimation}
+
+Rather than estimate using the Nested Fixed Point algorithm,
+mathematical programming under equality constraints will be
+employed. At its core, this is simply an estimation procedure where we
+let the market shares be equal to the expected demand, and estimate
+using the orthogonality condition between $\xi$ and the set of
+instruments $z$.
+
+\begin{align*}
+  \min_{\alpha,\beta,\xi,\bm{\xi}} \quad & \sum_{t=1}^T \sum_{j=1}^N \bm{\xi}_{jt} \inv{W} \bm{\xi}_{jt}\\
+  \text{ subject to: } & \bm{\xi}_{jt} = \xi_{jt} z_{jt}\\
+  & \frac{1}{\pi^2} \sum_q \sum_w \sum_e \sum_r w_q w_w w_e w_r D( j, t, (\theta_{11} +
+    \sqrt{2}\theta_{21}x_q),(\theta_{12} + \sqrt{2}\theta_{22}x_q),(\theta_{13} +
+    \sqrt{2}\theta_{23}x_q),(\theta_{14} + \sqrt{2}\theta_{24}x_q)) = s_{jt}
+\end{align*}
+
+Where $D$ is a function such that: 
+\begin{equation*}
+  D( j, t, \alpha, \beta_1, \beta_2, \beta_3) =  \frac{\exp(\alpha
+    p_{jt} + x_{jt} \beta + \xi_{jt})}{\sum \exp(\alpha p_{kt} + x_{kt}\beta + \xi_{kt})}
+\end{equation*}
+
+However, this can be simplified rather easily. Consider a set of
+parameters in the model $\delta_{jt}$. Let $\delta_{jt}$ be such that:
+\begin{equation*}
+  \xi_{jt} = \delta_{jt}  - \theta_{11} p_{jt} - \theta_{12} - \theta_{13} x_{jt2} - \theta_{14} x_{jt3}
+\end{equation*}
+
+That is, it captures the linear aspects of the normal random variables
+in the integration. This reduces the number of variables in the
+non-linear constraint from $8$ to $4$, and adds new linear constraints
+to account for this. Since solvers are much better at handling linear
+constraints, this simplifies matters.
+
+Another simplification arises from altering the constraint on $\bm{w}$.
+\begin{equation*}
+  \bm{\xi} = \sum_{t=1}^T \sum_{j=1}^N \xi_{jt} z_{jt}
+\end{equation*}
+
+This simplifies the number of needed constraints on $\bm{\xi}$ and
+reduces the objective function as well.
+
+
+The optimization question can
+now be written as:
+
+\begin{align*}
+  \min_{\alpha,\beta,\xi,\bm{\xi},\delta} \quad & \bm{\xi}' \inv{W} \bm{\xi}\\
+  \text{subject to: } & \bm{\xi} = \sum_{t=1}^T \sum_{j=1}^N \xi_{jt} z_{jt}\\
+  & \frac{1}{\pi^2} \sum_q \sum_w \sum_e \sum_r w_q w_w w_e w_r D( j, t, (
+    \sqrt{2}\theta_{21}x_q),(\sqrt{2}\theta_{22}x_q),(\sqrt{2}\theta_{23}x_q),(\sqrt{2}\theta_{24}x_q))
+    = s_{jt}\\
+  & \xi_{jt} = \delta_{jt} \theta_{11} p_{jt} - \theta_{12} - \theta_{13} x_{jt2} - \theta_{14} x_{jt3}
+\end{align*}
+
+Where $D$ is a function such that: 
+\begin{equation*}
+  D( j, t, \alpha, \beta_1, \beta_2, \beta_3) =  \frac{\exp(\alpha
+    p_{jt} + x_{jt} \beta + \xi_{jt})}{\sum \exp(\alpha p_{kt} + x_{kt}\beta + \xi_{kt})}
+\end{equation*}
+
+and $x,w$ are given by the appropriate Gauss-Hermite samples and
+weights, respectively.
+
+This approach was implemented in AMPL using the solver Knitro. The
+many different initialization points were selected by Knitro to
+approximate the global optimum.
+
+\begin{verbatim}
+Final Statistics
+----------------
+Final objective value               =   1.08291302532658e+02
+Final feasibility error (abs / rel) =   1.30e-06 / 2.27e-07
+Final optimality error  (abs / rel) =   1.24e-04 / 2.50e-07
+# of iterations                     =         12 
+# of CG iterations                  =          4 
+# of function evaluations           =         14
+# of gradient evaluations           =         13
+# of Hessian evaluations            =         12
+Total program time (secs)           =     297.02255 (   297.006 CPU time)
+Time spent in evaluations (secs)    =     290.77496
+
+===============================================================================
+
+Knitro 10.2.0: Locally optimal or satisfactory solution.
+objective 108.2913025; feasibility error 1.3e-06
+12 iterations; 14 function evaluations
+
+suffix feaserror OUT;
+suffix opterror OUT;
+suffix numfcevals OUT;
+suffix numiters OUT;
+
+thetaOne [*] :=
+1  -7.22334
+2  -3.02503
+3  -5.4718e-05
+4  -0.083034
+
+
+thetaTwo [*] :=
+1  0.00605334
+2  0.000258687
+3  0.0783632
+4  0.000432742
+\end{verbatim}
+
+
+\end{document}

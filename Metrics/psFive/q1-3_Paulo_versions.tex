@@ -1,0 +1,371 @@
+\documentclass[12pt]{paper}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{Schwieg}
+
+\begin{document}
+\section*{Question 1}
+
+\subsection*{a}
+
+Consider the lagrangian below:
+\begin{equation*}
+  \Lagrange(\beta,\lambda) = \frac{1}{2n} \sum_{i=1}^n ( Y_i - X_i' \beta)^2 + \lambda' ( R
+  \beta - c)
+\end{equation*}
+
+Taking gradients and applying the rules of matrix calculus:
+\begin{align*}
+  \nabla_{\beta} \Lagrange &= -\frac{1}{n}\sum_{i=1}^n X_i ( Y_i - X_i' \beta) + R' \lambda
+  = 0\\
+  \nabla_{\lambda} \Lagrange &= R \beta - c = 0
+\end{align*}
+
+Let $\altest{\beta}, \altest{\lambda}$ be such that this system is satisfied. 
+
+\subsection*{b}
+
+Expanding the condition on $\beta$:
+\begin{align*}
+ - \frac{1}{n}\sum_{i=1}^n X_i Y_i +\frac{1}{n} \sum_{i=1}^n X_i X_i'
+  \altest{\beta} + R' \altest{\lambda} &= 0\\
+  \frac{1}{n} \sum_{i=1}^n X_i Y_i - R' \altest{\lambda} &= \frac{1}{n}
+                                                  \sum_{i=1}^n X_i X_i'
+                                                  \altest{\beta}\\
+  \inv{\left( \frac{1}{n} \sum_{i=1}^n X_i X_i'  \right)} \left(
+  \frac{1}{n} \sum_{i=1}^n  X_i Y_i \right) - \inv{\left( \frac{1}{n}
+  \sum_{i=1}^n X_i X_i'  \right)} R' \altest{\lambda} &= \altest{\beta}\\
+  \est{\beta} - \inv{\left( \frac{1}{n} \sum_{i=1}^n X_i X_i'
+  \right)} R' \altest{\lambda} &= \altest{\beta}
+\end{align*}
+
+Note that the inversion is possible because of the same line of
+reasoning that allowed for it during the calculation of the OLS
+estimator; that is, because there is no perfect colinearity in $X$ and $\inv{\left( \frac{1}{n} \sum_{i=1}^n X_i X_i'  \right)}\plim\exV{XX'}^{-1}$ due to WLLN, the matrix of samples must have an inverse with probability approaching one.
+
+Substituting the expression above for $\altest{\beta}$ in the second condition:
+\begin{align*}
+  R \altest{\beta} &= c\\
+  R \est{\beta} - R \inv{\left( \frac{1}{n} \sum_{i=1}^n X_i X_i'  \right)}
+  R' \altest{\lambda} &= c\\
+   \inv{ \left( R \inv{ \left( \frac{1}{n} \sum_{i=1}^n X_i
+               X_i' \right)} R' \right)} \left(  R \est{\beta} - c \right)
+               &= \altest{\lambda}
+\end{align*}
+
+
+\subsection*{c}
+
+$\altest{\lambda}$ is a continuous function of
+$\est{\beta}$ and $\inv{\left( \frac{1}{n} \sum_{i=1}^n X_i X_i'  \right)}$, as matrix multiplication, addition and inversion are all
+continuous operations. Because $\est{\beta} \plim \beta$ and $\inv{\left( \frac{1}{n} \sum_{i=1}^n X_i X_i'  \right)}\plim\exV{XX'}^{-1}$ (by the
+Weak Law of Large Numbers and Continuous Mapping Theorem), and marginal convergence in probability implies joint convergence, we can aply the CMT to conclude:
+\begin{equation*}
+  \altest{\lambda} \plim \inv{ \left( R\exV{XX'}^{-1}R' \right)} \left(  R \beta - c \right) = 0,
+\end{equation*}
+when $\left(  R \beta - c \right) = 0$.
+
+\subsection*{d}
+
+As seen in class, the Limiting distribution of $\est{\beta}$ is given by:
+\begin{align*}
+  \sqrt{n} \left(  \est{\beta} - \beta \right) \convDist \normal( 0, \Omega)\\
+  \Omega = \inv{\exV{XX'}} \Vari{X u} \inv{\exV{XX'}}\\
+\end{align*}
+
+Notice then that we can apply CMT to obtain:
+\begin{align*}
+  \sqrt{n} \left(  R\est{\beta}-c - R\beta +c\right) =\sqrt{n} \left(  R\est{\beta} - R\beta \right) \convDist \normal( 0, R\Omega R')\\
+\end{align*}
+
+And, when $\left(  R \beta - c \right) = 0$, this implies: $\sqrt{n} \left(  R\est{\beta}-c\right)\convDist \normal( 0, R\Omega R')$.
+
+Now, because $\inv{\left( \frac{1}{n} \sum_{i=1}^n X_i X_i'  \right)}\plim\exV{XX'}^{-1}$, and using CMT and slutsky, we can conclude that:
+\begin{align*}
+  \sqrt{n}\altest{\lambda}&=\inv{ \left( R \inv{ \left( \frac{1}{n} \sum_{i=1}^n X_i
+               X_i' \right)} R' \right)}\sqrt{n} \left(  R \est{\beta} - c \right)\\
+               & \convDist \inv{ \left( R\exV{XX'}^{-1}R' \right)}\normal( 0, R\Omega R')=\normal( 0,A R\Omega R'A'),\\
+\end{align*}
+where $A:=\inv{ \left( R\exV{XX'}^{-1}R' \right)}$.
+
+\subsection*{e}
+
+To construct a feasible test, we need to estimate the covariance matrix $\Lambda:=A R\Omega R'A'$ in the asymptotic distribution above. First, we may estimate $\Omega$ with the
+heteroskedasticity-robust estimators used in class: 
+
+\begin{equation*}
+  \est{\Omega} = \inv{\left( \frac{1}{n}\sum_{i=1}^n X_i X_i' \right)}
+  \left( \frac{1}{n}\sum_{i=1}^n X_i X_i' (\hat{u}_i)^2 \right)
+  \inv{\left( \frac{1}{n}\sum_{i=1}^n X_i X_i' \right)}
+\end{equation*}
+
+We saw in class that $\est{\Omega} \plim \Omega$. Also, we saw above that  $\inv{\left( \frac{1}{n} \sum_{i=1}^n X_i X_i'  \right)}\plim\exV{XX'}^{-1}$. Thus, by CMT, we have that:
+\begin{equation*}
+  \est{\Lambda} := \inv{ \left( R \inv{ \left( \frac{1}{n} \sum_{i=1}^n X_i
+               X_i' \right)} R' \right)}R\est{\Omega}R'\inv{ \left( R \inv{ \left( \frac{1}{n} \sum_{i=1}^n X_i
+               X_i' \right)} R' \right)}\plim \Lambda
+\end{equation*}
+So, $\est{\Lambda}$ is a consistent estimator of the covariance matrix of $\sqrt{n} \altest{\lambda}$, under the null hypothesis. Therefore, under $(R\beta=c)$, we have, by slutsky and the fact that $\Lambda$ is invertible (it is a multiplication of invertible matrices):
+\begin{align*}
+  \est{\Lambda}^{-\frac{1}{2}} \sqrt{n} \left(  \altest{\lambda} \right) \convDist \normal( 0,
+  1 )\\
+  n \altest{\lambda}' \inv{\est{\Lambda}} \altest{\lambda}
+  \convDist \chi_p^2 \\
+\end{align*}
+since we have $p$ restrictions.
+
+This depends completely on known quantities, and can therefore be
+tested. We define the test statistic as:
+\begin{align*}
+ T_n:= n \altest{\lambda}' \inv{\est{\Lambda}} \altest{\lambda}
+\end{align*}
+
+Our test will take the form of:
+\begin{equation*}
+  \indicate{T_n > c_{p,1-\alpha}}
+\end{equation*}
+where $c_{p,1-\alpha}$ is the critical value for the $\alpha$ specified in the chi-square distribution with $p$ degrees of freedom.
+
+And, as shown below, using portmanteau lemma, our test is consistent in level:
+\begin{align*}
+  \limsup_{n\rightarrow\infty} \exV{\indicate{T_n >  c_{p,1-\alpha}}} &= 
+                \limsup_{n\rightarrow\infty}\Pr(T_n> c_{p,1-\alpha})\\
+  &\le  \limsup_{n\rightarrow\infty} \Pr \left( n \altest{\lambda}' \inv{\est{\Lambda}} \altest{\lambda} \ge  c_{p,1-\alpha} \right)\\
+  &\le \Pr \left( \chi_p^2 \ge  c_{p,1-\alpha} \right)\\
+  &= \alpha
+\end{align*}
+
+\subsection*{f}
+Both tests are actually equivalent. We can see that by substituting the expressions for $\altest{\lambda}$ and $\inv{\est{\Lambda}}$ into the test statistic used above:
+\begin{multline*}
+ T_n=n\left\{ \inv{ \left( R \inv{ \left( \frac{1}{n} \sum_{i=1}^n X_i
+               X_i' \right)} R' \right)} \left(  R \est{\beta} - c \right)\right\}' \\
+               \inv{\left\{\inv{ \left( R \inv{ \left( \frac{1}{n} \sum_{i=1}^n X_i
+               X_i' \right)} R' \right)}R\est{\Omega}R'\inv{ \left( R \inv{ \left( \frac{1}{n} \sum_{i=1}^n X_i
+               X_i' \right)} R' \right)}\right\}}\\
+               \left\{ \inv{ \left( R \inv{ \left( \frac{1}{n} \sum_{i=1}^n X_i
+               X_i' \right)} R' \right)} \left(  R \est{\beta} - c \right)\right\}
+\end{multline*}
+
+\begin{multline*}
+ T_n=n  \left(  R \est{\beta} - c \right)' \inv{ \left( R \inv{ \left( \frac{1}{n} \sum_{i=1}^n X_i
+               X_i' \right)} R' \right)} \\
+                \left( R \inv{ \left( \frac{1}{n} \sum_{i=1}^n X_i
+               X_i' \right)} R' \right) \inv{(R\est{\Omega}R')}  \left( R \inv{ \left( \frac{1}{n} \sum_{i=1}^n X_i
+               X_i' \right)} R' \right) \\
+                \inv{ \left( R \inv{ \left( \frac{1}{n} \sum_{i=1}^n X_i
+               X_i' \right)} R' \right)} \left(  R \est{\beta} - c \right)
+\end{multline*}
+
+\begin{equation*}
+ T_n=n\left(  R \est{\beta} - c \right)'  \inv{(R\est{\Omega}R')}  \left(  R \est{\beta} - c \right)
+\end{equation*}
+
+Thus, we can see that both test have the same test statistic and the same asymptotic distribution, thus they are equivalent.
+
+\section*{Question 2}
+
+\subsection*{a}
+
+\begin{align*}
+  \Vari{\hat{X}} &= \Vari{X} + \Vari{V} + Cov( X, V)\\
+                 &= \Vari{X} + \Vari{V} + 2(\exV{XV} - \exV{X}\exV{V})\\
+                 &= \Vari{X} + \Vari{V}\\
+\end{align*}
+
+As $\exV{V} = \exV{XV} = 0$.
+
+\begin{align*}
+  \Vari{Y} &= \Vari{\beta_0} + \Vari{\beta_1 X} + \Vari{U} +2( Cov( \beta_0, U) +
+             Cov( \beta_1 X, U) + Cov( \beta_0, \beta_1 X))\\
+           &= \beta_1^2 \Vari{X} + \Vari{U} + 2(\beta_1 \exV{XU} - \beta_1 \exV{X} \exV{U})\\
+  &= \beta_1^2 \Vari{X} + \Vari{U}\\
+\end{align*}
+As $\beta_0$ is a constant, and $\exV{U} = \exV{XU} = 0$.
+
+\begin{align*}
+  Cov( \hat{X}, Y) &= Cov( X, Y) + Cov( V, Y)\\
+                   &= \exV{XY} - \exV{X}\exV{Y} + \exV{VY} - \exV{V}\exV{Y}\\
+  &= \exV{\beta_0 X + \beta_1 X^2 + UX} - \exV{X}(\beta_0 + \beta_1 \exV{X}) + \exV{
+    \beta_0 V + \beta_1 XV + UV} - 0\\
+  &= \beta_0 \exV{X} + \beta_1 \exV{X^2} - \beta_0 \exV{X} - \beta_1 \exV{X}^2\\
+  &= \beta_1 \Vari{X}
+\end{align*}
+
+As $\exV{V} = \exV{XV} = \exV{U} = \exV{XU} = 0$.
+
+\subsection*{b}
+
+First let's show that $ \frac{Cov( \hat{X}, Y)}{\Vari{\hat{X}}}\le \beta_1$. Let $\beta_1 \geq 0$. If
+$\beta_1 = 0$, then $Cov( \hat{X}, Y) = 0$  and this result is true
+trivially. So let $\beta_1 > 0$. Then we get that:
+
+\begin{equation*}
+  \frac{Cov( \hat{X}, Y)}{\Vari{\hat{X}}} = \frac{\beta_1 \Vari{X}}{\Vari{X} + \Vari{V}} \leq \beta_1,
+\end{equation*}
+
+since $\Vari{X} \leq \Vari{X} + \Vari{V}$ (otherwise there would be no difference between $X and \hat{X}$) and $\beta_1 > 0$.
+
+Now, we show that $\beta_1\le \frac{\Vari{Y}}{Cov( \hat{X}, Y)}$. If $\beta_1=0$, then $Cov( \hat{X}, Y) = 0$ and the division is not well-defined (although we may define $\frac{c}{0}:=\infty$, for $c>0$, and then we have the inequality). Consider $\beta_1>0$. Then we have:
+
+\begin{align*}
+  \frac{\Vari{Y}}{Cov( \hat{X}, Y)}=\frac{\beta_1^2 \Vari{X} + \Vari{U}}{\beta_1 \Vari{X}}=\beta_1+\frac{\Vari{U}}{\beta_1 \Vari{X}}\ge \beta_1
+\end{align*}
+Because $\beta_1>0$ and the variances are positive.
+
+We know that $\frac{Cov( \hat{X}, Y)}{\Vari{\hat{X}}}$ is the coefficient from the regression $Y=\beta_0^*+\beta_1^*\hat{X}+U^*$. Thus we can interpret the lower bound as a proof that the coefficient on the ``wrong'' regression, in this simple case, will be always weakly smaller than the coefficient on the ``true'' regression. Similarly, the upper bound is the inverse of the coefficient of the reverse regression $\hat{X}=\alpha_0+\alpha_1Y+z$, and thus we can interpret it as stating the the true coefficient will be always smaller than the inverse of the coefficient of the reverse regression involving the $\hat{X}$.
+
+\subsection*{c}
+
+We already saw that the result holds when $\beta_1 = 0$ (letter $b$ above), so let us examine the case when
+$\beta_1 < 0$. We can do this similarly to letter $b$ above:
+
+First the upper bound:
+\begin{equation*}
+  \frac{Cov( \hat{X}, Y)}{\Vari{\hat{X}}} = \frac{\beta_1 \Vari{X}}{\Vari{X} + \Vari{V}} \ge \beta_1,
+\end{equation*}
+because now $\beta_1<0$, and multiplying it by a number smaller than one decreases its absolute value and makes it bigger, since it is negative.
+
+Then the lower bound:
+\begin{align*}
+  \frac{\Vari{Y}}{Cov( \hat{X}, Y)}=\frac{\beta_1^2 \Vari{X} + \Vari{U}}{\beta_1 \Vari{X}}=\beta_1+\frac{\Vari{U}}{\beta_1 \Vari{X}}\le \beta_1
+\end{align*}
+Because $\beta_1<0$ and the variances are positive, so adding something negative to a negative number decreases the resut.
+
+
+\section*{Question 3}
+
+$X,Z$ are both $k+1$ dimensional vectors (thus $\exV{ZX'}$ is a square
+matrix with dimension $k+1$), and rank $\exV{ZX'}$ is $k+1$. Approach
+by contrapositive, Let us assume that there is perfect colinearity in
+$Z$ and show that this implies rank $\exV{ZX'}< k+1$ (it cannot have
+rank higher than its dimension). That is, assume $\exists c \neq 0$ such that
+$1 = \Pr ( c' Z = 0)$. Thus using this $c$, we have:
+
+\begin{align*}
+  c'\exV{ZX'}=\exV{(c'Z)X'}=0
+\end{align*}
+
+But this implies that there exists $c\ne0$ such that
+$c'\exV{ZX'}=0$. This means that the rows of $\exV{ZX'}$ are not
+linearly independent. As $\exV{ZX'}$ is a square matrix, a row being
+linearly dependent implies that the determinant of the matrix is
+zero. Therefore the transpose of this matrix, $\exV{ZX'}'$ has a
+determinant of zero, and linearly dependent rows. Linear dependence in
+the rows of this matrix is equivalent to linear dependence in the
+columns of $\exV{ZX'}$. This means the matrix does not have full
+rank.
+
+Therefore having rank $k+1$ in $\exV{ZX'}$ implies no perfect
+colinearity in $Z$.
+% But this implies that there exists $c\ne0$ such that $c'\exV{ZX'}=0$,
+% and thus it cannot have full rank (that is, its rank must be smaller
+% than $k+1$). This contradicts the assumption on the rank of
+% $\exV{ZX'}$ and, thus, we can conclude that there is no perfect
+% colinearity in $Z$.
+
+\section*{Question 4}
+
+We are given $V = X - BLP(X \vert Z)$. Let us define
+$BLP(X \vert Z) = \Pi' Z$ where $\Pi$ is a $\ell+1$ by $k +1$ matrix.
+
+Consider $BLP( U \vert V) = V' \gamma$, note that this has an implied
+first-order condition of orthogonality.
+\begin{equation*}
+  \vec{0} = \exV{ V ( U - V' \gamma)} = \exV{ V \tilde{U}}
+\end{equation*}
+
+This is exactly exogeneity for $V$.
+
+From the first-order conditions on the $BLP( X \vert Z)$ we know that for
+all $j$,
+\begin{align*}
+  \exV{ Z ( X_j - \Pi' Z)} &= 0\\
+  \exV{ Z V_j } &= 0\\
+  \exV{ Z V'} &= 0
+\end{align*}
+
+Where the last result accumulates all of the $j$ vector conditions
+into one matrix condition.
+
+We may also note that:
+
+\begin{align*}
+  \exV{ X \tilde{U}} &= \exV{ V \tilde{U} + BLP( X \vert Z) \tilde{U}} =
+                       \exV{ BLP( X \vert Z) \tilde{U}}\\
+  &=\exV{  \Pi' Z \left( U - V'\gamma \right)}\\
+  &= \Pi' \exV{ Z U} - \Pi' \exV{Z V'}\gamma\\
+  &= \Pi ' \vec{0} - \Pi' \vec{0} \gamma = \vec{0}\\
+\end{align*}
+
+\subsection*{b}
+
+Using the sub-vector results from linear regression before, we may
+solve for $\beta$ as:
+
+Define $\tilde{Y} = Y - BLP( Y \vert V)$ and $\tilde{X} = X - BLP( X \vert V)
+= BLP( X \vert Z) = \Pi'Z$.
+
+
+This occurs because $V$ contains no more information than $Z$, so
+predicting $X$ on $V$ is the same as predicting it on $Z$ (after
+handling the subtracting elements.) Best Linear Predictors, under
+interpretation one are a linear conditional expectation. Applying the
+law of iterated expectations:
+\begin{equation*}
+  \exV{ \exV{ X \vert V} \vert Z} = \exV{ X \vert Z}
+\end{equation*}
+
+as $Z$ has less information than $V$. So the best linear predictor of
+$X$ given $V$ is $X - \Pi'Z$. 
+
+Then
+\begin{align*}
+  \beta &= \inv{ \exV{ \tilde{X} \tilde{X}'}} \exV{ \tilde{X} \tilde{Y}}\\
+    &= \inv{ \exV{ \tilde{X} \tilde{X}'}} \exV{ \tilde{X} Y}\\
+    &= \inv{ \exV{ \Pi'ZZ' \Pi' }} \exV{ \Pi'ZY}\\
+    &= \inv{ \Pi' \exV{ZZ'} \Pi} \Pi' \exV{ZY}
+\end{align*}
+
+This is exactly our instrumental variables estimator that we derived
+in class. 
+
+\section*{Question 5}
+
+\subsection*{a}
+
+Since $Z'\lambda=BLP(Y|Z)$, we can use the expression for the best linear predictor and: (i) that $\exV{ZZ'}$ exists and is invertible, since there is no perfect colinearity in $Z$, and (ii) $\exV{ZY}=\exV{ZX'}\beta+\exV{ZU}$ exists (since both elements in the summation exist by assumption), to get:
+\begin{align*}
+ \lambda&=\inv{\exV{ZZ'}}\exV{ZY}\\
+ &=\inv{\exV{ZZ'}}\exV{Z(X'\beta+U)}\\
+\text{(Because $\exV{ZU}=0$)   }  &=\inv{\exV{ZZ'}}\exV{ZX'}\beta 
+\end{align*}
+
+Now we also have that $\Gamma'Z=BLP(X|Z)$, and, using the same facts stated in the first paragraph above, we can also get the expression for $\Gamma=\inv{\exV{ZZ'}}\exV{ZX'}$. Therefore, using the result above, we get: $\lambda=\Gamma\beta$ as we wanted.
+
+Now we can substitute this into the reduced form equation for $Y$ to get:
+\begin{align*}
+\epsilon&=Y-Z'\lambda\\
+&=X'\beta+U-Z'\Gamma\beta\\
+&=(X'-Z'\Gamma)\beta+U\\
+\text{(Because $\eta=X-\Gamma'Z$)   }&=\eta'\beta+U,
+\end{align*}
+\noindent which is the result we wanted.
+
+\subsection*{b}
+
+To get an expression for $\beta$, we can substitute for $\lambda$ in the reduced form for $Y$ to get:
+\begin{align*}
+Y&=(\Gamma'Z)'\beta+\epsilon\\
+\end{align*}
+
+Now we can check that: $\exV{\Gamma'Z\epsilon}=0$
+\begin{align*}
+\exV{\Gamma'Z\epsilon}&=\exV{\Gamma'Z(\eta'\beta+U)}\\
+&=\Gamma'\exV{Z\eta'}\beta+\Gamma'\exV{ZU}=0,
+\end{align*}
+\noindent because $\eta=X-BLP(X|Z)$, so the first order condition for the best linear predictor gives us that $\exV{Z\eta'}=0$, and also we have by $\exV{ZU}$ assumption.
+
+Thus, since $\exV{\Gamma'Z\epsilon}=0$, we can obtain $\beta$ as $BLP(Y|\Gamma'Z)$, which results in: $\beta=\inv{\exV{\Gamma'ZZ'\Gamma}}\exV{\Gamma'ZY}=\inv{\Gamma'\exV{ZZ'}\Gamma}\Gamma'\exV{ZY}$. Notice that this expression is exactly the one derived in class, except that in class we called $\Gamma'Z=BLP(X|Z)$ as $\Pi'Z$.
+
+\end{document}

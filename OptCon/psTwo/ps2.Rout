@@ -1,0 +1,1507 @@
+
+R version 3.4.4 (2018-03-15) -- "Someone to Lean On"
+Copyright (C) 2018 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> #Stargazer makes output in nice latex tables
+> library(stargazer)
+
+Please cite as: 
+
+ Hlavac, Marek (2018). stargazer: Well-Formatted Regression and Summary Statistics Tables.
+ R package version 5.2.2. https://CRAN.R-project.org/package=stargazer 
+
+> #For quantile regression
+> library(quantreg)
+Loading required package: SparseM
+
+Attaching package: ‘SparseM’
+
+The following object is masked from ‘package:base’:
+
+    backsolve
+
+> 
+> 
+> birthData <- read.csv("data.csv")
+> 
+> summary(birthData)
+  birthweight        boy            married           black       
+ Min.   : 227   Min.   :0.0000   Min.   :0.0000   Min.   :0.0000  
+ 1st Qu.:2950   1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000  
+ Median :3317   Median :1.0000   Median :1.0000   Median :0.0000  
+ Mean   :3266   Mean   :0.5134   Mean   :0.6509   Mean   :0.3324  
+ 3rd Qu.:3657   3rd Qu.:1.0000   3rd Qu.:1.0000   3rd Qu.:1.0000  
+ Max.   :5727   Max.   :1.0000   Max.   :1.0000   Max.   :1.0000  
+      age          highschool      somecollege        college      
+ Min.   :13.00   Min.   :0.0000   Min.   :0.0000   Min.   :0.0000  
+ 1st Qu.:20.00   1st Qu.:0.0000   1st Qu.:0.0000   1st Qu.:0.0000  
+ Median :25.00   Median :0.0000   Median :0.0000   Median :0.0000  
+ Mean   :25.32   Mean   :0.3372   Mean   :0.2267   Mean   :0.1789  
+ 3rd Qu.:30.00   3rd Qu.:1.0000   3rd Qu.:0.0000   3rd Qu.:0.0000  
+ Max.   :46.00   Max.   :1.0000   Max.   :1.0000   Max.   :1.0000  
+    prenone          presecond         prethird           smoker      
+ Min.   :0.00000   Min.   :0.0000   Min.   :0.00000   Min.   :0.0000  
+ 1st Qu.:0.00000   1st Qu.:0.0000   1st Qu.:0.00000   1st Qu.:1.0000  
+ Median :0.00000   Median :0.0000   Median :0.00000   Median :1.0000  
+ Mean   :0.01204   Mean   :0.1513   Mean   :0.02714   Mean   :0.8722  
+ 3rd Qu.:0.00000   3rd Qu.:0.0000   3rd Qu.:0.00000   3rd Qu.:1.0000  
+ Max.   :1.00000   Max.   :1.0000   Max.   :1.00000   Max.   :1.0000  
+   cigsdaily        weightgain   
+ Min.   : 0.000   Min.   : 0.00  
+ 1st Qu.: 0.000   1st Qu.:21.00  
+ Median : 0.000   Median :30.00  
+ Mean   : 1.617   Mean   :33.39  
+ 3rd Qu.: 0.000   3rd Qu.:40.00  
+ Max.   :80.000   Max.   :99.00  
+> 
+> 
+> reg <- lm( formula = birthweight~boy + married + black + age + highschool + somecollege + college + prenone + presecond + prethird + smoker + cigsdaily + weightgain + I(age^2) + I(weightgain^2), data=birthData )
+> 
+> stargazer(reg)
+
+% Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
+% Date and time: Sat, Jan 19, 2019 - 05:09:49 PM
+\begin{table}[!htbp] \centering 
+  \caption{} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-2} 
+\\[-1.8ex] & birthweight \\ 
+\hline \\[-1.8ex] 
+ boy & 105.198$^{***}$ \\ 
+  & (12.159) \\ 
+  & \\ 
+ married & 22.657 \\ 
+  & (17.003) \\ 
+  & \\ 
+ black & $-$215.115$^{***}$ \\ 
+  & (15.834) \\ 
+  & \\ 
+ age & 38.736$^{***}$ \\ 
+  & (8.810) \\ 
+  & \\ 
+ highschool & 40.686$^{**}$ \\ 
+  & (17.715) \\ 
+  & \\ 
+ somecollege & 70.030$^{***}$ \\ 
+  & (20.583) \\ 
+  & \\ 
+ college & 19.815 \\ 
+  & (24.029) \\ 
+  & \\ 
+ prenone & $-$158.701$^{***}$ \\ 
+  & (56.808) \\ 
+  & \\ 
+ presecond & 49.998$^{***}$ \\ 
+  & (17.920) \\ 
+  & \\ 
+ prethird & 68.862$^{*}$ \\ 
+  & (38.143) \\ 
+  & \\ 
+ smoker & 200.895$^{***}$ \\ 
+  & (32.739) \\ 
+  & \\ 
+ cigsdaily & $-$4.351$^{**}$ \\ 
+  & (2.122) \\ 
+  & \\ 
+ weightgain & 19.829$^{***}$ \\ 
+  & (1.004) \\ 
+  & \\ 
+ I(age$\hat{\mkern6mu}$2) & $-$0.641$^{***}$ \\ 
+  & (0.159) \\ 
+  & \\ 
+ I(weightgain$\hat{\mkern6mu}$2) & $-$0.164$^{***}$ \\ 
+  & (0.009) \\ 
+  & \\ 
+ Constant & 2,103.312$^{***}$ \\ 
+  & (118.914) \\ 
+  & \\ 
+\hline \\[-1.8ex] 
+Observations & 9,800 \\ 
+R$^{2}$ & 0.109 \\ 
+Adjusted R$^{2}$ & 0.108 \\ 
+Residual Std. Error & 601.110 (df = 9784) \\ 
+F Statistic & 80.124$^{***}$ (df = 15; 9784) \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table} 
+> 
+> cMat <- reg$coefficients
+> 
+> quantiles = c(1:9/10.0)
+> 
+> for( q in quantiles ){
++     quantReg <- rq( formula = birthweight ~ . + I(age^2) + I(weightgain^2), data = birthData, tau = q )
++     cMat <- cbind(cMat, quantReg$coefficients )
++ 
++     print( stargazer( quantReg ) )
++ }
+
+% Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
+% Date and time: Sat, Jan 19, 2019 - 05:09:59 PM
+\begin{table}[!htbp] \centering 
+  \caption{} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-2} 
+\\[-1.8ex] & birthweight \\ 
+\hline \\[-1.8ex] 
+ boy & 83.362$^{***}$ \\ 
+  & (23.287) \\ 
+  & \\ 
+ married & 32.764 \\ 
+  & (28.030) \\ 
+  & \\ 
+ black & $-$272.743$^{***}$ \\ 
+  & (31.237) \\ 
+  & \\ 
+ age & 54.865$^{***}$ \\ 
+  & (18.716) \\ 
+  & \\ 
+ highschool & 87.073$^{***}$ \\ 
+  & (30.478) \\ 
+  & \\ 
+ somecollege & 104.832$^{***}$ \\ 
+  & (36.007) \\ 
+  & \\ 
+ college & 70.222 \\ 
+  & (45.766) \\ 
+  & \\ 
+ prenone & $-$498.838 \\ 
+  & (742.263) \\ 
+  & \\ 
+ presecond & 109.460$^{***}$ \\ 
+  & (27.172) \\ 
+  & \\ 
+ prethird & 219.354$^{***}$ \\ 
+  & (36.189) \\ 
+  & \\ 
+ smoker & 187.195$^{***}$ \\ 
+  & (44.862) \\ 
+  & \\ 
+ cigsdaily & $-$3.940 \\ 
+  & (2.483) \\ 
+  & \\ 
+ weightgain & 32.517$^{***}$ \\ 
+  & (2.401) \\ 
+  & \\ 
+ I(age$\hat{\mkern6mu}$2) & $-$1.079$^{***}$ \\ 
+  & (0.361) \\ 
+  & \\ 
+ I(weightgain$\hat{\mkern6mu}$2) & $-$0.286$^{***}$ \\ 
+  & (0.023) \\ 
+  & \\ 
+ Constant & 1,057.175$^{***}$ \\ 
+  & (237.759) \\ 
+  & \\ 
+\hline \\[-1.8ex] 
+Observations & 9,800 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table} 
+ [1] ""                                                                                                           
+ [2] "% Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu"
+ [3] "% Date and time: Sat, Jan 19, 2019 - 05:09:59 PM"                                                           
+ [4] "\\begin{table}[!htbp] \\centering "                                                                         
+ [5] "  \\caption{} "                                                                                             
+ [6] "  \\label{} "                                                                                               
+ [7] "\\begin{tabular}{@{\\extracolsep{5pt}}lc} "                                                                 
+ [8] "\\\\[-1.8ex]\\hline "                                                                                       
+ [9] "\\hline \\\\[-1.8ex] "                                                                                      
+[10] " & \\multicolumn{1}{c}{\\textit{Dependent variable:}} \\\\ "                                                
+[11] "\\cline{2-2} "                                                                                              
+[12] "\\\\[-1.8ex] & birthweight \\\\ "                                                                           
+[13] "\\hline \\\\[-1.8ex] "                                                                                      
+[14] " boy & 83.362$^{***}$ \\\\ "                                                                                
+[15] "  & (23.287) \\\\ "                                                                                         
+[16] "  & \\\\ "                                                                                                  
+[17] " married & 32.764 \\\\ "                                                                                    
+[18] "  & (28.030) \\\\ "                                                                                         
+[19] "  & \\\\ "                                                                                                  
+[20] " black & $-$272.743$^{***}$ \\\\ "                                                                          
+[21] "  & (31.237) \\\\ "                                                                                         
+[22] "  & \\\\ "                                                                                                  
+[23] " age & 54.865$^{***}$ \\\\ "                                                                                
+[24] "  & (18.716) \\\\ "                                                                                         
+[25] "  & \\\\ "                                                                                                  
+[26] " highschool & 87.073$^{***}$ \\\\ "                                                                         
+[27] "  & (30.478) \\\\ "                                                                                         
+[28] "  & \\\\ "                                                                                                  
+[29] " somecollege & 104.832$^{***}$ \\\\ "                                                                       
+[30] "  & (36.007) \\\\ "                                                                                         
+[31] "  & \\\\ "                                                                                                  
+[32] " college & 70.222 \\\\ "                                                                                    
+[33] "  & (45.766) \\\\ "                                                                                         
+[34] "  & \\\\ "                                                                                                  
+[35] " prenone & $-$498.838 \\\\ "                                                                                
+[36] "  & (742.263) \\\\ "                                                                                        
+[37] "  & \\\\ "                                                                                                  
+[38] " presecond & 109.460$^{***}$ \\\\ "                                                                         
+[39] "  & (27.172) \\\\ "                                                                                         
+[40] "  & \\\\ "                                                                                                  
+[41] " prethird & 219.354$^{***}$ \\\\ "                                                                          
+[42] "  & (36.189) \\\\ "                                                                                         
+[43] "  & \\\\ "                                                                                                  
+[44] " smoker & 187.195$^{***}$ \\\\ "                                                                            
+[45] "  & (44.862) \\\\ "                                                                                         
+[46] "  & \\\\ "                                                                                                  
+[47] " cigsdaily & $-$3.940 \\\\ "                                                                                
+[48] "  & (2.483) \\\\ "                                                                                          
+[49] "  & \\\\ "                                                                                                  
+[50] " weightgain & 32.517$^{***}$ \\\\ "                                                                         
+[51] "  & (2.401) \\\\ "                                                                                          
+[52] "  & \\\\ "                                                                                                  
+[53] " I(age$\\hat{\\mkern6mu}$2) & $-$1.079$^{***}$ \\\\ "                                                       
+[54] "  & (0.361) \\\\ "                                                                                          
+[55] "  & \\\\ "                                                                                                  
+[56] " I(weightgain$\\hat{\\mkern6mu}$2) & $-$0.286$^{***}$ \\\\ "                                                
+[57] "  & (0.023) \\\\ "                                                                                          
+[58] "  & \\\\ "                                                                                                  
+[59] " Constant & 1,057.175$^{***}$ \\\\ "                                                                        
+[60] "  & (237.759) \\\\ "                                                                                        
+[61] "  & \\\\ "                                                                                                  
+[62] "\\hline \\\\[-1.8ex] "                                                                                      
+[63] "Observations & 9,800 \\\\ "                                                                                 
+[64] "\\hline "                                                                                                   
+[65] "\\hline \\\\[-1.8ex] "                                                                                      
+[66] "\\textit{Note:}  & \\multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\\\ "             
+[67] "\\end{tabular} "                                                                                            
+[68] "\\end{table} "                                                                                              
+
+% Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
+% Date and time: Sat, Jan 19, 2019 - 05:10:00 PM
+\begin{table}[!htbp] \centering 
+  \caption{} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-2} 
+\\[-1.8ex] & birthweight \\ 
+\hline \\[-1.8ex] 
+ boy & 94.328$^{***}$ \\ 
+  & (15.846) \\ 
+  & \\ 
+ married & 30.038 \\ 
+  & (21.462) \\ 
+  & \\ 
+ black & $-$205.951$^{***}$ \\ 
+  & (20.454) \\ 
+  & \\ 
+ age & 44.923$^{***}$ \\ 
+  & (14.506) \\ 
+  & \\ 
+ highschool & 65.376$^{***}$ \\ 
+  & (23.746) \\ 
+  & \\ 
+ somecollege & 91.832$^{***}$ \\ 
+  & (25.204) \\ 
+  & \\ 
+ college & 42.737 \\ 
+  & (35.490) \\ 
+  & \\ 
+ prenone & $-$254.486$^{*}$ \\ 
+  & (152.709) \\ 
+  & \\ 
+ presecond & 10.351 \\ 
+  & (25.168) \\ 
+  & \\ 
+ prethird & 41.966$^{**}$ \\ 
+  & (16.536) \\ 
+  & \\ 
+ smoker & 212.603$^{***}$ \\ 
+  & (40.888) \\ 
+  & \\ 
+ cigsdaily & $-$1.934 \\ 
+  & (3.212) \\ 
+  & \\ 
+ weightgain & 21.455$^{***}$ \\ 
+  & (1.600) \\ 
+  & \\ 
+ I(age$\hat{\mkern6mu}$2) & $-$0.844$^{***}$ \\ 
+  & (0.273) \\ 
+  & \\ 
+ I(weightgain$\hat{\mkern6mu}$2) & $-$0.181$^{***}$ \\ 
+  & (0.016) \\ 
+  & \\ 
+ Constant & 1,642.839$^{***}$ \\ 
+  & (187.600) \\ 
+  & \\ 
+\hline \\[-1.8ex] 
+Observations & 9,800 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table} 
+ [1] ""                                                                                                           
+ [2] "% Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu"
+ [3] "% Date and time: Sat, Jan 19, 2019 - 05:10:01 PM"                                                           
+ [4] "\\begin{table}[!htbp] \\centering "                                                                         
+ [5] "  \\caption{} "                                                                                             
+ [6] "  \\label{} "                                                                                               
+ [7] "\\begin{tabular}{@{\\extracolsep{5pt}}lc} "                                                                 
+ [8] "\\\\[-1.8ex]\\hline "                                                                                       
+ [9] "\\hline \\\\[-1.8ex] "                                                                                      
+[10] " & \\multicolumn{1}{c}{\\textit{Dependent variable:}} \\\\ "                                                
+[11] "\\cline{2-2} "                                                                                              
+[12] "\\\\[-1.8ex] & birthweight \\\\ "                                                                           
+[13] "\\hline \\\\[-1.8ex] "                                                                                      
+[14] " boy & 94.328$^{***}$ \\\\ "                                                                                
+[15] "  & (15.846) \\\\ "                                                                                         
+[16] "  & \\\\ "                                                                                                  
+[17] " married & 30.038 \\\\ "                                                                                    
+[18] "  & (21.462) \\\\ "                                                                                         
+[19] "  & \\\\ "                                                                                                  
+[20] " black & $-$205.951$^{***}$ \\\\ "                                                                          
+[21] "  & (20.454) \\\\ "                                                                                         
+[22] "  & \\\\ "                                                                                                  
+[23] " age & 44.923$^{***}$ \\\\ "                                                                                
+[24] "  & (14.506) \\\\ "                                                                                         
+[25] "  & \\\\ "                                                                                                  
+[26] " highschool & 65.376$^{***}$ \\\\ "                                                                         
+[27] "  & (23.746) \\\\ "                                                                                         
+[28] "  & \\\\ "                                                                                                  
+[29] " somecollege & 91.832$^{***}$ \\\\ "                                                                        
+[30] "  & (25.204) \\\\ "                                                                                         
+[31] "  & \\\\ "                                                                                                  
+[32] " college & 42.737 \\\\ "                                                                                    
+[33] "  & (35.490) \\\\ "                                                                                         
+[34] "  & \\\\ "                                                                                                  
+[35] " prenone & $-$254.486$^{*}$ \\\\ "                                                                          
+[36] "  & (152.709) \\\\ "                                                                                        
+[37] "  & \\\\ "                                                                                                  
+[38] " presecond & 10.351 \\\\ "                                                                                  
+[39] "  & (25.168) \\\\ "                                                                                         
+[40] "  & \\\\ "                                                                                                  
+[41] " prethird & 41.966$^{**}$ \\\\ "                                                                            
+[42] "  & (16.536) \\\\ "                                                                                         
+[43] "  & \\\\ "                                                                                                  
+[44] " smoker & 212.603$^{***}$ \\\\ "                                                                            
+[45] "  & (40.888) \\\\ "                                                                                         
+[46] "  & \\\\ "                                                                                                  
+[47] " cigsdaily & $-$1.934 \\\\ "                                                                                
+[48] "  & (3.212) \\\\ "                                                                                          
+[49] "  & \\\\ "                                                                                                  
+[50] " weightgain & 21.455$^{***}$ \\\\ "                                                                         
+[51] "  & (1.600) \\\\ "                                                                                          
+[52] "  & \\\\ "                                                                                                  
+[53] " I(age$\\hat{\\mkern6mu}$2) & $-$0.844$^{***}$ \\\\ "                                                       
+[54] "  & (0.273) \\\\ "                                                                                          
+[55] "  & \\\\ "                                                                                                  
+[56] " I(weightgain$\\hat{\\mkern6mu}$2) & $-$0.181$^{***}$ \\\\ "                                                
+[57] "  & (0.016) \\\\ "                                                                                          
+[58] "  & \\\\ "                                                                                                  
+[59] " Constant & 1,642.839$^{***}$ \\\\ "                                                                        
+[60] "  & (187.600) \\\\ "                                                                                        
+[61] "  & \\\\ "                                                                                                  
+[62] "\\hline \\\\[-1.8ex] "                                                                                      
+[63] "Observations & 9,800 \\\\ "                                                                                 
+[64] "\\hline "                                                                                                   
+[65] "\\hline \\\\[-1.8ex] "                                                                                      
+[66] "\\textit{Note:}  & \\multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\\\ "             
+[67] "\\end{tabular} "                                                                                            
+[68] "\\end{table} "                                                                                              
+
+% Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
+% Date and time: Sat, Jan 19, 2019 - 05:10:02 PM
+\begin{table}[!htbp] \centering 
+  \caption{} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-2} 
+\\[-1.8ex] & birthweight \\ 
+\hline \\[-1.8ex] 
+ boy & 94.133$^{***}$ \\ 
+  & (13.768) \\ 
+  & \\ 
+ married & 33.702$^{*}$ \\ 
+  & (19.021) \\ 
+  & \\ 
+ black & $-$197.737$^{***}$ \\ 
+  & (18.911) \\ 
+  & \\ 
+ age & 24.179$^{**}$ \\ 
+  & (11.112) \\ 
+  & \\ 
+ highschool & 56.252$^{***}$ \\ 
+  & (19.778) \\ 
+  & \\ 
+ somecollege & 85.615$^{***}$ \\ 
+  & (23.218) \\ 
+  & \\ 
+ college & 55.814$^{**}$ \\ 
+  & (27.771) \\ 
+  & \\ 
+ prenone & $-$50.595 \\ 
+  & (52.144) \\ 
+  & \\ 
+ presecond & 16.819 \\ 
+  & (19.866) \\ 
+  & \\ 
+ prethird & 25.659 \\ 
+  & (44.377) \\ 
+  & \\ 
+ smoker & 222.487$^{***}$ \\ 
+  & (36.030) \\ 
+  & \\ 
+ cigsdaily & $-$1.953 \\ 
+  & (2.409) \\ 
+  & \\ 
+ weightgain & 18.188$^{***}$ \\ 
+  & (1.270) \\ 
+  & \\ 
+ I(age$\hat{\mkern6mu}$2) & $-$0.412$^{**}$ \\ 
+  & (0.207) \\ 
+  & \\ 
+ I(weightgain$\hat{\mkern6mu}$2) & $-$0.149$^{***}$ \\ 
+  & (0.012) \\ 
+  & \\ 
+ Constant & 2,099.697$^{***}$ \\ 
+  & (145.188) \\ 
+  & \\ 
+\hline \\[-1.8ex] 
+Observations & 9,800 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table} 
+ [1] ""                                                                                                           
+ [2] "% Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu"
+ [3] "% Date and time: Sat, Jan 19, 2019 - 05:10:02 PM"                                                           
+ [4] "\\begin{table}[!htbp] \\centering "                                                                         
+ [5] "  \\caption{} "                                                                                             
+ [6] "  \\label{} "                                                                                               
+ [7] "\\begin{tabular}{@{\\extracolsep{5pt}}lc} "                                                                 
+ [8] "\\\\[-1.8ex]\\hline "                                                                                       
+ [9] "\\hline \\\\[-1.8ex] "                                                                                      
+[10] " & \\multicolumn{1}{c}{\\textit{Dependent variable:}} \\\\ "                                                
+[11] "\\cline{2-2} "                                                                                              
+[12] "\\\\[-1.8ex] & birthweight \\\\ "                                                                           
+[13] "\\hline \\\\[-1.8ex] "                                                                                      
+[14] " boy & 94.133$^{***}$ \\\\ "                                                                                
+[15] "  & (13.768) \\\\ "                                                                                         
+[16] "  & \\\\ "                                                                                                  
+[17] " married & 33.702$^{*}$ \\\\ "                                                                              
+[18] "  & (19.021) \\\\ "                                                                                         
+[19] "  & \\\\ "                                                                                                  
+[20] " black & $-$197.737$^{***}$ \\\\ "                                                                          
+[21] "  & (18.911) \\\\ "                                                                                         
+[22] "  & \\\\ "                                                                                                  
+[23] " age & 24.179$^{**}$ \\\\ "                                                                                 
+[24] "  & (11.112) \\\\ "                                                                                         
+[25] "  & \\\\ "                                                                                                  
+[26] " highschool & 56.252$^{***}$ \\\\ "                                                                         
+[27] "  & (19.778) \\\\ "                                                                                         
+[28] "  & \\\\ "                                                                                                  
+[29] " somecollege & 85.615$^{***}$ \\\\ "                                                                        
+[30] "  & (23.218) \\\\ "                                                                                         
+[31] "  & \\\\ "                                                                                                  
+[32] " college & 55.814$^{**}$ \\\\ "                                                                             
+[33] "  & (27.771) \\\\ "                                                                                         
+[34] "  & \\\\ "                                                                                                  
+[35] " prenone & $-$50.595 \\\\ "                                                                                 
+[36] "  & (52.144) \\\\ "                                                                                         
+[37] "  & \\\\ "                                                                                                  
+[38] " presecond & 16.819 \\\\ "                                                                                  
+[39] "  & (19.866) \\\\ "                                                                                         
+[40] "  & \\\\ "                                                                                                  
+[41] " prethird & 25.659 \\\\ "                                                                                   
+[42] "  & (44.377) \\\\ "                                                                                         
+[43] "  & \\\\ "                                                                                                  
+[44] " smoker & 222.487$^{***}$ \\\\ "                                                                            
+[45] "  & (36.030) \\\\ "                                                                                         
+[46] "  & \\\\ "                                                                                                  
+[47] " cigsdaily & $-$1.953 \\\\ "                                                                                
+[48] "  & (2.409) \\\\ "                                                                                          
+[49] "  & \\\\ "                                                                                                  
+[50] " weightgain & 18.188$^{***}$ \\\\ "                                                                         
+[51] "  & (1.270) \\\\ "                                                                                          
+[52] "  & \\\\ "                                                                                                  
+[53] " I(age$\\hat{\\mkern6mu}$2) & $-$0.412$^{**}$ \\\\ "                                                        
+[54] "  & (0.207) \\\\ "                                                                                          
+[55] "  & \\\\ "                                                                                                  
+[56] " I(weightgain$\\hat{\\mkern6mu}$2) & $-$0.149$^{***}$ \\\\ "                                                
+[57] "  & (0.012) \\\\ "                                                                                          
+[58] "  & \\\\ "                                                                                                  
+[59] " Constant & 2,099.697$^{***}$ \\\\ "                                                                        
+[60] "  & (145.188) \\\\ "                                                                                        
+[61] "  & \\\\ "                                                                                                  
+[62] "\\hline \\\\[-1.8ex] "                                                                                      
+[63] "Observations & 9,800 \\\\ "                                                                                 
+[64] "\\hline "                                                                                                   
+[65] "\\hline \\\\[-1.8ex] "                                                                                      
+[66] "\\textit{Note:}  & \\multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\\\ "             
+[67] "\\end{tabular} "                                                                                            
+[68] "\\end{table} "                                                                                              
+
+% Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
+% Date and time: Sat, Jan 19, 2019 - 05:10:03 PM
+\begin{table}[!htbp] \centering 
+  \caption{} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-2} 
+\\[-1.8ex] & birthweight \\ 
+\hline \\[-1.8ex] 
+ boy & 108.116$^{***}$ \\ 
+  & (12.127) \\ 
+  & \\ 
+ married & 4.575 \\ 
+  & (17.031) \\ 
+  & \\ 
+ black & $-$205.024$^{***}$ \\ 
+  & (16.215) \\ 
+  & \\ 
+ age & 27.353$^{***}$ \\ 
+  & (10.065) \\ 
+  & \\ 
+ highschool & 59.280$^{***}$ \\ 
+  & (17.393) \\ 
+  & \\ 
+ somecollege & 99.575$^{***}$ \\ 
+  & (20.994) \\ 
+  & \\ 
+ college & 67.659$^{***}$ \\ 
+  & (24.993) \\ 
+  & \\ 
+ prenone & $-$43.209 \\ 
+  & (73.643) \\ 
+  & \\ 
+ presecond & 21.729 \\ 
+  & (18.924) \\ 
+  & \\ 
+ prethird & 31.884 \\ 
+  & (43.340) \\ 
+  & \\ 
+ smoker & 257.967$^{***}$ \\ 
+  & (32.304) \\ 
+  & \\ 
+ cigsdaily & $-$0.380 \\ 
+  & (2.225) \\ 
+  & \\ 
+ weightgain & 16.507$^{***}$ \\ 
+  & (1.031) \\ 
+  & \\ 
+ I(age$\hat{\mkern6mu}$2) & $-$0.428$^{**}$ \\ 
+  & (0.189) \\ 
+  & \\ 
+ I(weightgain$\hat{\mkern6mu}$2) & $-$0.133$^{***}$ \\ 
+  & (0.010) \\ 
+  & \\ 
+ Constant & 2,164.426$^{***}$ \\ 
+  & (130.052) \\ 
+  & \\ 
+\hline \\[-1.8ex] 
+Observations & 9,800 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table} 
+ [1] ""                                                                                                           
+ [2] "% Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu"
+ [3] "% Date and time: Sat, Jan 19, 2019 - 05:10:03 PM"                                                           
+ [4] "\\begin{table}[!htbp] \\centering "                                                                         
+ [5] "  \\caption{} "                                                                                             
+ [6] "  \\label{} "                                                                                               
+ [7] "\\begin{tabular}{@{\\extracolsep{5pt}}lc} "                                                                 
+ [8] "\\\\[-1.8ex]\\hline "                                                                                       
+ [9] "\\hline \\\\[-1.8ex] "                                                                                      
+[10] " & \\multicolumn{1}{c}{\\textit{Dependent variable:}} \\\\ "                                                
+[11] "\\cline{2-2} "                                                                                              
+[12] "\\\\[-1.8ex] & birthweight \\\\ "                                                                           
+[13] "\\hline \\\\[-1.8ex] "                                                                                      
+[14] " boy & 108.116$^{***}$ \\\\ "                                                                               
+[15] "  & (12.127) \\\\ "                                                                                         
+[16] "  & \\\\ "                                                                                                  
+[17] " married & 4.575 \\\\ "                                                                                     
+[18] "  & (17.031) \\\\ "                                                                                         
+[19] "  & \\\\ "                                                                                                  
+[20] " black & $-$205.024$^{***}$ \\\\ "                                                                          
+[21] "  & (16.215) \\\\ "                                                                                         
+[22] "  & \\\\ "                                                                                                  
+[23] " age & 27.353$^{***}$ \\\\ "                                                                                
+[24] "  & (10.065) \\\\ "                                                                                         
+[25] "  & \\\\ "                                                                                                  
+[26] " highschool & 59.280$^{***}$ \\\\ "                                                                         
+[27] "  & (17.393) \\\\ "                                                                                         
+[28] "  & \\\\ "                                                                                                  
+[29] " somecollege & 99.575$^{***}$ \\\\ "                                                                        
+[30] "  & (20.994) \\\\ "                                                                                         
+[31] "  & \\\\ "                                                                                                  
+[32] " college & 67.659$^{***}$ \\\\ "                                                                            
+[33] "  & (24.993) \\\\ "                                                                                         
+[34] "  & \\\\ "                                                                                                  
+[35] " prenone & $-$43.209 \\\\ "                                                                                 
+[36] "  & (73.643) \\\\ "                                                                                         
+[37] "  & \\\\ "                                                                                                  
+[38] " presecond & 21.729 \\\\ "                                                                                  
+[39] "  & (18.924) \\\\ "                                                                                         
+[40] "  & \\\\ "                                                                                                  
+[41] " prethird & 31.884 \\\\ "                                                                                   
+[42] "  & (43.340) \\\\ "                                                                                         
+[43] "  & \\\\ "                                                                                                  
+[44] " smoker & 257.967$^{***}$ \\\\ "                                                                            
+[45] "  & (32.304) \\\\ "                                                                                         
+[46] "  & \\\\ "                                                                                                  
+[47] " cigsdaily & $-$0.380 \\\\ "                                                                                
+[48] "  & (2.225) \\\\ "                                                                                          
+[49] "  & \\\\ "                                                                                                  
+[50] " weightgain & 16.507$^{***}$ \\\\ "                                                                         
+[51] "  & (1.031) \\\\ "                                                                                          
+[52] "  & \\\\ "                                                                                                  
+[53] " I(age$\\hat{\\mkern6mu}$2) & $-$0.428$^{**}$ \\\\ "                                                        
+[54] "  & (0.189) \\\\ "                                                                                          
+[55] "  & \\\\ "                                                                                                  
+[56] " I(weightgain$\\hat{\\mkern6mu}$2) & $-$0.133$^{***}$ \\\\ "                                                
+[57] "  & (0.010) \\\\ "                                                                                          
+[58] "  & \\\\ "                                                                                                  
+[59] " Constant & 2,164.426$^{***}$ \\\\ "                                                                        
+[60] "  & (130.052) \\\\ "                                                                                        
+[61] "  & \\\\ "                                                                                                  
+[62] "\\hline \\\\[-1.8ex] "                                                                                      
+[63] "Observations & 9,800 \\\\ "                                                                                 
+[64] "\\hline "                                                                                                   
+[65] "\\hline \\\\[-1.8ex] "                                                                                      
+[66] "\\textit{Note:}  & \\multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\\\ "             
+[67] "\\end{tabular} "                                                                                            
+[68] "\\end{table} "                                                                                              
+
+% Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
+% Date and time: Sat, Jan 19, 2019 - 05:10:04 PM
+\begin{table}[!htbp] \centering 
+  \caption{} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-2} 
+\\[-1.8ex] & birthweight \\ 
+\hline \\[-1.8ex] 
+ boy & 115.739$^{***}$ \\ 
+  & (12.557) \\ 
+  & \\ 
+ married & $-$2.262 \\ 
+  & (17.954) \\ 
+  & \\ 
+ black & $-$201.289$^{***}$ \\ 
+  & (16.063) \\ 
+  & \\ 
+ age & 32.034$^{***}$ \\ 
+  & (9.098) \\ 
+  & \\ 
+ highschool & 33.072$^{*}$ \\ 
+  & (19.205) \\ 
+  & \\ 
+ somecollege & 64.718$^{***}$ \\ 
+  & (22.169) \\ 
+  & \\ 
+ college & 34.085 \\ 
+  & (25.092) \\ 
+  & \\ 
+ prenone & $-$68.147$^{**}$ \\ 
+  & (31.957) \\ 
+  & \\ 
+ presecond & 37.258$^{*}$ \\ 
+  & (19.286) \\ 
+  & \\ 
+ prethird & 12.958 \\ 
+  & (38.565) \\ 
+  & \\ 
+ smoker & 240.480$^{***}$ \\ 
+  & (37.176) \\ 
+  & \\ 
+ cigsdaily & $-$1.351 \\ 
+  & (2.550) \\ 
+  & \\ 
+ weightgain & 15.545$^{***}$ \\ 
+  & (1.078) \\ 
+  & \\ 
+ I(age$\hat{\mkern6mu}$2) & $-$0.463$^{***}$ \\ 
+  & (0.163) \\ 
+  & \\ 
+ I(weightgain$\hat{\mkern6mu}$2) & $-$0.123$^{***}$ \\ 
+  & (0.010) \\ 
+  & \\ 
+ Constant & 2,252.496$^{***}$ \\ 
+  & (123.418) \\ 
+  & \\ 
+\hline \\[-1.8ex] 
+Observations & 9,800 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table} 
+ [1] ""                                                                                                           
+ [2] "% Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu"
+ [3] "% Date and time: Sat, Jan 19, 2019 - 05:10:05 PM"                                                           
+ [4] "\\begin{table}[!htbp] \\centering "                                                                         
+ [5] "  \\caption{} "                                                                                             
+ [6] "  \\label{} "                                                                                               
+ [7] "\\begin{tabular}{@{\\extracolsep{5pt}}lc} "                                                                 
+ [8] "\\\\[-1.8ex]\\hline "                                                                                       
+ [9] "\\hline \\\\[-1.8ex] "                                                                                      
+[10] " & \\multicolumn{1}{c}{\\textit{Dependent variable:}} \\\\ "                                                
+[11] "\\cline{2-2} "                                                                                              
+[12] "\\\\[-1.8ex] & birthweight \\\\ "                                                                           
+[13] "\\hline \\\\[-1.8ex] "                                                                                      
+[14] " boy & 115.739$^{***}$ \\\\ "                                                                               
+[15] "  & (12.557) \\\\ "                                                                                         
+[16] "  & \\\\ "                                                                                                  
+[17] " married & $-$2.262 \\\\ "                                                                                  
+[18] "  & (17.954) \\\\ "                                                                                         
+[19] "  & \\\\ "                                                                                                  
+[20] " black & $-$201.289$^{***}$ \\\\ "                                                                          
+[21] "  & (16.063) \\\\ "                                                                                         
+[22] "  & \\\\ "                                                                                                  
+[23] " age & 32.034$^{***}$ \\\\ "                                                                                
+[24] "  & (9.098) \\\\ "                                                                                          
+[25] "  & \\\\ "                                                                                                  
+[26] " highschool & 33.072$^{*}$ \\\\ "                                                                           
+[27] "  & (19.205) \\\\ "                                                                                         
+[28] "  & \\\\ "                                                                                                  
+[29] " somecollege & 64.718$^{***}$ \\\\ "                                                                        
+[30] "  & (22.169) \\\\ "                                                                                         
+[31] "  & \\\\ "                                                                                                  
+[32] " college & 34.085 \\\\ "                                                                                    
+[33] "  & (25.092) \\\\ "                                                                                         
+[34] "  & \\\\ "                                                                                                  
+[35] " prenone & $-$68.147$^{**}$ \\\\ "                                                                          
+[36] "  & (31.957) \\\\ "                                                                                         
+[37] "  & \\\\ "                                                                                                  
+[38] " presecond & 37.258$^{*}$ \\\\ "                                                                            
+[39] "  & (19.286) \\\\ "                                                                                         
+[40] "  & \\\\ "                                                                                                  
+[41] " prethird & 12.958 \\\\ "                                                                                   
+[42] "  & (38.565) \\\\ "                                                                                         
+[43] "  & \\\\ "                                                                                                  
+[44] " smoker & 240.480$^{***}$ \\\\ "                                                                            
+[45] "  & (37.176) \\\\ "                                                                                         
+[46] "  & \\\\ "                                                                                                  
+[47] " cigsdaily & $-$1.351 \\\\ "                                                                                
+[48] "  & (2.550) \\\\ "                                                                                          
+[49] "  & \\\\ "                                                                                                  
+[50] " weightgain & 15.545$^{***}$ \\\\ "                                                                         
+[51] "  & (1.078) \\\\ "                                                                                          
+[52] "  & \\\\ "                                                                                                  
+[53] " I(age$\\hat{\\mkern6mu}$2) & $-$0.463$^{***}$ \\\\ "                                                       
+[54] "  & (0.163) \\\\ "                                                                                          
+[55] "  & \\\\ "                                                                                                  
+[56] " I(weightgain$\\hat{\\mkern6mu}$2) & $-$0.123$^{***}$ \\\\ "                                                
+[57] "  & (0.010) \\\\ "                                                                                          
+[58] "  & \\\\ "                                                                                                  
+[59] " Constant & 2,252.496$^{***}$ \\\\ "                                                                        
+[60] "  & (123.418) \\\\ "                                                                                        
+[61] "  & \\\\ "                                                                                                  
+[62] "\\hline \\\\[-1.8ex] "                                                                                      
+[63] "Observations & 9,800 \\\\ "                                                                                 
+[64] "\\hline "                                                                                                   
+[65] "\\hline \\\\[-1.8ex] "                                                                                      
+[66] "\\textit{Note:}  & \\multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\\\ "             
+[67] "\\end{tabular} "                                                                                            
+[68] "\\end{table} "                                                                                              
+
+% Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
+% Date and time: Sat, Jan 19, 2019 - 05:10:05 PM
+\begin{table}[!htbp] \centering 
+  \caption{} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-2} 
+\\[-1.8ex] & birthweight \\ 
+\hline \\[-1.8ex] 
+ boy & 119.489$^{***}$ \\ 
+  & (11.441) \\ 
+  & \\ 
+ married & 4.259 \\ 
+  & (16.003) \\ 
+  & \\ 
+ black & $-$204.335$^{***}$ \\ 
+  & (15.218) \\ 
+  & \\ 
+ age & 24.696$^{***}$ \\ 
+  & (8.637) \\ 
+  & \\ 
+ highschool & 24.110 \\ 
+  & (17.248) \\ 
+  & \\ 
+ somecollege & 60.361$^{***}$ \\ 
+  & (19.706) \\ 
+  & \\ 
+ college & 26.775 \\ 
+  & (23.477) \\ 
+  & \\ 
+ prenone & $-$51.263 \\ 
+  & (90.063) \\ 
+  & \\ 
+ presecond & 34.337$^{**}$ \\ 
+  & (17.384) \\ 
+  & \\ 
+ prethird & 24.499 \\ 
+  & (31.765) \\ 
+  & \\ 
+ smoker & 242.045$^{***}$ \\ 
+  & (29.348) \\ 
+  & \\ 
+ cigsdaily & $-$0.703 \\ 
+  & (1.633) \\ 
+  & \\ 
+ weightgain & 14.595$^{***}$ \\ 
+  & (1.008) \\ 
+  & \\ 
+ I(age$\hat{\mkern6mu}$2) & $-$0.339$^{**}$ \\ 
+  & (0.156) \\ 
+  & \\ 
+ I(weightgain$\hat{\mkern6mu}$2) & $-$0.113$^{***}$ \\ 
+  & (0.010) \\ 
+  & \\ 
+ Constant & 2,482.852$^{***}$ \\ 
+  & (115.623) \\ 
+  & \\ 
+\hline \\[-1.8ex] 
+Observations & 9,800 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table} 
+ [1] ""                                                                                                           
+ [2] "% Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu"
+ [3] "% Date and time: Sat, Jan 19, 2019 - 05:10:06 PM"                                                           
+ [4] "\\begin{table}[!htbp] \\centering "                                                                         
+ [5] "  \\caption{} "                                                                                             
+ [6] "  \\label{} "                                                                                               
+ [7] "\\begin{tabular}{@{\\extracolsep{5pt}}lc} "                                                                 
+ [8] "\\\\[-1.8ex]\\hline "                                                                                       
+ [9] "\\hline \\\\[-1.8ex] "                                                                                      
+[10] " & \\multicolumn{1}{c}{\\textit{Dependent variable:}} \\\\ "                                                
+[11] "\\cline{2-2} "                                                                                              
+[12] "\\\\[-1.8ex] & birthweight \\\\ "                                                                           
+[13] "\\hline \\\\[-1.8ex] "                                                                                      
+[14] " boy & 119.489$^{***}$ \\\\ "                                                                               
+[15] "  & (11.441) \\\\ "                                                                                         
+[16] "  & \\\\ "                                                                                                  
+[17] " married & 4.259 \\\\ "                                                                                     
+[18] "  & (16.003) \\\\ "                                                                                         
+[19] "  & \\\\ "                                                                                                  
+[20] " black & $-$204.335$^{***}$ \\\\ "                                                                          
+[21] "  & (15.218) \\\\ "                                                                                         
+[22] "  & \\\\ "                                                                                                  
+[23] " age & 24.696$^{***}$ \\\\ "                                                                                
+[24] "  & (8.637) \\\\ "                                                                                          
+[25] "  & \\\\ "                                                                                                  
+[26] " highschool & 24.110 \\\\ "                                                                                 
+[27] "  & (17.248) \\\\ "                                                                                         
+[28] "  & \\\\ "                                                                                                  
+[29] " somecollege & 60.361$^{***}$ \\\\ "                                                                        
+[30] "  & (19.706) \\\\ "                                                                                         
+[31] "  & \\\\ "                                                                                                  
+[32] " college & 26.775 \\\\ "                                                                                    
+[33] "  & (23.477) \\\\ "                                                                                         
+[34] "  & \\\\ "                                                                                                  
+[35] " prenone & $-$51.263 \\\\ "                                                                                 
+[36] "  & (90.063) \\\\ "                                                                                         
+[37] "  & \\\\ "                                                                                                  
+[38] " presecond & 34.337$^{**}$ \\\\ "                                                                           
+[39] "  & (17.384) \\\\ "                                                                                         
+[40] "  & \\\\ "                                                                                                  
+[41] " prethird & 24.499 \\\\ "                                                                                   
+[42] "  & (31.765) \\\\ "                                                                                         
+[43] "  & \\\\ "                                                                                                  
+[44] " smoker & 242.045$^{***}$ \\\\ "                                                                            
+[45] "  & (29.348) \\\\ "                                                                                         
+[46] "  & \\\\ "                                                                                                  
+[47] " cigsdaily & $-$0.703 \\\\ "                                                                                
+[48] "  & (1.633) \\\\ "                                                                                          
+[49] "  & \\\\ "                                                                                                  
+[50] " weightgain & 14.595$^{***}$ \\\\ "                                                                         
+[51] "  & (1.008) \\\\ "                                                                                          
+[52] "  & \\\\ "                                                                                                  
+[53] " I(age$\\hat{\\mkern6mu}$2) & $-$0.339$^{**}$ \\\\ "                                                        
+[54] "  & (0.156) \\\\ "                                                                                          
+[55] "  & \\\\ "                                                                                                  
+[56] " I(weightgain$\\hat{\\mkern6mu}$2) & $-$0.113$^{***}$ \\\\ "                                                
+[57] "  & (0.010) \\\\ "                                                                                          
+[58] "  & \\\\ "                                                                                                  
+[59] " Constant & 2,482.852$^{***}$ \\\\ "                                                                        
+[60] "  & (115.623) \\\\ "                                                                                        
+[61] "  & \\\\ "                                                                                                  
+[62] "\\hline \\\\[-1.8ex] "                                                                                      
+[63] "Observations & 9,800 \\\\ "                                                                                 
+[64] "\\hline "                                                                                                   
+[65] "\\hline \\\\[-1.8ex] "                                                                                      
+[66] "\\textit{Note:}  & \\multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\\\ "             
+[67] "\\end{tabular} "                                                                                            
+[68] "\\end{table} "                                                                                              
+
+% Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
+% Date and time: Sat, Jan 19, 2019 - 05:10:07 PM
+\begin{table}[!htbp] \centering 
+  \caption{} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-2} 
+\\[-1.8ex] & birthweight \\ 
+\hline \\[-1.8ex] 
+ boy & 118.590$^{***}$ \\ 
+  & (12.543) \\ 
+  & \\ 
+ married & 2.594 \\ 
+  & (17.406) \\ 
+  & \\ 
+ black & $-$197.651$^{***}$ \\ 
+  & (16.175) \\ 
+  & \\ 
+ age & 30.650$^{***}$ \\ 
+  & (9.171) \\ 
+  & \\ 
+ highschool & 14.803 \\ 
+  & (17.921) \\ 
+  & \\ 
+ somecollege & 43.760$^{**}$ \\ 
+  & (20.242) \\ 
+  & \\ 
+ college & 22.242 \\ 
+  & (25.184) \\ 
+  & \\ 
+ prenone & $-$33.940 \\ 
+  & (39.032) \\ 
+  & \\ 
+ presecond & 52.730$^{***}$ \\ 
+  & (20.334) \\ 
+  & \\ 
+ prethird & 24.149 \\ 
+  & (47.384) \\ 
+  & \\ 
+ smoker & 203.998$^{***}$ \\ 
+  & (37.247) \\ 
+  & \\ 
+ cigsdaily & $-$3.231$^{**}$ \\ 
+  & (1.611) \\ 
+  & \\ 
+ weightgain & 13.969$^{***}$ \\ 
+  & (1.078) \\ 
+  & \\ 
+ I(age$\hat{\mkern6mu}$2) & $-$0.431$^{**}$ \\ 
+  & (0.168) \\ 
+  & \\ 
+ I(weightgain$\hat{\mkern6mu}$2) & $-$0.103$^{***}$ \\ 
+  & (0.011) \\ 
+  & \\ 
+ Constant & 2,566.396$^{***}$ \\ 
+  & (122.431) \\ 
+  & \\ 
+\hline \\[-1.8ex] 
+Observations & 9,800 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table} 
+ [1] ""                                                                                                           
+ [2] "% Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu"
+ [3] "% Date and time: Sat, Jan 19, 2019 - 05:10:07 PM"                                                           
+ [4] "\\begin{table}[!htbp] \\centering "                                                                         
+ [5] "  \\caption{} "                                                                                             
+ [6] "  \\label{} "                                                                                               
+ [7] "\\begin{tabular}{@{\\extracolsep{5pt}}lc} "                                                                 
+ [8] "\\\\[-1.8ex]\\hline "                                                                                       
+ [9] "\\hline \\\\[-1.8ex] "                                                                                      
+[10] " & \\multicolumn{1}{c}{\\textit{Dependent variable:}} \\\\ "                                                
+[11] "\\cline{2-2} "                                                                                              
+[12] "\\\\[-1.8ex] & birthweight \\\\ "                                                                           
+[13] "\\hline \\\\[-1.8ex] "                                                                                      
+[14] " boy & 118.590$^{***}$ \\\\ "                                                                               
+[15] "  & (12.543) \\\\ "                                                                                         
+[16] "  & \\\\ "                                                                                                  
+[17] " married & 2.594 \\\\ "                                                                                     
+[18] "  & (17.406) \\\\ "                                                                                         
+[19] "  & \\\\ "                                                                                                  
+[20] " black & $-$197.651$^{***}$ \\\\ "                                                                          
+[21] "  & (16.175) \\\\ "                                                                                         
+[22] "  & \\\\ "                                                                                                  
+[23] " age & 30.650$^{***}$ \\\\ "                                                                                
+[24] "  & (9.171) \\\\ "                                                                                          
+[25] "  & \\\\ "                                                                                                  
+[26] " highschool & 14.803 \\\\ "                                                                                 
+[27] "  & (17.921) \\\\ "                                                                                         
+[28] "  & \\\\ "                                                                                                  
+[29] " somecollege & 43.760$^{**}$ \\\\ "                                                                         
+[30] "  & (20.242) \\\\ "                                                                                         
+[31] "  & \\\\ "                                                                                                  
+[32] " college & 22.242 \\\\ "                                                                                    
+[33] "  & (25.184) \\\\ "                                                                                         
+[34] "  & \\\\ "                                                                                                  
+[35] " prenone & $-$33.940 \\\\ "                                                                                 
+[36] "  & (39.032) \\\\ "                                                                                         
+[37] "  & \\\\ "                                                                                                  
+[38] " presecond & 52.730$^{***}$ \\\\ "                                                                          
+[39] "  & (20.334) \\\\ "                                                                                         
+[40] "  & \\\\ "                                                                                                  
+[41] " prethird & 24.149 \\\\ "                                                                                   
+[42] "  & (47.384) \\\\ "                                                                                         
+[43] "  & \\\\ "                                                                                                  
+[44] " smoker & 203.998$^{***}$ \\\\ "                                                                            
+[45] "  & (37.247) \\\\ "                                                                                         
+[46] "  & \\\\ "                                                                                                  
+[47] " cigsdaily & $-$3.231$^{**}$ \\\\ "                                                                         
+[48] "  & (1.611) \\\\ "                                                                                          
+[49] "  & \\\\ "                                                                                                  
+[50] " weightgain & 13.969$^{***}$ \\\\ "                                                                         
+[51] "  & (1.078) \\\\ "                                                                                          
+[52] "  & \\\\ "                                                                                                  
+[53] " I(age$\\hat{\\mkern6mu}$2) & $-$0.431$^{**}$ \\\\ "                                                        
+[54] "  & (0.168) \\\\ "                                                                                          
+[55] "  & \\\\ "                                                                                                  
+[56] " I(weightgain$\\hat{\\mkern6mu}$2) & $-$0.103$^{***}$ \\\\ "                                                
+[57] "  & (0.011) \\\\ "                                                                                          
+[58] "  & \\\\ "                                                                                                  
+[59] " Constant & 2,566.396$^{***}$ \\\\ "                                                                        
+[60] "  & (122.431) \\\\ "                                                                                        
+[61] "  & \\\\ "                                                                                                  
+[62] "\\hline \\\\[-1.8ex] "                                                                                      
+[63] "Observations & 9,800 \\\\ "                                                                                 
+[64] "\\hline "                                                                                                   
+[65] "\\hline \\\\[-1.8ex] "                                                                                      
+[66] "\\textit{Note:}  & \\multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\\\ "             
+[67] "\\end{tabular} "                                                                                            
+[68] "\\end{table} "                                                                                              
+
+% Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
+% Date and time: Sat, Jan 19, 2019 - 05:10:08 PM
+\begin{table}[!htbp] \centering 
+  \caption{} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-2} 
+\\[-1.8ex] & birthweight \\ 
+\hline \\[-1.8ex] 
+ boy & 125.616$^{***}$ \\ 
+  & (14.417) \\ 
+  & \\ 
+ married & 22.185 \\ 
+  & (20.225) \\ 
+  & \\ 
+ black & $-$179.703$^{***}$ \\ 
+  & (18.979) \\ 
+  & \\ 
+ age & 37.628$^{***}$ \\ 
+  & (10.343) \\ 
+  & \\ 
+ highschool & 2.806 \\ 
+  & (22.211) \\ 
+  & \\ 
+ somecollege & 29.414 \\ 
+  & (24.588) \\ 
+  & \\ 
+ college & $-$25.648 \\ 
+  & (28.570) \\ 
+  & \\ 
+ prenone & $-$149.273$^{***}$ \\ 
+  & (24.537) \\ 
+  & \\ 
+ presecond & 33.683 \\ 
+  & (22.222) \\ 
+  & \\ 
+ prethird & 15.671 \\ 
+  & (39.795) \\ 
+  & \\ 
+ smoker & 177.092$^{***}$ \\ 
+  & (32.186) \\ 
+  & \\ 
+ cigsdaily & $-$6.059$^{***}$ \\ 
+  & (1.564) \\ 
+  & \\ 
+ weightgain & 12.766$^{***}$ \\ 
+  & (1.207) \\ 
+  & \\ 
+ I(age$\hat{\mkern6mu}$2) & $-$0.546$^{***}$ \\ 
+  & (0.185) \\ 
+  & \\ 
+ I(weightgain$\hat{\mkern6mu}$2) & $-$0.092$^{***}$ \\ 
+  & (0.011) \\ 
+  & \\ 
+ Constant & 2,672.938$^{***}$ \\ 
+  & (136.433) \\ 
+  & \\ 
+\hline \\[-1.8ex] 
+Observations & 9,800 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table} 
+ [1] ""                                                                                                           
+ [2] "% Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu"
+ [3] "% Date and time: Sat, Jan 19, 2019 - 05:10:09 PM"                                                           
+ [4] "\\begin{table}[!htbp] \\centering "                                                                         
+ [5] "  \\caption{} "                                                                                             
+ [6] "  \\label{} "                                                                                               
+ [7] "\\begin{tabular}{@{\\extracolsep{5pt}}lc} "                                                                 
+ [8] "\\\\[-1.8ex]\\hline "                                                                                       
+ [9] "\\hline \\\\[-1.8ex] "                                                                                      
+[10] " & \\multicolumn{1}{c}{\\textit{Dependent variable:}} \\\\ "                                                
+[11] "\\cline{2-2} "                                                                                              
+[12] "\\\\[-1.8ex] & birthweight \\\\ "                                                                           
+[13] "\\hline \\\\[-1.8ex] "                                                                                      
+[14] " boy & 125.616$^{***}$ \\\\ "                                                                               
+[15] "  & (14.417) \\\\ "                                                                                         
+[16] "  & \\\\ "                                                                                                  
+[17] " married & 22.185 \\\\ "                                                                                    
+[18] "  & (20.225) \\\\ "                                                                                         
+[19] "  & \\\\ "                                                                                                  
+[20] " black & $-$179.703$^{***}$ \\\\ "                                                                          
+[21] "  & (18.979) \\\\ "                                                                                         
+[22] "  & \\\\ "                                                                                                  
+[23] " age & 37.628$^{***}$ \\\\ "                                                                                
+[24] "  & (10.343) \\\\ "                                                                                         
+[25] "  & \\\\ "                                                                                                  
+[26] " highschool & 2.806 \\\\ "                                                                                  
+[27] "  & (22.211) \\\\ "                                                                                         
+[28] "  & \\\\ "                                                                                                  
+[29] " somecollege & 29.414 \\\\ "                                                                                
+[30] "  & (24.588) \\\\ "                                                                                         
+[31] "  & \\\\ "                                                                                                  
+[32] " college & $-$25.648 \\\\ "                                                                                 
+[33] "  & (28.570) \\\\ "                                                                                         
+[34] "  & \\\\ "                                                                                                  
+[35] " prenone & $-$149.273$^{***}$ \\\\ "                                                                        
+[36] "  & (24.537) \\\\ "                                                                                         
+[37] "  & \\\\ "                                                                                                  
+[38] " presecond & 33.683 \\\\ "                                                                                  
+[39] "  & (22.222) \\\\ "                                                                                         
+[40] "  & \\\\ "                                                                                                  
+[41] " prethird & 15.671 \\\\ "                                                                                   
+[42] "  & (39.795) \\\\ "                                                                                         
+[43] "  & \\\\ "                                                                                                  
+[44] " smoker & 177.092$^{***}$ \\\\ "                                                                            
+[45] "  & (32.186) \\\\ "                                                                                         
+[46] "  & \\\\ "                                                                                                  
+[47] " cigsdaily & $-$6.059$^{***}$ \\\\ "                                                                        
+[48] "  & (1.564) \\\\ "                                                                                          
+[49] "  & \\\\ "                                                                                                  
+[50] " weightgain & 12.766$^{***}$ \\\\ "                                                                         
+[51] "  & (1.207) \\\\ "                                                                                          
+[52] "  & \\\\ "                                                                                                  
+[53] " I(age$\\hat{\\mkern6mu}$2) & $-$0.546$^{***}$ \\\\ "                                                       
+[54] "  & (0.185) \\\\ "                                                                                          
+[55] "  & \\\\ "                                                                                                  
+[56] " I(weightgain$\\hat{\\mkern6mu}$2) & $-$0.092$^{***}$ \\\\ "                                                
+[57] "  & (0.011) \\\\ "                                                                                          
+[58] "  & \\\\ "                                                                                                  
+[59] " Constant & 2,672.938$^{***}$ \\\\ "                                                                        
+[60] "  & (136.433) \\\\ "                                                                                        
+[61] "  & \\\\ "                                                                                                  
+[62] "\\hline \\\\[-1.8ex] "                                                                                      
+[63] "Observations & 9,800 \\\\ "                                                                                 
+[64] "\\hline "                                                                                                   
+[65] "\\hline \\\\[-1.8ex] "                                                                                      
+[66] "\\textit{Note:}  & \\multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\\\ "             
+[67] "\\end{tabular} "                                                                                            
+[68] "\\end{table} "                                                                                              
+
+% Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
+% Date and time: Sat, Jan 19, 2019 - 05:10:09 PM
+\begin{table}[!htbp] \centering 
+  \caption{} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{1}{c}{\textit{Dependent variable:}} \\ 
+\cline{2-2} 
+\\[-1.8ex] & birthweight \\ 
+\hline \\[-1.8ex] 
+ boy & 141.591$^{***}$ \\ 
+  & (18.841) \\ 
+  & \\ 
+ married & 37.376 \\ 
+  & (26.310) \\ 
+  & \\ 
+ black & $-$182.540$^{***}$ \\ 
+  & (24.637) \\ 
+  & \\ 
+ age & 59.731$^{***}$ \\ 
+  & (14.241) \\ 
+  & \\ 
+ highschool & $-$23.160 \\ 
+  & (25.882) \\ 
+  & \\ 
+ somecollege & $-$6.022 \\ 
+  & (33.196) \\ 
+  & \\ 
+ college & $-$96.917$^{***}$ \\ 
+  & (37.271) \\ 
+  & \\ 
+ prenone & $-$107.646 \\ 
+  & (162.621) \\ 
+  & \\ 
+ presecond & 56.693 \\ 
+  & (34.814) \\ 
+  & \\ 
+ prethird & $-$18.916 \\ 
+  & (46.658) \\ 
+  & \\ 
+ smoker & 151.351$^{**}$ \\ 
+  & (59.975) \\ 
+  & \\ 
+ cigsdaily & $-$9.181$^{***}$ \\ 
+  & (3.550) \\ 
+  & \\ 
+ weightgain & 12.879$^{***}$ \\ 
+  & (1.435) \\ 
+  & \\ 
+ I(age$\hat{\mkern6mu}$2) & $-$0.875$^{***}$ \\ 
+  & (0.266) \\ 
+  & \\ 
+ I(weightgain$\hat{\mkern6mu}$2) & $-$0.091$^{***}$ \\ 
+  & (0.013) \\ 
+  & \\ 
+ Constant & 2,583.119$^{***}$ \\ 
+  & (188.183) \\ 
+  & \\ 
+\hline \\[-1.8ex] 
+Observations & 9,800 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Note:}  & \multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\ 
+\end{tabular} 
+\end{table} 
+ [1] ""                                                                                                           
+ [2] "% Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu"
+ [3] "% Date and time: Sat, Jan 19, 2019 - 05:10:10 PM"                                                           
+ [4] "\\begin{table}[!htbp] \\centering "                                                                         
+ [5] "  \\caption{} "                                                                                             
+ [6] "  \\label{} "                                                                                               
+ [7] "\\begin{tabular}{@{\\extracolsep{5pt}}lc} "                                                                 
+ [8] "\\\\[-1.8ex]\\hline "                                                                                       
+ [9] "\\hline \\\\[-1.8ex] "                                                                                      
+[10] " & \\multicolumn{1}{c}{\\textit{Dependent variable:}} \\\\ "                                                
+[11] "\\cline{2-2} "                                                                                              
+[12] "\\\\[-1.8ex] & birthweight \\\\ "                                                                           
+[13] "\\hline \\\\[-1.8ex] "                                                                                      
+[14] " boy & 141.591$^{***}$ \\\\ "                                                                               
+[15] "  & (18.841) \\\\ "                                                                                         
+[16] "  & \\\\ "                                                                                                  
+[17] " married & 37.376 \\\\ "                                                                                    
+[18] "  & (26.310) \\\\ "                                                                                         
+[19] "  & \\\\ "                                                                                                  
+[20] " black & $-$182.540$^{***}$ \\\\ "                                                                          
+[21] "  & (24.637) \\\\ "                                                                                         
+[22] "  & \\\\ "                                                                                                  
+[23] " age & 59.731$^{***}$ \\\\ "                                                                                
+[24] "  & (14.241) \\\\ "                                                                                         
+[25] "  & \\\\ "                                                                                                  
+[26] " highschool & $-$23.160 \\\\ "                                                                              
+[27] "  & (25.882) \\\\ "                                                                                         
+[28] "  & \\\\ "                                                                                                  
+[29] " somecollege & $-$6.022 \\\\ "                                                                              
+[30] "  & (33.196) \\\\ "                                                                                         
+[31] "  & \\\\ "                                                                                                  
+[32] " college & $-$96.917$^{***}$ \\\\ "                                                                         
+[33] "  & (37.271) \\\\ "                                                                                         
+[34] "  & \\\\ "                                                                                                  
+[35] " prenone & $-$107.646 \\\\ "                                                                                
+[36] "  & (162.621) \\\\ "                                                                                        
+[37] "  & \\\\ "                                                                                                  
+[38] " presecond & 56.693 \\\\ "                                                                                  
+[39] "  & (34.814) \\\\ "                                                                                         
+[40] "  & \\\\ "                                                                                                  
+[41] " prethird & $-$18.916 \\\\ "                                                                                
+[42] "  & (46.658) \\\\ "                                                                                         
+[43] "  & \\\\ "                                                                                                  
+[44] " smoker & 151.351$^{**}$ \\\\ "                                                                             
+[45] "  & (59.975) \\\\ "                                                                                         
+[46] "  & \\\\ "                                                                                                  
+[47] " cigsdaily & $-$9.181$^{***}$ \\\\ "                                                                        
+[48] "  & (3.550) \\\\ "                                                                                          
+[49] "  & \\\\ "                                                                                                  
+[50] " weightgain & 12.879$^{***}$ \\\\ "                                                                         
+[51] "  & (1.435) \\\\ "                                                                                          
+[52] "  & \\\\ "                                                                                                  
+[53] " I(age$\\hat{\\mkern6mu}$2) & $-$0.875$^{***}$ \\\\ "                                                       
+[54] "  & (0.266) \\\\ "                                                                                          
+[55] "  & \\\\ "                                                                                                  
+[56] " I(weightgain$\\hat{\\mkern6mu}$2) & $-$0.091$^{***}$ \\\\ "                                                
+[57] "  & (0.013) \\\\ "                                                                                          
+[58] "  & \\\\ "                                                                                                  
+[59] " Constant & 2,583.119$^{***}$ \\\\ "                                                                        
+[60] "  & (188.183) \\\\ "                                                                                        
+[61] "  & \\\\ "                                                                                                  
+[62] "\\hline \\\\[-1.8ex] "                                                                                      
+[63] "Observations & 9,800 \\\\ "                                                                                 
+[64] "\\hline "                                                                                                   
+[65] "\\hline \\\\[-1.8ex] "                                                                                      
+[66] "\\textit{Note:}  & \\multicolumn{1}{r}{$^{*}$p$<$0.1; $^{**}$p$<$0.05; $^{***}$p$<$0.01} \\\\ "             
+[67] "\\end{tabular} "                                                                                            
+[68] "\\end{table} "                                                                                              
+Warning message:
+In rq.fit.br(x, y, tau = tau, ...) : Solution may be nonunique
+> 
+> 
+> cMat <- rbind( append("OLS", as.character(quantiles),1), cMat)
+> 
+> 
+> print( stargazer( cMat ))
+
+% Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu
+% Date and time: Sat, Jan 19, 2019 - 05:10:10 PM
+\begin{table}[!htbp] \centering 
+  \caption{} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}} ccccccccccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & cMat & .1 & .2 & .3 & .4 & .5 & .6 & .7 & .8 & .9 \\ 
+\hline \\[-1.8ex] 
+ & OLS & 0.1 & 0.2 & 0.3 & 0.4 & 0.5 & 0.6 & 0.7 & 0.8 & 0.9 \\ 
+(Intercept) & 2103.31183813517 & 1057.17477456089 & 1642.83874178515 & 2099.69662122548 & 2164.42633357702 & 2252.49584364945 & 2482.85175155056 & 2566.39604556841 & 2672.93775145407 & 2583.11916930282 \\ 
+boy & 105.198468615206 & 83.3615894508855 & 94.3275197457324 & 94.1329174609443 & 108.115866255602 & 115.738550584172 & 119.489179657392 & 118.590047494134 & 125.615961205183 & 141.590504721486 \\ 
+married & 22.6568685002788 & 32.7636568081129 & 30.0379892089673 & 33.7021121406001 & 4.57487525029438 & -2.26201384993872 & 4.25915982410912 & 2.59416608665017 & 22.1854953092049 & 37.3764940847232 \\ 
+black & -215.115096515916 & -272.742897519599 & -205.951300436991 & -197.736651520567 & -205.02392651686 & -201.288954640922 & -204.334823385295 & -197.651220191497 & -179.703075931903 & -182.540170375779 \\ 
+age & 38.7360596094482 & 54.8648508731411 & 44.9226766780885 & 24.1790999173663 & 27.3532975240741 & 32.033661504627 & 24.6955604260078 & 30.6504193802828 & 37.6280738104873 & 59.7308246110769 \\ 
+highschool & 40.6861595205836 & 87.0728888358419 & 65.3760069554818 & 56.2520456211854 & 59.2795346915425 & 33.0723684931565 & 24.1095796165996 & 14.8030803555356 & 2.80591594085943 & -23.1602503010952 \\ 
+somecollege & 70.0301614022753 & 104.831915403349 & 91.8323656518189 & 85.6152830923635 & 99.5753678924435 & 64.7178806358391 & 60.3614276844132 & 43.7602877934444 & 29.4142739770332 & -6.02161852453384 \\ 
+college & 19.8145610518145 & 70.2216942317171 & 42.7372306850109 & 55.814440264457 & 67.6587515494338 & 34.0853111830912 & 26.7747932542485 & 22.2420409333121 & -25.648187639451 & -96.9166480484581 \\ 
+prenone & -158.70060175804 & -498.838451563529 & -254.485974143781 & -50.5947713999004 & -43.2087753869578 & -68.1468736969498 & -51.2631418361273 & -33.9402885334128 & -149.273157232501 & -107.645578989887 \\ 
+presecond & 49.9978009680702 & 109.459668512099 & 10.3511499641542 & 16.819491049359 & 21.728525569716 & 37.2579861817833 & 34.3370324062219 & 52.7300596417009 & 33.6825864859329 & 56.6930627475556 \\ 
+prethird & 68.8618043425696 & 219.354340713772 & 41.966107807379 & 25.6588509607294 & 31.8841337443976 & 12.9582864792629 & 24.4987816804137 & 24.1485897831638 & 15.6709869437773 & -18.915623188237 \\ 
+smoker & 200.894625321923 & 187.194872270935 & 212.603447071687 & 222.486621396211 & 257.967363781794 & 240.480079420732 & 242.045122085448 & 203.998090910236 & 177.091735828674 & 151.351176741599 \\ 
+cigsdaily & -4.35082092341041 & -3.93986602712646 & -1.93352818874677 & -1.952733633004 & -0.37993982349694 & -1.35064689928038 & -0.702556227528365 & -3.2309667953648 & -6.05919340016304 & -9.18108523302694 \\ 
+weightgain & 19.8294285148626 & 32.5165203776086 & 21.4548265846494 & 18.1880050948345 & 16.50692877348 & 15.5450696212692 & 14.5951088350478 & 13.9690287887608 & 12.7657575866414 & 12.8793224787879 \\ 
+I(age$\hat{\mkern6mu}$2) & -0.640772333095632 & -1.07944844669226 & -0.84397464999107 & -0.412416043592662 & -0.427546642087485 & -0.463426970572892 & -0.339070854606109 & -0.431108038878205 & -0.54612976292987 & -0.875492450754312 \\ 
+I(weightgain$\hat{\mkern6mu}$2) & -0.164294573640296 & -0.285870739040072 & -0.180937049095296 & -0.148911627853394 & -0.133448812891334 & -0.123263885195257 & -0.113222721245111 & -0.102873437979423 & -0.0922144929618361 & -0.0907737341759001 \\ 
+\hline \\[-1.8ex] 
+\end{tabular} 
+\end{table} 
+ [1] ""                                                                                                                                                                                                                                                           
+ [2] "% Table created by stargazer v.5.2.2 by Marek Hlavac, Harvard University. E-mail: hlavac at fas.harvard.edu"                                                                                                                                                
+ [3] "% Date and time: Sat, Jan 19, 2019 - 05:10:10 PM"                                                                                                                                                                                                           
+ [4] "\\begin{table}[!htbp] \\centering "                                                                                                                                                                                                                         
+ [5] "  \\caption{} "                                                                                                                                                                                                                                             
+ [6] "  \\label{} "                                                                                                                                                                                                                                               
+ [7] "\\begin{tabular}{@{\\extracolsep{5pt}} ccccccccccc} "                                                                                                                                                                                                       
+ [8] "\\\\[-1.8ex]\\hline "                                                                                                                                                                                                                                       
+ [9] "\\hline \\\\[-1.8ex] "                                                                                                                                                                                                                                      
+[10] " & cMat & .1 & .2 & .3 & .4 & .5 & .6 & .7 & .8 & .9 \\\\ "                                                                                                                                                                                                 
+[11] "\\hline \\\\[-1.8ex] "                                                                                                                                                                                                                                      
+[12] " & OLS & 0.1 & 0.2 & 0.3 & 0.4 & 0.5 & 0.6 & 0.7 & 0.8 & 0.9 \\\\ "                                                                                                                                                                                         
+[13] "(Intercept) & 2103.31183813517 & 1057.17477456089 & 1642.83874178515 & 2099.69662122548 & 2164.42633357702 & 2252.49584364945 & 2482.85175155056 & 2566.39604556841 & 2672.93775145407 & 2583.11916930282 \\\\ "                                            
+[14] "boy & 105.198468615206 & 83.3615894508855 & 94.3275197457324 & 94.1329174609443 & 108.115866255602 & 115.738550584172 & 119.489179657392 & 118.590047494134 & 125.615961205183 & 141.590504721486 \\\\ "                                                    
+[15] "married & 22.6568685002788 & 32.7636568081129 & 30.0379892089673 & 33.7021121406001 & 4.57487525029438 & -2.26201384993872 & 4.25915982410912 & 2.59416608665017 & 22.1854953092049 & 37.3764940847232 \\\\ "                                               
+[16] "black & -215.115096515916 & -272.742897519599 & -205.951300436991 & -197.736651520567 & -205.02392651686 & -201.288954640922 & -204.334823385295 & -197.651220191497 & -179.703075931903 & -182.540170375779 \\\\ "                                         
+[17] "age & 38.7360596094482 & 54.8648508731411 & 44.9226766780885 & 24.1790999173663 & 27.3532975240741 & 32.033661504627 & 24.6955604260078 & 30.6504193802828 & 37.6280738104873 & 59.7308246110769 \\\\ "                                                     
+[18] "highschool & 40.6861595205836 & 87.0728888358419 & 65.3760069554818 & 56.2520456211854 & 59.2795346915425 & 33.0723684931565 & 24.1095796165996 & 14.8030803555356 & 2.80591594085943 & -23.1602503010952 \\\\ "                                            
+[19] "somecollege & 70.0301614022753 & 104.831915403349 & 91.8323656518189 & 85.6152830923635 & 99.5753678924435 & 64.7178806358391 & 60.3614276844132 & 43.7602877934444 & 29.4142739770332 & -6.02161852453384 \\\\ "                                           
+[20] "college & 19.8145610518145 & 70.2216942317171 & 42.7372306850109 & 55.814440264457 & 67.6587515494338 & 34.0853111830912 & 26.7747932542485 & 22.2420409333121 & -25.648187639451 & -96.9166480484581 \\\\ "                                                
+[21] "prenone & -158.70060175804 & -498.838451563529 & -254.485974143781 & -50.5947713999004 & -43.2087753869578 & -68.1468736969498 & -51.2631418361273 & -33.9402885334128 & -149.273157232501 & -107.645578989887 \\\\ "                                       
+[22] "presecond & 49.9978009680702 & 109.459668512099 & 10.3511499641542 & 16.819491049359 & 21.728525569716 & 37.2579861817833 & 34.3370324062219 & 52.7300596417009 & 33.6825864859329 & 56.6930627475556 \\\\ "                                                
+[23] "prethird & 68.8618043425696 & 219.354340713772 & 41.966107807379 & 25.6588509607294 & 31.8841337443976 & 12.9582864792629 & 24.4987816804137 & 24.1485897831638 & 15.6709869437773 & -18.915623188237 \\\\ "                                                
+[24] "smoker & 200.894625321923 & 187.194872270935 & 212.603447071687 & 222.486621396211 & 257.967363781794 & 240.480079420732 & 242.045122085448 & 203.998090910236 & 177.091735828674 & 151.351176741599 \\\\ "                                                 
+[25] "cigsdaily & -4.35082092341041 & -3.93986602712646 & -1.93352818874677 & -1.952733633004 & -0.37993982349694 & -1.35064689928038 & -0.702556227528365 & -3.2309667953648 & -6.05919340016304 & -9.18108523302694 \\\\ "                                      
+[26] "weightgain & 19.8294285148626 & 32.5165203776086 & 21.4548265846494 & 18.1880050948345 & 16.50692877348 & 15.5450696212692 & 14.5951088350478 & 13.9690287887608 & 12.7657575866414 & 12.8793224787879 \\\\ "                                               
+[27] "I(age$\\hat{\\mkern6mu}$2) & -0.640772333095632 & -1.07944844669226 & -0.84397464999107 & -0.412416043592662 & -0.427546642087485 & -0.463426970572892 & -0.339070854606109 & -0.431108038878205 & -0.54612976292987 & -0.875492450754312 \\\\ "            
+[28] "I(weightgain$\\hat{\\mkern6mu}$2) & -0.164294573640296 & -0.285870739040072 & -0.180937049095296 & -0.148911627853394 & -0.133448812891334 & -0.123263885195257 & -0.113222721245111 & -0.102873437979423 & -0.0922144929618361 & -0.0907737341759001 \\\\ "
+[29] "\\hline \\\\[-1.8ex] "                                                                                                                                                                                                                                      
+[30] "\\end{tabular} "                                                                                                                                                                                                                                            
+[31] "\\end{table} "                                                                                                                                                                                                                                              
+> 
+> 
+> 
+> 
+> sum( reg$residuals )
+[1] -1.837996e-11
+> length( reg$residuals[abs(reg$residuals) < 1e-10] )
+[1] 0
+> 
+> 
+> #Lets use $\tau$ = .5 as LAD is supposedly comparable to OLS
+> ladEstimate <- rq( formula = birthweight ~ . + I(age^2) + I(weightgain^2), data = birthData, tau = .5 )
+Warning message:
+In rq.fit.br(x, y, tau = tau, ...) : Solution may be nonunique
+> sum( ladEstimate$residuals )
+[1] -481228.6
+> length( ladEstimate$residuals[abs(ladEstimate$residuals) < 1e-10] )
+[1] 16
+> 
+> #Check if this depends on our choice of $\tau$
+> for( q in quantiles ){
++     quantReg <- rq( formula = birthweight ~ . + I(age^2) + I(weightgain^2), data = birthData, tau = q )
++     print(sum( quantReg$residuals ))
++     print(length( quantReg$residuals[abs(quantReg$residuals) < 1e-10] ))
++ }
+[1] 6775271
+[1] 16
+[1] 3791328
+[1] 16
+[1] 2041984
+[1] 16
+[1] 777500.2
+[1] 16
+[1] -481228.6
+[1] 16
+[1] -1606437
+[1] 16
+[1] -2837352
+[1] 16
+[1] -4360045
+[1] 16
+[1] -6475144
+[1] 16
+Warning message:
+In rq.fit.br(x, y, tau = tau, ...) : Solution may be nonunique
+> 
+> pdf("qNineHist.pdf")
+> hist(ladEstimate$dual)
+> dev.off()
+null device 
+          1 
+> 
+> proc.time()
+   user  system elapsed 
+ 26.387   0.285  26.755 

@@ -1,0 +1,26 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+data \PYG{o}{\PYGZlt{}\PYGZhy{}} read.csv\PYG{p}{(} \PYG{l+s}{\PYGZdq{}ps4.csv\PYGZdq{}} \PYG{p}{)}
+
+k \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{k+kp}{ncol}\PYG{p}{(}data\PYG{p}{)}
+N \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{k+kp}{nrow}\PYG{p}{(}data\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Since we are not calling lm, we want to do matrix algebra, we need}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} R to not store this stuff as a data frame. What a terrible language.}
+
+Y \PYG{o}{\PYGZlt{}\PYGZhy{}}  \PYG{k+kp}{as.matrix}\PYG{p}{(}data\PYG{o}{\PYGZdl{}}y\PYG{p}{)}
+X \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{k+kp}{as.matrix}\PYG{p}{(}\PYG{k+kp}{cbind}\PYG{p}{(} \PYG{k+kp}{rep}\PYG{p}{(}\PYG{l+m}{1}\PYG{p}{,}N\PYG{p}{),} data\PYG{p}{[,}\PYG{l+m}{2}\PYG{o}{:}\PYG{l+m}{3}\PYG{p}{]} \PYG{p}{))}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Remember that matrix multiplication uses the \PYGZpc{}*\PYGZpc{}}
+mat \PYG{o}{\PYGZlt{}\PYGZhy{}}  \PYG{k+kp}{t}\PYG{p}{(}X\PYG{p}{)}\PYG{o}{\PYGZpc{}*\PYGZpc{}}X
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Rather than using inverses, let\PYGZsq{}s be numerically stable and use the}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Cholesky decomp and forward/back substitution for legitimate answers}
+\PYG{n+nb+bp}{F} \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{k+kp}{chol}\PYG{p}{(}mat\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} We now have $ X' X \beta = X' Y$}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} This is equivalent to $F' F \beta = X' Y$}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Thus $\beta = \inv{F} \inv{F'}  X' Y$}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Note that F\PYGZsq{} is lower triangular so we use forward substitution.}
+beta \PYG{o}{\PYGZlt{}\PYGZhy{}}  \PYG{k+kp}{backsolve}\PYG{p}{(} \PYG{n+nb+bp}{F}\PYG{p}{,} \PYG{k+kp}{forwardsolve}\PYG{p}{(} \PYG{k+kp}{t}\PYG{p}{(}\PYG{n+nb+bp}{F}\PYG{p}{),} \PYG{k+kp}{t}\PYG{p}{(}X\PYG{p}{)}\PYG{o}{\PYGZpc{}*\PYGZpc{}}Y \PYG{p}{)} \PYG{p}{)}
+\end{Verbatim}

@@ -1,0 +1,788 @@
+\documentclass[12pt]{paper}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\usepackage{bbm}
+\usepackage{graphicx}
+
+\DeclareMathOperator{\diam}{diam}
+\DeclareMathOperator{\interior}{int}
+\DeclareMathOperator{\close}{cl}
+
+\newcommand{\met}[1]{d \left ( #1 \right )}
+\newcommand{\brak}[1]{ \left [ #1 \right ] }
+\newcommand{\cbrak}[1]{ \left \{ #1 \right \}}
+\renewcommand{\vec}[1]{ \bm{ #1 }}
+\newcommand{\abs}[1]{\left \lvert #1 \right \rvert}
+\newcommand{\seq}[1]{{\left \{ #1 \right \}}}
+\newcommand{\conj}[1]{ \overline{ #1 } }
+%\newcommand{\close}[1]{ \bar{ #1 } }
+\newcommand{\set}[1]{\left \{ #1 \right \}}
+\newcommand{\Lim}{\lim\limits}
+\newcommand{\compose}{\circ}
+\newcommand{\inv}[1]{{#1}^{-1}}
+\newcommand{\compl}[1]{{#1}^{c}}
+
+
+
+\newcommand{\setR}{ \mathbb{R} }
+\newcommand{\setQ}{ \mathbb{Q} }
+\newcommand{\setZ}{ \mathbb{Z} }
+\newcommand{\setN}{ \mathbb{N} }
+
+\newcommand{\plim}{ \overset{p}{\to} }
+\newcommand{\mean}[2][N]{ \overline{ #2 }_{#1}}
+\newcommand{\exV}[1]{\mathbb{E} \left [ #1 \right ]}
+\newcommand{\Vari}[1]{\mathbb{V} \left ( #1 \right )}
+
+\newcommand{\est}[2][n]{ \widehat{ #2 }_{#1}}
+\newcommand{\altest}[2][n]{ \tilde{ #2 }_{#1}}
+
+\newcommand{\indicate}[1]{ \mathbbm{1}_{\{#1\}}}
+\newcommand{\convDist}{ \overset{d}{\to}}
+\newcommand{\unif}{\emph{U}}
+\newcommand{\normal}{\mathcal{N}}
+\newcommand{\eye}{\mathbbm{I}}
+
+\newcommand{\bigO}{\mathcal{O}}
+\newcommand{\Lagrange}{\mathcal{L}}
+
+\newcommand{\deriv}[2]{\frac{ \partial #1}{ \partial #2}}
+
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
+
+% \usepackage{Schwieg}
+
+\begin{document}
+
+\section{1.3}
+
+We may write the function $f$ as a piecewise-linear convex problem.
+
+\begin{equation*}
+  f(x) = \max\{ -(x-1), 0, 2(x-2) \}
+\end{equation*}
+
+\begin{align*}
+  \min_{x,z} \quad & c' \bm{x} + z\\
+  \text{s.t. } &z \geq -(d' \bm{x} -1)\\
+                & z \geq 0\\
+                & z \geq 2(d' \bm{x} - 2)\\
+  &A \bm{x} \geq b
+\end{align*}
+
+Putting this in standard form, by adding slack variables
+$\bm{s},e_1,e_2$, and defining $x = x^+ - x^-$
+
+\begin{align*}
+  \min_{x^+, x^-, s, e_1, e_2, z} \quad & c'(x^+ - x^-) + z\\
+  \text{s.t. } &z + d'(x^+ - x^-) - e_1 = 1\\
+                &z - 2d'(x^+ - x^-) - e_2 = -4\\
+                &A(x^+ - x^-) - \bm{s} = b\\
+                &x^+,x^-, z, e_1, e_2, \bm{s} \geq 0\\
+\end{align*}
+
+The matrix form of this standard form is omitted to save myself the
+hell of writing out this matrix in \LaTeX. But can easily be done.
+
+\section{1.4}
+
+Consider the problem
+\begin{align*}
+  \min_{x_1, x_2} \quad &2x_1 + 3\abs{x_2 - 10}\\
+  \text{s.t. } &\abs{x_1 +2} + \abs{x_2} \leq 5
+\end{align*}
+
+reformulate it as a linear program.
+
+\vspace{.3in}
+
+We make the following substitutions:
+
+\begin{align*}
+ x_2 &= s_2^+ - s_2^-\\
+x_1 + 2 &= s_1^+ - s_1^-
+\end{align*}
+
+We define a new variable $z_1 \geq 0$ such that $z_1 \ge \max\{x_2 -10, 10
+-x_2 \} = \abs{x_2 - 10}$.
+
+
+\begin{align*}
+  \min \quad & 2(s_1^+ - s_1^- - 2) + 3z_1\\
+  \text{s.t. } &s_1^+ + s_1^- + s_2^+ + s_2^- \leq 5\\
+       &z_1 \geq s_2^+ - s_2^- - 10\\
+       &z_1 \geq 10 - s_2^+ + s_2^-\\
+       &z_1, s_2^+, s_2^-, s_1^+, s_1^- \geq 0
+\end{align*}
+
+Rewriting the expression in standard form by adding slack variables
+$e_1, e_2, e_3$
+
+\begin{align*}
+  \min \quad & 2 s_1^+ - 2s_1^- + 3z_1\\
+  \text{ s.t. } & s_1^+ + s_1^- + s_2^+ + s_2^- + e_1 = 5\\
+       & z_1 - s_2^+ + s_2^- - e_2 = 10\\
+       & z_1 + s_2^+ - s_2^- - e_3 = 10\\
+       &z_1, s_2^+, s_2^-, s_1^+, s_1^-, e_1, e_2, e_3 \geq 0
+\end{align*}
+
+\section{1.12}
+
+It is clear we want to choose the radius as well as the center of the
+ball.
+
+That is we want to the center of the ball plus any vector with length
+less than $r$ to be inside the polyhedron. Being inside the polyhedron
+is equivalent to satisfying the constraint for all $i$.
+
+\begin{equation*}
+  a_i' ( y + c) \leq b_i \quad \norm{c} \leq r
+\end{equation*}
+
+We also know that $a_i'c \leq r \norm{a_i}$
+
+\begin{align*}
+  \max_{y,r} \quad &r\\
+  \text{ s.t. } & a_i' y + r \norm{a_i} \leq b_i
+\end{align*}
+
+To rewrite this in its standard form:
+
+\begin{align*}
+  \max_{y^+,y^-,r,e} \quad&r\\
+  \text{ s.t. } & a_i' (y^+ - y^-) + r \norm{a_i} + e_i = b_i\\
+                     & y^+, y^-, r, e_i \geq 0  
+\end{align*}
+
+\section{1.17}
+
+He wishes to maximize his expected portfolio value next year, which is
+given by $\sum_{i=1}^n r_i (s_i - x_i)$ where $x_i$ is the amount of
+share $i$ that he elects to sell.
+
+He is required to raise $K$ capital in the current period, and when he
+sells his stock at the current price, he pays $30\%$ in taxes, and
+$1\%$ in transaction fees, leaving him with $69\%$ leftover.
+
+His constraint then becomes: $.69 \times \sum_{i=1}^n q_i x_i = K$
+He is also constrained by not being able to sell more shares than he
+currently owns. This is assuming that there is no derivative market,
+and no ability to short.
+
+His problem then can be written as:
+
+\begin{align*}
+  \max &\sum_{i=1}^n r_i (s_i -x_i)\\
+  \text{ s.t. } & x_i \leq s_i\\
+       & .69 \sum_{i=1}^nq_i x_i = K\\
+  &x_i \geq 0  
+\end{align*}
+
+\section{1.20}
+
+\begin{enumerate}
+\item Let $S = \{ Ax \vert x \in \setR^n \}$, show that $S$ is a subspace of
+  $\setR^l$
+
+  We know that $A0 = 0$, so it is clear that $0 \in S$.
+  
+  Let $y_1,y_2 \in S$, Note that there is at least one $x_1,x_2$ such
+  that $y_1 = Ax_1$ and $y_2 = Ax_2$. Therefore we can write $y_1 +
+  y_2$ as $Ax_1 + Ax_2 = A(x_1 + x_2)$ and $S$ is therefore closed
+  under addition.
+
+  Let $y \in S$. There exists $x$ such that $y = Ax$. Therefore $cy =
+  cAx = A(cx) \in S$. So we know that $S$ is closed under scalar
+  multiplication. These three properties verify that $S$ is a
+  subspace.
+\item Assume that $S$ is a proper subspace of $\setR^n$. Show that
+  there exists a matrix $B$ such that $S = \{ y \in \setR^n \vert By = 0
+  \}$.
+
+
+  Since $S$ is a proper subspace of $\setR^n$, then we know that the
+  dimension of $S$ is less than $n$. Therefore the dimension of the
+  orthogonal complement is at least one. Consider any basis
+  $b_1,...,b_k$ of this space. By definition, for any vector $y \in S$,
+  $\sum_{i=1}^k \lambda_i b_i' y = 0$ as each vector $b$ is orthogonal to
+  $y$. Therefore we may construct a matrix using the vectors $b_i$ as
+  the columns of $B$. This matrix has the property that $By = 0$,
+  which is exactly what we are looking for.
+
+  It remains to be shown that all vectors such that $Bx = 0$ live in
+  $S$. It is obvious that $0 \in S$, so consider $x \neq 0$. By definition,
+  any vector $x$ lives in $S$ or its orthogonal complement. If $x$ is
+  in the orthogonal complement of $S$, then $Bx \neq 0$ as it can be
+  written as a non-trivial linear combination of the basis vectors
+  $b_i$. So it must be that if $Bx = 0$, $x \in S$.
+\item Suppose that $V$ is a m-dimensional affline subspace of
+  $\setR^n$ with $m < n$. Show that there exist linearly independent
+  vectors $a_1, ..., a_{n-m}$ and scalars $b_1, ..., b_{n-m}$ such
+  that:
+  \begin{equation*}
+    V = \{y \vert a_i' y = b_i, i= 1,2,...,n-m \}
+  \end{equation*}
+
+  Abusing notation, $V-b$ will denote the elements of $V$ minus
+  $b$. Since $V$ is an affline subspace, $V-b$ is a proper
+  subspace. Therefore there exists a matrix $B$ such that $V-b = \{ y
+  \vert Ay = 0 \}$ This can then be written as: $V = \{ y + b \vert Ay = 0
+  \}$, or alternatively as: $V = \{ y \vert Ay = b \}$ This is exactly
+  equivalent to saying that $V = \{ y \vert a_i'y = b_i, i = 1,2,...n-m
+  \}$ as the dimension of the orthogonal complement will be $n-m$, and
+  since $A$ is composed of basis vectors, they are linearly
+  independent. 
+\end{enumerate}
+
+
+\section{2.3}
+
+
+Consider a polyhedron defined by the constraints $A \bm{x} = \bm{b}$
+and $0 \leq \bm{x} \leq u$ and assume that the matrix $A$ has linearly
+independent rows. Provide a procedure analogous to the one in section
+2.3 for constructing basic solutions and prove an analog of theorem
+2.4
+
+\vspace{.3in}
+
+Consider the vector $s = u - \bm{x}$. The existing polyhedron is
+equivalent to doubling the state space, and adding the constraints
+that $s_i + x_i = u$. Define
+\begin{equation*}
+  A_{x,s} =
+  \begin{pmatrix}
+    A & 0\\
+    I & I
+  \end{pmatrix}
+  \quad b_{x,s} =
+  \begin{pmatrix}
+    b\\
+    u
+  \end{pmatrix}
+\end{equation*}
+
+Now we have a new polyhedron defined by $A_{x,s} (x,s)' = b_{x,s}$ and
+$0 \leq (x,s)'$. This now fits the standard form, and we may follow the
+procedure used in section 2.3. Note that the dimensions of $A_{x,s}$
+are $m + n \times 2n$.
+
+We can choose $m+n$ linearly independent columns of $A_{x,s}$ and let
+$(x,s)_i' = 0$ for all of the columns not chosen, and simply invert
+this system to obtain the values of $x$ and $s$. Note that since we
+have taken $m+n$ columns, it is impossible for both $x_i$ and $s_i$ to
+equal zero, allowing this procedure to make sense.
+
+The equality constraints holding implies that $Ax = b$ and $n$
+linearly independent active inequality constraints implies that for
+$n$ values of $x_i$, $x_i = 0$ or $x_i = u$. 
+
+In the system with $x,s$ as the state variables, the system is in
+standard form, and therefore theorem 2.4 applies directly. Choose
+$B_1,...B_{m+n}$ linearly independent columns of $A_{x,s}$.
+
+If we do not select the $i^{th}$ column, we must select the $n+i$
+column in order to maintain linear independence, but there will be
+times when both are selected. It is still true that when $i \notin
+B_1,...B_{m+n}$ that $x_i = 0$, it is also true that when $i+n \notin B_1, ...,
+B_{m+n}$ then $x_i = u$. The columns of $A_{x,s}^{B_1,...,B_m}$ remain linearly
+independent, but this will not be true for $A$. Consider the example:
+
+
+\begin{align*}
+  x_1 + x_3 &= 1\\
+  x_2 + x_3 &= 1\\
+  0 \leq x \leq u
+\end{align*}
+
+When we move to the slack-variable state, a valid basic solution, by
+selecting the first five columns according to the algorithm reveals:
+\begin{equation*}
+  x_1 = 1 - u \quad x_2 = 1-u\quad x_3 = u\quad s_1 = 2u - 1\quad s_2 = 2u - 1\quad s_3 = 0
+\end{equation*}
+
+One can verify that taking only the values for $x$, this is a basic
+solution for the original system as well.
+
+The columns of $A$ that correspond to this basic solution are all of
+the columns of $A$, which are clearly not linearly independent, as it
+includes all three of the columns.
+
+
+
+\section{2.5}
+
+A mapping $f$ is called affline if it is of the form $f(x) = Ax +
+b$. Two polyhedra $P,Q$ are isomorphic if there exists affline
+mappings $f: P \rightarrow Q$, $g: Q \rightarrow P$ such that: $f(g(x))= x$ and $g(f(y)) =
+y$.
+
+If $P$ and $Q$ are isomorphic, show that there exists a one-to-one
+correspondence between their extreme points. i.e. Show that $x$ is an
+extreme point of $P$ if and only if $f(x)$ is an extreme point of $Q$.
+
+\vspace{.3in}
+
+Let $x$ be an extreme point of $P$. Assume that $f(x)$ is not an
+extreme point of $Q$. Then there exists points $y,z \in Q$ and $\lambda \in
+(0,1)$ such that $f(x) = \lambda y + (1-\lambda)z$. Applying $g$ to both sides of
+the equation,
+\begin{equation*}
+  x = g(\lambda y + (1-\lambda)z) = \lambda g(y) + (1-\lambda)g(z)
+\end{equation*}
+using the affline property of $g$. However, this shows that $x$ can be
+written as a convex combination of two points in $P$. This is a
+contradiction to $x$ being an extreme point of $P$,so $f(x)$ must in
+fact be an extreme point of $Q$.
+
+\vspace{.3in}
+Let $f(x)$ be an extreme point of $Q$. Assume that $x$ is not an
+extreme point of $P$. Therefore there exists points $y,z \in P$ and $\lambda \in
+(0,1)$ such that $x = \lambda y + (1-\lambda)z$. Applying $f$ and using its
+affline properties:
+
+\begin{equation*}
+  f(x) = \lambda f(y) + (1-\lambda)f(z)
+\end{equation*}
+This is a contradiction, as we assumed that $f(x)$ was an extreme
+point. Therefore it must be the case that $x$ is an extreme point of
+$P$.
+
+\vspace{.3in}
+Let
+\begin{align*}
+  P &= \{ x \in \setR^n \vert Ax \geq b, x \geq 0 \}\\
+  Q &= \{ (x,z) \in \setR^{n+k} \vert Ax- z  = b, x \geq 0, z \geq 0 \}
+\end{align*}
+Show that $P$ and $Q$ are isomorphic.
+
+\vspace{.3in}
+
+Define $z = Ax - b$. it is clear that $Ax -z = b$. We can see that $Ax
+\geq b \Leftrightarrow z \geq 0$.
+
+We wish to transform $x \mapsto (x, Ax-b)$ and $(x,z) \mapsto x$
+
+
+\begin{align*}
+  f(x) &=
+  \begin{pmatrix}
+    I_n\\
+    A
+  \end{pmatrix}x +
+  \begin{pmatrix}
+    0\\
+    -b 
+  \end{pmatrix}\\
+  g(y) &=
+         \begin{pmatrix}
+           I_n & 0\\
+           0 & 0
+         \end{pmatrix}y
+\end{align*}
+
+These two affline transforms satisfy our mapping restrictions, now we
+must show that they satisfy the identity restrictions.
+
+\begin{equation*}
+  g(f(x)) =
+  \begin{pmatrix}
+    I_n & 0\\
+    0 & 0
+  \end{pmatrix}
+  \left[
+    \begin{pmatrix}
+      I_n\\
+      A
+    \end{pmatrix}x +
+    \begin{pmatrix}
+      0\\
+      -b
+    \end{pmatrix}
+\right] =
+\begin{pmatrix}
+  I_n & 0\\
+  0 & 0
+\end{pmatrix}
+\begin{pmatrix}
+  x\\
+  Ax - b
+\end{pmatrix} = x
+\end{equation*}
+
+\begin{equation*}
+  f(g(y)) =
+  \begin{pmatrix}
+    I_n\\
+    A
+  \end{pmatrix}
+  \begin{pmatrix}
+    I_n & 0\\
+    0 & 0
+  \end{pmatrix}
+  y +
+  \begin{pmatrix}
+    0\\
+    -b
+  \end{pmatrix} = y
+\end{equation*}
+This establishes the isomorphism between the two polyhedra.
+
+\section{2.6}
+
+Let $A_1,...,A_n$ be vectors in $\setR^m$
+\begin{equation*}
+  C = \left\{ \sum_{i=1}^n \lambda_i A_i \Big \vert \lambda_1,...,\lambda_n \geq 0 \right\}
+\end{equation*}
+
+Show that any element of $C$ can be written in the form $\sum_{i=1}^n \lambda_i
+A_i$ with $\lambda_i \geq 0$ and at most $m$ of the coefficients being nonzero.
+
+\vspace{.3in}
+
+If we let $m \geq n$ this is trivial, so assume that $m < n$. Note that
+there are at most $m$ linearly independent vectors $A$. Choose $m$ of
+these vectors, and note that any vector in the non-negative span of
+$A_i$ can be written as a non-negative linear combination of these $m$
+vectors. Set $\lambda_i =0$ for all vectors not in this list, and then we
+have that any element in $C$, which is the non-negative span of $A$,
+can be written as a linear combination of at most $m$ vectors in $A$.
+
+\vspace{.3in}
+
+Let $P$ be the convex hull of the set of vectors $A$. Show that any
+element of $P$ can be expressed as $\sum_{i=1}^n \lambda_i A_i$ where
+$\sum_{i=1}^n \lambda_i = 1$ and $\lambda_i\geq 0 $ with at most $m+1$ of $\lambda_i \neq 0$.
+
+\vspace{.3in}
+Assuming that $m < n$, there must be at least one linearly dependent
+vector in $A$. Without loss of generality, reorder the set $A$ such
+that the dimension of the set $A_1,...,A_{n}$ is the same as the set
+$A_2, ..., A_n$. Now consider the set $A_2 - A_1, ... A_n - A_1$. This
+set has the same dimension as $A_1, ..., A_n$ by construction.
+
+Consider any point $x \in P$. We may write that $x = \sum_{i=1}^n \lambda_i
+A_i = A_1 + \sum_{i=1}^n \lambda_i (A_i - A_1)$. However, since $A_2, ..., A_n$
+has dimension of at most $m$, we may rewrite this expression as:
+
+\begin{equation*}
+  x = A_1 + \sum_{i=2}^n \lambda_i' (A_i - A_1)
+\end{equation*}
+
+where $\sum_{i=2}^n \lambda_i' \leq 1$ and at most $m$ of $\lambda_i'$ are
+non-zero. Simplifying this expression we arrive at:
+\begin{equation*}
+  x = (1 - \sum_{i=2}^n \lambda_i')A_1 + \sum_{i=2}^n \lambda_i' A_i = \sum_{i=1}^n \lambda_i' A_i
+\end{equation*}
+
+Where $\lambda_1' = 1 - \sum_{i=2}^n \lambda_i'$ and at most $m+1$ of the $\lambda_i'$ are
+non-zero, as well as $\sum_{i=1}^n\lambda_i' = 1$.
+
+\section{2.8}
+
+Consider the standard polyhedron $\{ x \vert Ax = b, x \geq 0 \}$ and assume
+that the rows of $A$ are linearly independent. Let $x$ be a basic
+solution, and let $J = \{ i, x_i\neq 0\}$. Show that a basis is
+associated with basic solution $x$ if and only if every column $A_i$,
+$i \in J$ is in the basis.
+
+\vspace{.3in}
+
+We say that a basis $h$ is associated with a basic solution $x$ if we can
+write $x = \inv{A_h}b$ where $A_h$ is a matrix with the basis vectors
+as its columns.
+
+Assume that there is a basis which contains every column of $A_i, i \in
+J$. This means that each of these columns $A_i$ are linearly
+independent, and therefore the matrix $A_J$ formed by the columns is
+invertible. From this we can obtain: $x_j = \inv{A_J}b$ and then set
+$x_i = 0$ for $i \notin J$. This fits all the conditions required by
+theorem 2.4 to show that $x$ which is the combination of $x_i =
+\inv{A_J}b$ for $i \in J$ and $x_i = 0$ for $i \notin J$ is a basic solution.
+
+For the converse, assume that $x$ is a basic solution for $A$. By
+theorem 2.4 there are $m$ columns of $A$ that are linearly
+independent, and that $x_i = 0$ for all $i$ not in these $m$. Consider
+the $m$ dimensional subspace spanned by these columns. Since there is
+a basis associated with this solution, there are $m$ vectors in that
+form this basis.
+
+Assume that there is a column $A_i$ for which $x_i \neq 0$ but is not
+contained in the basis. Then there are columns for which $x =
+\inv{A_h}b$ for the $m$ non-zero components of $x$. However, this
+requires that $A_h$ be a full rank $m \times m$ matrix, and therefore have
+linearly independent columns. This is $m$ columns that are linearly
+independent, and therefore form a basis. Therefore there is a basis
+associated with $x$ that contains all the columns $A_i$ for $i \in J$.
+
+\section{2.10}
+
+Consider the standard polyhedron $P = \{ x \vert Ax = b, x \geq 0 \}$ and assume
+that the rows of $A$ are linearly independent. Answer true or false,
+providing a proof or counter-example.
+
+\begin{enumerate}
+\item If $n = m+1$ then $P$ has at most two basic feasible solutions.
+
+  We can count the number of possible basic solutions of a polyhedron
+  by setting $m$ components equal to zero.  The number of basic
+  solutions for a polyhedron is given by $\binom{n}{m}$. Substituting
+  $n = m+1$ we get that number of solutions is:
+  $\frac{(m+1)!}{m!} = m+1$. If we consider a polyhedron where all
+  basic solutions are feasible (it is in standard form with all basic
+  points non-negative), then this will clearly not be equal to
+  2.
+
+  
+\item The set of all optimal solutions is bounded.
+
+  False. If the optimal cost is infinite, then there is no optimal
+  solution. If it is finite, then there is an optimal
+  solution. However, for this to occur at an extreme point, we require
+  that there is an extreme point of $P$. If it has no extreme points,
+  the set of optimal solutions need not be bounded. Consider the
+  problem: $\min_{x_1,x_2} x_1$ subject to: $x_1 = 1$. The set of all
+  solutions is given by: $(1,x)$ and is unbounded.
+
+  
+\item At every optimal solution, no more than $m$ variables can be
+  positive.
+
+  % True. I assume that we are not considering infinity as an optimal
+  % solution, since there can be no $x$ that corresponds to this
+  % solution value. Every optimal solution is a basic feasible solution,
+  % and thus must have that only $m$ variables are active, and the
+  % remaining variables equal to zero.
+  False, there can be optimal solutions that are not extreme points
+  (the polyhedron does not have any extreme points.) In this case,
+  there are no restrictions placed on the number of positive terms at
+  the optimal.
+\item If there is more than one optimal solution, then there are
+  uncountably many optimal solution.
+
+  True. If there is more than one solution, it occurs along an edge of
+  the polyhedron, which can be bijected to an interval. Since the
+  cardinality of an interval is uncountably infinite, the same must be
+  true of the optimal solution set.
+\item If there are several optimal solutions, then there exist at
+  least two basic feasible solutions that are optimal.
+
+  True. Basic feasible solutions are vertices of the polyhedron, and
+  if there are several optimal solutions, the solutions occur on an
+  edge of the polyhedron, which is a convex combination of the
+  vertices. This means that the vertices will also be optimal. These
+  are two basic-feasible solutions.
+\item Consider the problem of minimize $\max \{c'x, d'x\}$ over the
+  set $P$. If this problem has an optimal solution, it must have an
+  optimal solution which is an extreme point of $P$.
+
+  False. It is possible that $P$ does not have any extreme points, in
+  which case the optimal solution would not occur at an extreme
+  point. It is also possible that the optimal cost is not finite, and
+  therefore there is no optimal solution.
+\end{enumerate}
+
+\section{2.13a}
+
+Consider the standard polyhedron $P = \{ x \vert Ax = b, x \geq 0 \}$ and assume
+that the rows of $A$ are linearly independent. Let $A$ be $m \times n$ and
+that all feasible solutions are non-degenerate. Let $x$ be an element
+of $P$ that has exactly $m$ positive components. Show that $x$ is a
+basic feasible solution.
+
+\vspace{.3in}
+
+Since we know that $x\in P$ it is sufficient to show that $x$ is a basic
+solution. Define $B$ to be the matrix formed by the columns of $A$
+that correspond to the non-zero elements of $x$.
+
+All of the equality constraints of $P$ are satisfied by any point of
+$P$ trivially, and if there are only $m$ positive components, it must
+be that there are $n-m$ components that are zero. There are $m$ active
+constraints from the matrix equality, and $n-m$ active constraints
+from the positive inequality, therefore there are $n$ active
+constraints, and all that remains is to show that these are linearly
+independent. There is no degeneracy on any of the basic feasible
+solutions, and we know that the rows are linearly independent, and
+must be independent of the binding constraints on $x \geq 0$. Therefore
+all the rows are linearly independent, so the determinant of the
+system is non-zero, and therefore the columns are linearly
+independent. This satisfies the conditions for a basic solution, and
+since it is feasible, it must be a basic feasible solution.
+
+\section{2.14}
+
+Let $P$ be a bounded polyhedron in $\setR^n$, let $a$ be a vector in
+$\setR^n$ and let $b$ be some scalar. Let $Q = \{ x \in P \vert a'x = b
+\}$. Show that every extreme point of $Q$ is either an extreme point
+of $P$ or a convex combination of two adjacent extreme points of $P$.
+
+\vspace{.3in}
+
+$Q$ is a hyper-plane intersecting with $P$. There are three possible
+geometric shapes of this object. First is that the set is empty as $P$
+does not overlap, then there are no extreme points and this is true
+vacuously.
+
+Second the intersection contains only one point. This point is
+therefore an extreme point of $Q$. Call this point $x_0$, we wish to
+show that this point is a vertex of $P$. Since $Q$ contains only
+$x_0$, it must be the case that $a'x > b$ or $a'x < b$ for all $x \in P
+\neq x_0$. Using either $a$ or $-a$, we have that $c'x_0 < c'x$ for all
+$x \in P, x \neq x_0$. This implies that $x_0$ is a vertex of $P$, and
+therefore an extreme point.
+
+Consider an extreme point of $Q$. This point lies in $P$, a bounded
+polyhedron, so it can be written as a convex combination of extreme
+points of $P$. However it cannot be written as a convex combination of
+any points of $Q$.
+
+Since $Q$ is the intersection of a hyper-place and a polyhedron, its
+extreme points must occur ether on the vertex or on the edge of the
+polyhedron. If it were in the interior of $P$, it could be written as
+a convex combination of points in $Q$, and therefore could not be an
+extreme point. If it were on a face, but not an edge of $P$, then it
+could still be written as a convex combination of other points along
+that face in $Q$, so it must occur at the edges or vertices. However,
+we define edges as convex combinations of adjacent vertices, and
+therefore the extreme points of $Q$ lie either on the extreme points
+of $P$, or as a convex combination of two adjacent extreme points of
+$P$.
+
+\section{2.15}
+
+Consider the polyhedron $P = \{ x \in \setR^n \vert a_i'x \geq b_i\}$ Suppose
+that $u,v$ are distinct feasible basic solutions that satisfy
+$a_i' u = a_i' v = b_i$ for $i = 1,...,n-1$, and that $a_i,...a_{n-1}$
+are linearly independent. Let
+$L = \{ \lambda u + (1-\lambda) v \vert \lambda \in [0,1] \}$ Let
+$Q = \{ z \in P \vert a_iz = b_i, i = 1,...,n-1\}$.
+Prove that $L = Q$.
+
+\vspace{.3in}
+
+Let $x$ be a convex combination of $u$ and $v$, $x = \lambda u + (1-\lambda)v$,
+For any $i = 1,...,n-1$, we know that $a_i' x = \lambda a_i'u + (1-\lambda)a_i' v =
+b_i$. This tells us that $x \in Q$.
+
+Let $x$ be such that it cannot be written as a convex combination of
+$u$ and $v$. Either $\lambda \notin [0,1]$ or it does not lie on the line
+connecting $u$ and $v$. We wish to show that $x \notin Q$.
+
+Case $\lambda \notin [0,1]$: Then $x \notin P$ and therefore $x \notin Q$.
+
+Case $x$ is not on the line connecting $u$ and $v$. Then it can be
+written as a point on the line plus a term orthogonal to this
+line. That is, $x = \lambda u + (1-\lambda)v + y$ where $y' ( u - v ) = 0$
+
+\begin{equation*}
+ a_i' x = \lambda a_i' u + (1- \lambda)a_i' v + a_i' y = b_i + a_i'y
+\end{equation*}
+
+Clearly, $x$ is in $Q$ if $a_i'y = 0 \forall i = 1,...,n-1$.  That is, $y$
+is orthogonal to $A$. We know that $y'u = y' v$, so $y$ can be written
+as a linear combination of $a_i$. It is therefore impossible for
+$a_i'y = 0$ for all $a_i$ as $y$ is an element of their span. This
+implies that $x \notin Q$, and completes the proof.
+
+\section{2.17}
+
+Consider the polyhedron $\{ x \in \setR^n \vert Ax \leq b \quad x \geq 0 \}$ and a
+non-degenerate feasible basic solution $x^{*}$. Introduce slack
+variables and construct a corresponding polyhedron: $\{ (x,z) \vert Ax + z
+= b, x \geq 0, z\geq 0\}$ in standard form. Show that $(x^{*},b - Ax^{*})$ is a
+non-degenerate basic feasible solution for the new polyhedron.
+
+\vspace{.3in}
+
+From exercise 2.5b, we know that polyhedron of this form are
+isomorphic. (Apply -A and -b to change the signs). Since these two
+polyhedra are isomorphic, from exercise 2.5a, we know that if $x^{*}$
+is an extreme point of the first, it must be an extreme point of the
+second, following the isomorphism described in exercise 2.5b.
+
+Note that $x^{*}$ being a feasible basic solution implies that it is
+an extreme point of the first polyhedron, so therefore $(x^{*}, b -
+Ax^{*})$ must be an extreme point of the second polyhedron, and
+therefore a feasible basic solution for the new polyhedron.
+
+% As $x^{*}$ is a non-degenerate feasible basic solution to its
+% polyhedron, there are $n$ linearly dependent active constraints. There
+% are $m+n$ total constraints.
+% % We know that $x^{*}$ has $m$ non-zero entities, and that for each
+% % active constraint, there are $n$ linearly dependent active
+% % constraints.
+
+% In the slack-polyhedron, there are $n+m$ choice variables, and to be a
+% non-degenerate feasible basic solution, we require that there are
+% $m$ non-zero entities as well as $m+n$ linearly independent active
+% constraints. We also require that the equality constraints hold,
+% i.e. $z = b - Ax^{*}$ which is fulfilled by default. This is $m$ of
+% the active constraints.
+
+% If the $i^{th}$ non-negative constraint is active, then $x_i^{*} = 0$
+% in both polyhedrons, and this constraint is active for both
+% polyhedra. If the other constraint is active in the original
+% polyhedron, then $b_i - A_ix^{*} = 0$ and the non-negative $z$
+% constraint is active in the second polyhedron. This gives us the
+% correct number of constraints, and they are both feasible. All that
+% remains is to show that the constraints are linearly independent.
+
+% The constraints active in the first problem are:
+% $x_i = 0, b_i - A_i x^{*} = 0$ These are linearly independent by
+% definition of a feasible basic solution. In the second polyhedron
+% these constraints are: $x_i = 0, z_i = 0$ There is also the constraint
+% that $z_i = b_i - A_i x^{*}$. However this constraint is linearly
+% independent from the assumption that $x_i = 0$ and $b_i - A_i x^{*}$
+% be linearly independent, coming from $x^{*}$ being a non-degenerate
+% feasible basic solution. Adding in the $z_i$ appends the identity
+% matrix to the right, but maintains the linear independence.
+
+\section{2.19ab}
+
+Let $P \subset \setR^n$ be a polyhedron in standard form whose definition
+involves $m$ linearly independent equality constraints. Its dimension
+is defined as the smallest integer k such that P is contained in some
+$k$-dimensional affline subspace of $\setR^n$
+
+\begin{enumerate}
+\item Explain why the dimension of $P$ is at most $n-m$.
+
+  Consider the polyhedron $P'$ defined by only the equality
+  constraints of $P$. The equality constraints of the polyhedron can
+  be written in the form $Ax = b$. Where $A$ is an $m \times n$ matrix of
+  full rank. Consider the affline space $V = P' - b$. Any element of
+  $V$ can then be expressed by a vector $x$ such that $Ax = 0$. This
+  means that all the vectors contained in $V$ are in the Null Space of
+  $A$. The dimension of the column space of $A$ plus the dimension of
+  the Null space equals $n$. Therefore the dimension of $P'$ is $n-m$.
+
+  The intersection of the inequality constraints and the Null space of
+  $A$ can only be a subset of the Null space of $A$, and therefore the
+  dimension can only be decreased. That is $dim P \leq dim P'$. This
+  establishes an upper bound on the dimension of $dim P$.
+
+  
+\item Suppose that $P$ has a non-degenerate basic feasible
+  solution. Show that the dimension of $P$ is equal to $n-m$
+
+  Having a non-degenerate basic feasible solution means that there is
+  a basic solution that meets all other constraints, with all equality
+  constraints active, and has $n$ linearly independent active
+  constraints. Since it is non-degenerate, there are only $n$ active
+  constraints. $m-n$ components of the feasible basic solution are 
+
+  This means that 
+
+  
+\end{enumerate}
+
+
+\end{document}

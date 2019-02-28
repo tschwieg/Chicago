@@ -1,0 +1,65 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k}{function} \PYG{n}{RevissedSimplexIteration}\PYG{p}{(} \PYG{n}{BInv}\PYG{o}{::}\PYG{k+kt}{Matrix}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},} \PYG{n}{x}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},}
+                           \PYG{n}{A}\PYG{o}{::}\PYG{k+kt}{Matrix}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},} \PYG{n}{c}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},}
+                           \PYG{n}{b}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},} \PYG{n}{k}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Int64}\PYG{p}{\PYGZcb{},}
+                           \PYG{n}{M}\PYG{o}{::}\PYG{k+kt}{Int64}\PYG{p}{,} \PYG{n}{N}\PYG{o}{::}\PYG{k+kt}{Int64}\PYG{p}{)}
+
+
+    \PYG{c}{\PYGZsh{}First let us compute some costs, we stop computing costs as soon}
+    \PYG{c}{\PYGZsh{}as we have a negative cost}
+    \PYG{n}{j} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
+    \PYG{c}{\PYGZsh{}Numerical Precision problems when working with the inverse}
+    \PYG{k}{for} \PYG{n}{i} \PYG{k+kp}{in} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{M}
+        \PYG{k}{if}\PYG{p}{(} \PYG{n}{c}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{dot}\PYG{p}{(} \PYG{n}{c}\PYG{p}{[}\PYG{n}{k}\PYG{p}{],} \PYG{n}{BInv}\PYG{o}{*}\PYG{n}{A}\PYG{p}{[}\PYG{o}{:}\PYG{p}{,}\PYG{n}{i}\PYG{p}{])} \PYG{o}{\PYGZlt{}} \PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{1e\PYGZhy{}8}\PYG{p}{)}
+            \PYG{n}{j} \PYG{o}{=} \PYG{n}{i}
+            \PYG{k}{break}
+        \PYG{k}{end}
+    \PYG{k}{end}
+
+    \PYG{c}{\PYGZsh{}Check if we are at an optimal solution}
+    \PYG{k}{if}\PYG{p}{(} \PYG{n}{j} \PYG{o}{==} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1} \PYG{p}{)}
+        \PYG{k}{return} \PYG{l+m+mi}{1}
+    \PYG{k}{end}
+
+    \PYG{n}{u} \PYG{o}{=} \PYG{n}{BInv}\PYG{o}{*}\PYG{n}{A}\PYG{p}{[}\PYG{o}{:}\PYG{p}{,}\PYG{n}{j}\PYG{p}{]}
+    \PYG{c}{\PYGZsh{}Check if the problem is unbounded below}
+    \PYG{k}{if}\PYG{p}{(} \PYG{n}{sum}\PYG{p}{(}\PYG{n}{u}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{0} \PYG{k}{for} \PYG{n}{i} \PYG{k+kp}{in} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{M} \PYG{p}{)} \PYG{o}{==} \PYG{l+m+mi}{0}\PYG{p}{)}
+        \PYG{k}{return} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
+    \PYG{k}{end}
+
+
+    \PYG{c}{\PYGZsh{}This is an implementation of Bland\PYGZsq{}s Rule}
+    \PYG{n}{min} \PYG{o}{=} \PYG{l+m+mf}{1.0e10}
+    \PYG{n}{ℓ} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
+    \PYG{k}{for} \PYG{n}{i} \PYG{k+kp}{in} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{M}
+        \PYG{k}{if}\PYG{p}{(} \PYG{n}{u}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{\PYGZgt{}} \PYG{l+m+mf}{0.0} \PYG{p}{)}
+            \PYG{n}{thetaTemp} \PYG{o}{=} \PYG{p}{(}\PYG{n}{x}\PYG{p}{[}\PYG{n}{k}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]]} \PYG{o}{/} \PYG{n}{u}\PYG{p}{[}\PYG{n}{i}\PYG{p}{])}
+            \PYG{c}{\PYGZsh{}The strict inequality means that the first i wins the}
+            \PYG{c}{\PYGZsh{}tie.}
+            \PYG{k}{if}\PYG{p}{(} \PYG{n}{thetaTemp} \PYG{o}{\PYGZlt{}} \PYG{n}{min} \PYG{p}{)}
+                \PYG{n}{min} \PYG{o}{=} \PYG{n}{thetaTemp}
+                \PYG{n}{ℓ} \PYG{o}{=} \PYG{n}{i}
+            \PYG{k}{end}
+        \PYG{k}{end}
+    \PYG{k}{end}
+    \PYG{c}{\PYGZsh{}Now the basis has k instead of ℓ}
+    \PYG{n}{k}\PYG{p}{[}\PYG{n}{ℓ}\PYG{p}{]} \PYG{o}{=} \PYG{n}{j}
+
+    \PYG{c}{\PYGZsh{}Are elementary matrix operations faster than this?}
+    \PYG{k}{for} \PYG{n}{i} \PYG{k+kp}{in} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{M}
+        \PYG{k}{if} \PYG{n}{i} \PYG{o}{!=} \PYG{n}{ℓ}
+            \PYG{n+nd}{@inbounds} \PYG{n}{BInv}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,}\PYG{o}{:}\PYG{p}{]} \PYG{o}{\PYGZhy{}=} \PYG{p}{(}\PYG{n}{u}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{/} \PYG{n}{u}\PYG{p}{[}\PYG{n}{ℓ}\PYG{p}{])}\PYG{o}{*}\PYG{n}{BInv}\PYG{p}{[}\PYG{n}{ℓ}\PYG{p}{,}\PYG{o}{:}\PYG{p}{]}
+        \PYG{k}{end}
+    \PYG{k}{end}
+    \PYG{n}{val} \PYG{o}{=} \PYG{n}{u}\PYG{p}{[}\PYG{n}{ℓ}\PYG{p}{]}
+    \PYG{k}{for} \PYG{n}{j} \PYG{k+kp}{in} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{M}
+        \PYG{n+nd}{@inbounds} \PYG{n}{BInv}\PYG{p}{[}\PYG{n}{ℓ}\PYG{p}{,}\PYG{n}{j}\PYG{p}{]} \PYG{o}{=}  \PYG{n}{BInv}\PYG{p}{[}\PYG{n}{ℓ}\PYG{p}{,}\PYG{n}{j}\PYG{p}{]} \PYG{o}{/} \PYG{n}{u}\PYG{p}{[}\PYG{n}{ℓ}\PYG{p}{]}
+    \PYG{k}{end}
+
+    \PYG{n}{x} \PYG{o}{.=} \PYG{l+m+mi}{0}
+    \PYG{n}{x}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]} \PYG{o}{=} \PYG{n}{BInv}\PYG{o}{*}\PYG{n}{b}
+
+    \PYG{c}{\PYGZsh{}Continue iterating:}
+    \PYG{k}{return} \PYG{l+m+mi}{0}
+\PYG{k}{end}
+\end{Verbatim}

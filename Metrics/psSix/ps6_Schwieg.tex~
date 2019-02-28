@@ -1,0 +1,439 @@
+\documentclass[12pt]{paper}
+
+\usepackage{Schwieg}
+\usepackage[margin=1in]{geometry}
+\usepackage{minted}
+
+\begin{document}
+
+\section{Question 1}
+
+
+Conditioned upon $X$, $Y_i \sim \normal( X_i' \theta, \sigma^2)$. This tells us
+that $\frac{Y_i - X_i' \theta}{\sigma} \sim \normal( 0, 1)$. As a result, the
+density of $Y_i$ given $X_i$ is given by:
+$\frac{1}{\sigma}\phi( \frac{z - X_i' \theta}{\sigma})$.
+
+
+
+\subsection{What is the (condition) likelihood function? What is the
+  (conditional) log-likelihood function?}
+
+\begin{align*}
+  \ell_n(\theta) &= \prod_{i=1}^n p_{\theta}( y_i \vert x_i)\\
+         &= \prod_{i=1}^n \frac{1}{\sigma} \phi\left( \frac{ y_i - x_i' \theta}{\sigma}\right)\\
+  &= \frac{1}{\sigma^n} \prod_{i=1}^n \phi \left( \frac{y_i - x_i' \theta}{\sigma}\right)
+\end{align*}
+
+\begin{align*}
+  L_n(\theta) = - \log( \sigma ) + \frac{1}{n} \sum_{i=1}^n \log \left( \phi \left(
+  \frac{y_i - x_i'\theta}{\sigma} \right) \right)
+\end{align*}
+
+\subsection{Find the ML estimators of \theta and \sigma}
+
+\begin{align*}
+  \deriv{L_n(\theta)}{\theta_j} &= \frac{1}{n} \sum_{i=1}^n \frac{\phi' \left( \frac{y_i
+  - x_i' \theta}{\sigma} \right) ( - x_{i,j})}{\phi \left( \frac{y_i - x_i'\theta}{\sigma}
+                        \right)} = 0\\
+  \deriv{L_n(\theta)}{\sigma} &= \frac{-1}{\sigma} + \frac{1}{n} \sum_{i=1}^n\frac{\phi' \left( \frac{y_i
+  - x_i' \theta}{\sigma} \right) \left( \frac{-(y_i - x_i' \theta)}{\sigma^2} \right)}{\phi \left( \frac{y_i - x_i'\theta}{\sigma}
+                      \right)} = 0\\
+\end{align*}
+
+Let us simplify the notation by using
+\begin{align*}
+  A_i &= \frac{\phi' \left( \frac{y_i
+  - x_i' \theta}{\sigma} \right) }{\phi \left( \frac{y_i - x_i'\theta}{\sigma}
+      \right)} = \frac{y_i - x_i' \theta}{\sigma}\\
+  0 &= \frac{1}{n} \sum_{i=1}^n \frac{y_i - x_i' \theta}{\sigma} ( - x_{i,j})\\
+  \sigma &= \frac{1}{n} \sum_{i=1}^n \frac{y_i - x_i' \theta}{\sigma} ( y_i - x_i' \theta)\\
+  \sigma^2 &= \frac{1}{n} \sum_{i=1}^n u_i^2\\
+  0 &= \sum_{i=1}^n  x_{i,j} u_i \quad \forall j\\
+\end{align*}
+
+Let us denote the matrix containing $X_i$ on the $i^{th}$ row as
+$\bm{X}$. Then our condition simplifies to:
+\begin{equation*}
+    0 = \bm{X} \bm{u}
+\end{equation*}
+
+This is exactly the orthogonality condition found in linear
+regression, and as such has the same solution.
+
+\begin{align*}
+  \est{\theta} &= \inv{(X' X)} X'Y\\
+  \est{\sigma^2} &= \frac{1}{n}\sum_{i=1}^n u_i^2
+\end{align*}
+
+\subsection{(c)}
+
+Consider testing $H_0 : \theta = \theta_0$ vs. $H_1: \theta \neq \theta_0$. Describe how you
+would carry this out using each of the three hypothesis testing
+methods described in class. How do they compare with the Wald tests
+and LM tests described earlier in class using ordinary least squares?\par
+
+Let $f(\theta)$ denote the log-likelihood function evaluated at $\theta$. Let
+$g(\theta)$ denote the gradient of the log-likelihood function evaluated at
+$\theta$. 
+\begin{itemize}
+\item Wald Test\newline
+  Uses $\sqrt{n} ( \est{\theta} - \theta_0) \sim \normal$
+\item LM Test\newline
+  Uses $2( f(\est{\theta}) - f(\theta_0)) \sim \chi^2$
+\item LR Test\newline
+  Uses $g(\est{\theta})$ and $g(\theta_0)$. 
+\end{itemize}
+(Obviously there is a lot more TODO here.)
+
+\section{Question 2}
+
+Let $X_1,...,X_n$ be an i.i.d. sequence of random variables with
+distribution $\unif(\theta,2\theta)$ with $\theta > 0$ i.e. uniformly distributed on
+the interval $[\theta,2\theta]$.
+
+\subsection{(a)}
+
+Show that the maximum likelihood estimator of $\theta$ is given by
+\begin{equation*}
+  \est{\theta} = \frac{1}{n} \max_{1 \leq i \leq n} X_i
+\end{equation*}
+
+The density of $X_i$ is given by: $\frac{1}{\theta} \indicate{ X_i \in
+  [\theta,2\theta]}$. The likelihood function is then given by:
+
+\begin{align*}
+  \ell_n(\theta) &= \prod_{i=1}^n \frac{1}{\theta} \indicate{ X_i \in [\theta,2\theta]}\\
+  &= \frac{1}{\theta^n} \indicate{ X_i \in [\theta,2\theta] \quad \forall i}
+\end{align*}
+
+The log-likelihood function is then given by: 
+\begin{equation*}
+  L_n(\theta) = -n \log( \theta) + \log( \indicate{ X_i \in [\theta,2\theta] } )  
+\end{equation*}
+
+This function is decreasing in $\theta$, provided that all $X_i \in
+[\theta,2\theta]$. This means that we wish to choose the smallest possible $\theta$
+value that maintains all $\theta \leq X_i \leq 2\theta$. The upper bound is the
+relevant bound, so we allow for $\est{\theta} = \frac{1}{2} \max_{1\leq i \leq
+  n}X_i$. 
+
+\subsection{(b)}
+
+Let us determine the distribution of $Z = \max X_i$.
+Let $z \in [\theta,2\theta]$. 
+\begin{align*}
+  \Pr( Z \leq z ) &= \Pr( \max X_i \leq z)\\
+               &= \cap \Pr( X_i \leq z)\\
+               &= \left(  \frac{z - \theta}{\theta} \right)^n\\
+  f_z(z) &= n \left( \frac{z-\theta}{\theta} \right)^{n-1} \frac{1}{\theta}\\
+  \exV{Z} &= \frac{n}{\theta}\int_{\theta}^{2\theta} z \left(  \frac{z}{\theta} - 1
+            \right)^{n-1} dz\\
+               &= n \int_0^1 (\theta u + \theta )u^{n-1}du\\
+               &= n \int_0^1 \theta u^n + \theta u^{n-1}du\\
+  &= \theta \frac{2n + 1}{n+1} 
+\end{align*}
+
+From this we can see that:
+\begin{equation*}
+  \exV{ \est{\theta}} = \frac{1}{2} \exV{ \max{X_i}} = \theta \frac{2n+1}{2n+2}
+  \neq \theta
+\end{equation*}
+
+So $\est{\theta}$ is not an unbiased estimator of $\theta$.
+
+\subsection{(c)}
+
+Prove that $\est{\theta}$ is a consistent estimator of $\theta$.
+
+\begin{align*}
+  \Pr( \abs{\est{\theta} - \theta} < \epsilon) &= \Pr( \abs{ \frac{1}{2}\max{X_i} - \theta}
+                                < \epsilon)\\
+                              &= \Pr( \theta - \frac{1}{2} \max{x_i} < \epsilon)\\
+                              &= \Pr( \max{X_i} > 2( \theta - \epsilon))\\
+                              &= 1 - \Pr( \max{X_i} < 2( \theta - \epsilon))\\
+                              &1 - \left(  \frac{\theta - 2 \epsilon}{\theta}\right)^n\\
+  &\rightarrow 1
+\end{align*}
+
+\subsection{(d)}
+
+Show that $n( \theta - \est{\theta})$ converges in distribution to an exponential
+distribution with parameter $\lambda$ as $n\rightarrow\infty$. Express $\lambda$ in terms of $\theta$.
+
+Firstly we can note that the Probability that $\theta - \est{\theta} < 0$ is
+zero. There is no support for $X_i > \theta$, so the maximum cannot be
+greater than $\theta$.  
+
+\begin{align*}
+  \Pr( n ( \theta - \est{\theta}) \leq x) &= \Pr( \theta - \est{\theta} \leq \frac{x}{n})\\
+                             &= 1 - \left( \frac{\theta - \frac{2x}{n}}{\theta}
+                               \right)^n\\
+                             &= 1 - \left(  1 - \frac{2x}{n\theta} \right)^n\\
+  &\rightarrow 1 - \exp( - \frac{2x}{\theta})
+\end{align*}
+
+If we let $\lambda = \frac{\theta}{2}$, then we see that $n( \theta - \est{\theta})
+\convDist \exp( \frac{\theta}{2})$.
+
+\est{\theta}
+\subsection{(e)}
+
+Construct an (approximate) 95\% confidence interval for $\theta$. Justify
+your answer.
+
+We are certain that $\theta > \frac{1}{2}\max{X_i}$, so this is a logical
+lower bound for our interval. We wish to use part (d) to determine the
+upper bound.
+
+We are interested in an interval $C_n := [\frac{1}{2} \max{X_i}, c]$ such
+that $\Pr( \theta \in C_n ) \leq .95$.
+\begin{align*}
+  \Pr( \theta < c ) &= \Pr( n\theta < nc + n \est{\theta} - n \est{\theta})\\
+               &= \Pr( n( \theta - \est{\theta}) < n \left( c - \est{\theta}\right)
+                 )\\
+               &\rightarrow 1 - \exp \left( - \frac{2n ( c - \est{\theta})}{\theta} \right)\\
+  \leq 1 - \exp \left( - \frac{2n ( c - \est{\theta})}{\est{\theta}} \right)
+\end{align*}
+
+Since we know that $\est{\theta} < \theta$. Setting this probability equal to
+$.95$.
+
+\begin{align*}
+  1 - \exp \left( - \frac{2n ( c - \est{\theta})}{\est{\theta}} \right) &= .95\\
+  \exp \left( - \frac{2n ( c - \est{\theta})}{\est{\theta}} \right) &= .05\\
+  \frac{2n ( c - \est{\theta})}{\est{\theta}} &= - \log .05\\
+  c &= \est{\theta} - \frac{\est{\theta}\log(.05)}{2n}
+\end{align*}
+
+From this we know that: $\Pr( \theta \in [\est{\theta}, c] ) \leq .95$. as $n \rightarrow \infty$.
+
+\section{Question 3}
+
+\subsection{(a)}
+
+Suggest an unbiased estimator $\altest{\theta}$ of $\theta$. Justify your
+answer.
+
+Using a Method of Moments estimator, we may set the sample mean equal
+to the population mean.
+
+\begin{align*}
+  \frac{1}{n} \sum_{i=1}^n X_i &= \exV{X}\\
+  \mean{X} &= \frac{3 \theta}{2}\\
+  \altest{\theta} &= \frac{2 \mean{X}}{3}
+\end{align*}
+
+
+To show this is an unbiased estimator:
+
+\begin{align*}
+  \exV{\altest{\theta}} &= \frac{2}{3}\exV{ \mean{X}}\\
+                   &= \frac{2}{3} \frac{3\theta}{2}\\
+                   &= \theta
+\end{align*}
+
+
+\begin{minted}[mathescape,
+               linenos,
+               breaklines,
+               numbersep=5pt,
+               frame=lines,
+               firstnumber=last]{julia}
+using Random
+using Latexify
+using Distributions
+
+thetapos = [0.5,1,10]
+npos = [2,5,20,100]
+
+srand( 235711 )
+
+#This just allocates a bunch of arrays to fit all the data we're asked to simulate
+X = zeros( length(thetapos), length(npos) )
+hatABS = zeros( length(thetapos), length(npos) )
+tildeABS = zeros( length(thetapos), length(npos) )
+hatMSE = zeros( length(thetapos), length(npos) )
+tildeMSE = zeros( length(thetapos), length(npos) )
+ind = zeros( length(thetapos), length(npos) )
+
+tempx = zeros(10000,maximum(npos))
+tempHatTheta = zeros(10000)
+tempTildeTheta = zeros(10000)
+    
+for i in 1:length(thetapos)
+    theta = thetapos[i]
+    dist = Uniform( theta, 2*theta)
+    for j in 1:length(npos)
+        n = npos[j]
+        for k in 1:10000
+            tempx[k,1:n] = rand( dist, n)
+            tempHatTheta[k] = maximum(tempx[k,1:n])/2.0
+            tempTildeTheta[k] = (2.0/3.0)*mean(tempx[k,1:n])
+        end
+
+        tempHatABS = abs.( tempHatTheta .- theta)
+        hatABS[i,j] = mean( tempHatABS )
+
+        tempTildeABS = abs.( tempTildeTheta .- theta)
+        tildeABS[i,j] = mean(tempTildeABS)
+
+        tempHATMSE = tempHatABS .* tempHatABS
+        hatMSE[i,j] = mean(tempHATMSE)
+
+        tempTildeMSE = tempTildeABS .* tempTildeABS
+        tildeMSE[i,j] = mean( tempTildeMSE)
+
+        temp = tempTildeMSE .> tempHATMSE
+        ind[i,j] = mean(temp)
+    end
+end
+latexify( hatABS )
+latexify( tildeABS )
+latexify( hatMSE )
+latexify( tildeMSE )
+latexify( ind )
+\end{minted}
+
+Let the rows of the tables vary on $\theta$, and the columns to vary on $n$.
+
+\begin{equation}
+  \exV{ \abs{ \est{\theta} - \theta}} = 
+\left[
+\begin{array}{cccc}
+0.08251768335983423 & 0.04138028761353768 & 0.012018038359357993 & 0.002454747534893202 \\ 
+0.1662848600155058 & 0.08475125594998142 & 0.02374699873557352 & 0.00494945986523853 \\ 
+1.6589077838768331 & 0.8366331484718982 & 0.2358728497592693 & 0.04929336702035111 \\ 
+\end{array}
+\right]
+\end{equation}
+
+
+\begin{equation}
+  \exV{ \abs{ \altest{\theta} - \theta}} = 
+\left[
+\begin{array}{cccc}
+0.05584644447354317 & 0.034519073486349604 & 0.016988332238097325 & 0.007605867624554295 \\ 
+0.11119251004386879 & 0.06964597047247212 & 0.03418167581734512 & 0.015062323974035206 \\ 
+1.119239886041974 & 0.6926595973569091 & 0.34332959993442197 & 0.15368077317701256 \\ 
+\end{array}
+\right]
+\end{equation}
+
+
+\begin{equation}
+  \exV{ \left( \est{\theta} - \theta \right)^2} = 
+\left[
+\begin{array}{cccc}
+0.01024438140998567 & 0.0029171978588955374 & 0.00027465629325299607 & 1.1864782455611658e-5 \\ 
+0.041500566748932294 & 0.012261662263366389 & 0.0011002390515266176 & 4.83207144878072e-5 \\ 
+4.138548894376528 & 1.1834305928755853 & 0.10500402586399134 & 0.004806614060271922 \\ 
+\end{array}
+\right]
+\end{equation}
+
+
+\begin{equation}
+  \exV{ \left( \altest{\theta} - \theta \right)^2} = 
+\left[
+\begin{array}{cccc}
+0.004665025816471523 & 0.0018421547114045925 & 0.0004514346501389149 & 9.034229559800396e-5 \\ 
+0.018496421647766204 & 0.007466969347271993 & 0.0018146009679841717 & 0.0003637273407901821 \\ 
+1.8659466555904451 & 0.737506296107824 & 0.18430868379420634 & 0.03693727407880436 \\ 
+\end{array}
+\right]
+\end{equation}
+
+
+\begin{equation}
+  \Pr( \abs{ \altest{\theta} - \theta} < \abs{ \est{\theta} - \theta} )
+\left[
+\begin{array}{cccc}
+0.292 & 0.4114 & 0.6225 & 0.8097 \\ 
+0.2904 & 0.4081 & 0.6311 & 0.7977 \\ 
+0.2952 & 0.4149 & 0.6242 & 0.8045 \\ 
+\end{array}
+\right]
+\end{equation}
+
+We can see that at very small values of $n$, unbiasedness is a
+valuable property, but as soon as we get to reasonable data sizes, the
+maximum likelihood estimator outperforms the Method of Moments
+estimator by a large margin. So for data sets of reasonable size, I
+would always prefer the maximum likelihood estimator for Uniform
+estimation.
+
+Unbiasedness is not always the most important property. Maximum
+likelihood estimators trade off bias for much lower variance. This
+trade-off can be examined by looking at Mean-Squared error, which is
+considers this trade-off.
+
+\subsection{(c)}
+
+Can you justify your preference on theoretical grounds?
+
+From the Central Limit Theorem, we know that $\sqrt{n} ( \altest{\theta} -
+\theta) \sim \normal$. So we know that $\altest{\theta}$ is $\sqrt{n}$-consistent
+for $\theta$. However, $\est{\theta}$ is $n$-consistent for $\theta$. This indicates
+that $\est{\theta}$ is converging to $\theta$ more quickly than $\altest{\theta}$
+is. We are able to ``blow up'' $\est{\theta}$ by more than $\altest{\theta}$ and
+still have the sequence be tight.
+
+From part (d) of question 2, we showed that $\est{\theta}$ was
+$n$-consistent, and that it converged to an exponential
+distribution. This tells us that the order of convergence of the
+maximum likelihood estimator is $\bigO( \frac{1}{n})$ rather than the
+order of converge of $\bigO ( \frac{1}{\sqrt{n}})$ of the Method of
+Moments estimator.
+
+\section{Question 5}
+
+Let $X_i$ be an i.i.d. sequence of random variables with pdf on
+$\setR$ given by:
+\begin{equation*}
+  f_{\theta}(x) =
+  \begin{cases}
+    (1+\theta)x^{\theta}\quad &\text{ for } 0 < x < 1\\
+    0 & otherwise
+  \end{cases}
+\end{equation*}
+for some $\theta > -1$.
+
+\subsection{(a)}
+
+\begin{align*}
+  \mu = \exV{X_i} &= \int_0^1 (1+\theta)x^{\theta+1}\\
+            &= \frac{1+\theta}{2+\theta} x^{\theta+2} \vert_0^1\\
+  &= \frac{1+\theta}{2+\theta}  
+\end{align*}
+
+\begin{align*}
+  \mu(2+\theta) &= 1 + \theta\\
+  2\mu - 1 &= \theta( 1 - \mu)\\
+  \theta &= \frac{2\mu - 1}{ 1 - \mu}
+\end{align*}
+
+\subsection{(b)}
+
+Write the log-likelihood function as a function of $\mu$.
+
+\begin{align*}
+  L_n (\theta) &= \frac{1}{n} \sum_{i=1}^n \log(1 + \theta) + \theta \log( X_i )\\
+  L_n( \mu )&= \frac{1}{n} \sum_{i=1}^n \log( \mu ) + \frac{2\mu - 1}{ 1 - \mu}
+            \log( X_i )
+\end{align*}
+
+\subsection{(c)}
+
+We believe that the solution will be interior.
+
+\begin{align*}
+  \deriv{L_n(\mu)}{\mu} &= \frac{1}{n} \sum_{i=1}^n \frac{1}{\mu} +
+                      \frac{(1-\mu)2 - (1-2\mu)}{(1-\mu)^2} \log( X_i) = 0\\
+  \frac{1}{\mu} \frac{(1-\mu)^2}{4\mu - 1} &= \frac{1}{n} \sum_{i=1}^n \log(X_i)\\
+  \frac{1 - 2\mu + \mu^2}{4\mu^2 - \mu} &= \frac{1}{n} \sum_{i=1}^n \log(X_i)\\
+  
+\end{align*}
+
+
+\end{document}

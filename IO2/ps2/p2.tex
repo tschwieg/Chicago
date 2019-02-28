@@ -1,0 +1,71 @@
+\documentclass[12pt]{paper}
+
+\begin{document}
+\section{2}
+
+Since the $\epsilon_{ti}$ is private information of the firm, but the
+parameters are common knowledge, the decision of firm 1 depends on the
+unknown parameter of firm 2, and vice versa.
+
+Firm one will enter when
+\begin{equation*}
+  \alpha x_t + \epsilon_{1t} - \delta y_{2t} \geq 0
+\end{equation*}
+
+In this case, it makes profits equal to that quantity, if it chooses
+not to enter, it makes profits of $0$.
+
+\begin{align*}
+  \exV{\Pi} &= y_{1t} \brak{\alpha x_t + \epsilon_{1t} - \delta \exV{y_{2t}}}\\
+  &= y_{1t} \brak{\alpha x_t + \epsilon_{1t} - \delta \Pr( y_{2t} = 1)}
+\end{align*}
+
+
+
+Firm 1 wishes to maximize its expected profits, so it will not choose
+to enter if it expects negative profits, and will enter if the profits
+are positive. This indicates that its strategy is just to enter when
+$\exV{\Pi} \geq 0$. Since there is no difference in the parameters between
+firms, except for $\epsilon$, this is true for firm 2 as well.
+\begin{equation*}
+  y_{it} = \indicate{ \alpha x_t + \epsilon_{it} - \delta \Pr( y_{-it} = 1) \geq 0}
+\end{equation*}
+
+Taking expectations we get
+\begin{align*}
+  \exV{y_{it}} &= \Pr( \epsilon_{it} \geq \delta \Pr( y_{-it} = 1) - \alpha x_t )\\
+  \Pr( y_{it} = 1) &= 1 - F_{\epsilon}( \delta \Pr( y_{-it} = 1) - \alpha x_t)
+\end{align*}
+
+Applying the Distributional assumption that the $\epsilon$ are distributed
+Type-1 extreme value, we get that:
+
+\begin{align*}
+  \Pr( y_{1t} = 1) &= \frac{\exp(\delta \Pr( y_{2t} = 1) - \alpha x_t)}{1 +
+                     \exp(\Pr(y_{2t} = 1) - \alpha x_t)}\\
+  \Pr( y_{2t} = 1) &= \frac{\exp(\delta \Pr( y_{1t} = 1) - \alpha x_t)}{1 +
+                     \exp(\Pr(y_{1t} = 1) - \alpha x_t)}
+\end{align*}
+
+The solution to these two equations is the Bayes-Nash equilibrium
+probabilities that each firm enters the market. Firm i just believes
+that firm j enters the market with these probabilities, and then
+maximizes his profit under that assumption, while firm j does the
+same. This will constitute a Bayes-Nash equilibrium.
+
+As a result of this, from firm j's point of view, firm i is simply
+flipping a coin with probability given by the solution to these
+equations. When that coin lands on heads, he enters the market, and
+when it is tails he chooses not to enter the market. 
+
+
+\section{3}
+
+From the Econometricians' point of view, the only randomness in the
+choice of firm $i$ is his own draw in $\epsilon_{it}$ as he has already taken
+an expectation of the draw of firm $j$ and the assumption of
+Bayes-Nash equilibrium constrains these beliefs to satisfying the
+above system. 
+
+
+\end{document}

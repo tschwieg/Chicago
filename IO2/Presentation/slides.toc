@@ -1,0 +1,7 @@
+\beamer@endinputifotherversion {3.36pt}
+\beamer@sectionintoc {1}{Introduction}{2}{0}{1}
+\beamer@sectionintoc {2}{Deep Blue}{5}{0}{2}
+\beamer@sectionintoc {3}{Shogi - Bonanza}{9}{0}{3}
+\beamer@sectionintoc {4}{AlphaGo}{14}{0}{4}
+\beamer@sectionintoc {5}{AlphaGo is Two-step Estimation}{21}{0}{5}
+\beamer@sectionintoc {6}{Assumptions}{25}{0}{6}

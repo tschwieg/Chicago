@@ -1,0 +1,462 @@
+\documentclass[12pt]{paper}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{amsfonts}
+\usepackage{bbm}
+\usepackage{graphicx}
+
+\DeclareMathOperator{\diam}{diam}
+\DeclareMathOperator{\interior}{int}
+\DeclareMathOperator{\close}{cl}
+
+\newcommand{\met}[1]{d \left ( #1 \right )}
+\newcommand{\brak}[1]{ \left [ #1 \right ] }
+\newcommand{\cbrak}[1]{ \left \{ #1 \right \}}
+\renewcommand{\vec}[1]{ \bm{ #1 }}
+\newcommand{\abs}[1]{\left \lvert #1 \right \rvert}
+\newcommand{\seq}[1]{{\left \{ #1 \right \}}}
+\newcommand{\conj}[1]{ \overline{ #1 } }
+%\newcommand{\close}[1]{ \bar{ #1 } }
+\newcommand{\set}[1]{\left \{ #1 \right \}}
+\newcommand{\Lim}{\lim\limits}
+\newcommand{\compose}{\circ}
+\newcommand{\inv}[1]{{#1}^{-1}}
+\newcommand{\compl}[1]{{#1}^{c}}
+
+
+
+\newcommand{\setR}{ \mathbb{R} }
+\newcommand{\setQ}{ \mathbb{Q} }
+\newcommand{\setZ}{ \mathbb{Z} }
+\newcommand{\setN}{ \mathbb{N} }
+
+\newcommand{\plim}{ \overset{p}{\to} }
+\newcommand{\mean}[2][N]{ \overline{ #2 }_{#1}}
+\newcommand{\exV}[1]{\mathbb{E} \left [ #1 \right ]}
+\newcommand{\Vari}[1]{\mathbb{V} \left ( #1 \right )}
+
+\newcommand{\est}[2][n]{ \widehat{ #2 }_{#1}}
+\newcommand{\altest}[2][n]{ \tilde{ #2 }_{#1}}
+
+\newcommand{\indicate}[1]{ \mathbbm{1}_{\{#1\}}}
+\newcommand{\convDist}{ \overset{d}{\to}}
+\newcommand{\unif}{\emph{U}}
+\newcommand{\normal}{\mathcal{N}}
+\newcommand{\eye}{\mathbbm{I}}
+
+\newcommand{\bigO}{\mathcal{O}}
+\newcommand{\Lagrange}{\mathcal{L}}
+
+\newcommand{\deriv}[2]{\frac{ \partial #1}{ \partial #2}}
+
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
+
+%\usepackage{Schwieg}
+
+\begin{document}
+\section{Exercise 5}
+
+Show that the Gibbs sampler satisfies detailed balance
+
+\vspace{.3in}
+
+Detailed balance requires that
+
+\begin{equation*}
+  P( \theta^{i-1} \vert \theta^i) p(\theta^i) = P( \theta^i \vert \theta^{i-1}) p(\theta^{i-1})  
+\end{equation*}
+
+
+Consider a single step of the Gibbs-Sampler on dimension $j$ for $\theta$.
+
+Note that $\theta_{-j}^i = \theta_{-j}^{i-1} := \theta_{-j}$ as we are only sampling on a
+single dimension. There is no chance of rejection, so we only have
+to consider the full $j^{th}$ conditional of the distribution.
+
+
+\begin{align*}
+  p(\theta_j^{i-1}\vert \theta_{-j} ) \Pr( \theta^i \vert \theta^{i-1}) &= p(\theta_j^{i-1}\vert \theta_{-j} ) p( \theta_j^i \vert \theta_{-j}^i )\\
+            &= p(\theta_j^{i-1}\vert \theta_{-j} ) \frac{ p(\theta_j^i \vert \theta_{-j})}{\int p( z \vert\theta_{-j})}\\
+            &= p( \theta_j^i \vert \theta_{-j}) \frac{ p(\theta_j^{i-1}\vert \theta_{-j} ) }{\int p(z \vert \theta_{-j})}\\
+            &= p( \theta_j^i \vert \theta_{-j}) \Pr( \theta^{i-1} \vert \theta^i)
+\end{align*}
+
+
+
+
+\section{Exercise 7}
+
+Give the expression for the exact distribution, called the $ABC$
+posterior which is sampled by the ABC sampler.
+
+\vspace{.3in}
+
+Drawing from Forneron and Ng (2016):
+
+First note that we draw our possible value $\theta^{*}$ from $q( \theta^{*} \vert
+\theta^i )$, and then independently sample $z \sim F_Z$. So our proposal
+distribution is the product of these two:
+
+\begin{equation*}
+  q( \theta^{*}, z \vert \theta^i) = q(\theta^{*} \vert \theta^i) L( z \vert \theta^i)
+\end{equation*}
+
+Our acceptance probability is given by:
+\begin{equation*}
+  \alpha( \theta^i, \theta^{i+1}) = \min\{ \indicate{ \met{\hat{Y}, Y_{\theta^{*}}} }
+  \frac{ q( \theta^{i} \vert \theta^{i+1})}{ q( \theta^{i+1} \vert \theta^i)} ,  1\}
+\end{equation*}
+
+
+By construction, any accepted $\theta$ by the distribution must satisfy
+$\met{\hat{Y}, Y_{\theta}} < \epsilon$ and therefore
+$\indicate{\met{\hat{Y}, Y_{\theta}} < \epsilon} = 1$ so dividing by it will not
+affect the acceptance probability.
+
+Manipulating the interior of the acceptance probability:
+
+\begin{align*}
+  \indicate{\met{\hat{Y},Y_{\theta^{*}}} < \epsilon} \frac{q(\theta^i \vert \theta^{*})}{q(\theta^{*}
+  \vert \theta^i)} &= \frac{\indicate{\met{\hat{Y},Y_{\theta^{*}}} < \epsilon}
+            q(\theta^{*} \vert \theta^i) L(z^{*} \vert \theta^i) L( z^i \vert
+            \theta^{*})}{\indicate{\met{\hat{Y}, Y_{\theta^i}} < \epsilon} q(
+            \theta^i \vert \theta^{*}) L(z^{*} \vert \theta^i) L( z^i \vert \theta^{*}) }\\
+          &= \frac{\indicate{\met{\hat{Y},Y_{\theta^{*}}} < \epsilon}
+            q(\theta^i, z^i \vert \theta^{*}) L(z^{*} \vert \theta^i)
+            }{\indicate{\met{\hat{Y}, Y_{\theta^i}} < \epsilon} q( 
+            \theta^{*}, z^{*} \vert \theta^i) L( z^i \vert \theta^{*}) }\\
+\end{align*}
+
+This is now a special case of the Metropolis Hastings algorithm, with
+a particular $p$ distribution, so the detailed balance equations must
+be satisfied. This particular $p$ must be the ABC posterior that is
+being sampled, and is given by:
+\begin{equation*}
+  p_{ABC}( \theta^i, z^i \vert \epsilon ) = L(z^i \vert \theta^i) \indicate{ \met{\hat{Y}, Y_{\theta^i}}<\epsilon}
+\end{equation*}
+
+
+\section{Exercise 8}
+
+Show that the set of left and right eigenvalues are equal.
+
+\vspace{.3in}
+
+The space of right eigenvalues are the set of numbers $\lambda \in \Lambda_R$ that
+satisfy:
+\begin{equation*}
+  Pv = \lambda v \Leftrightarrow ( P - \lambda I)v = 0
+\end{equation*}
+for some vector $v \neq 0$. This is equivalent to the set of numbers $\Lambda_R$
+that give non-trivial basis vectors to the Null Space of $P - \lambda
+I$. These are the numbers where $\abs{P - \lambda I} = 0$.
+
+The left eigenvalues can be defined in a similar manner: $\lambda \in \Lambda_L$ if
+it satisfies
+\begin{equation*}
+  vP = \lambda v \Leftrightarrow v(P -\lambda I) = 0 \Leftrightarrow (P - \lambda I)' v' = 0
+\end{equation*}
+for some vector $v \neq 0$. Again this set can be characterized by a
+determinant condition: $\abs{(P - \lambda I)'} = 0$. However, this is just
+the transpose of the matrix for the right-eigenvalues, and the
+determinant of the transpose of a matrix is equal to the determinant
+of the matrix itself. This means that the two problems are equivalent,
+and therefore the set of left and right eigenvalues are equal.
+
+\section{Exercise 9}
+
+Write the computation of Total Variance as an optimal transport
+problem. In particular, display explicitly the cost matrix.
+
+\vspace{.3in}
+
+We know that Total Variance is defined as:
+\begin{equation*}
+  \norm{\mu - \nu} = \max_{A \subset \chi} \abs{\mu(A) - \nu(A)} = \inf_P \{ \Pr( X \neq Y )
+  \vert (X,Y) \text{ is a coupling with joint distribution }P\}
+\end{equation*}
+
+This is the largest possible difference in the probabilities that the
+two measures can assign to the same event.
+
+Following the questions suggested in the email:
+
+\begin{enumerate}
+\item For a given point $y \in Y$, how much mass in total must have been
+  moved to $y$?
+
+  We require that the $\nu(y)$ mass be moved into $Y$ at the
+  point $y$ to ensure that this distribution has the ``correct'' mass.
+  
+  
+\item For a given point $x \in X$ how much mass must have been moved
+  from $x$?
+
+  We require that $\mu(x)$ mass to be moved from $X$ at the point $x$.
+  
+\item How to defined probability in the form $\int_X c(x)dF(x)$?
+
+  If we choose $c(x) = 1$ then we obtain $\int_X dF(x)$ which is the cdf
+  of the distribution, and is therefore the probability over the
+  region $X$.
+  
+\item What should the cost be to move mass from $x \in X$ to itself?
+
+  Since total variation is a norm, the norm of zero must be zero so
+  the cost of moving mass to yourself needs to be zero. 
+  
+\item How will the integral change with finite support?
+
+  The integral will become a sum divided by the size of the
+  support. This is equivalent to assuming that the distribution
+  integrates to one.
+\end{enumerate}
+
+It is clear that if we need the cost of moving from a distribution to
+itself to be zero, but we want to catch a probability elsewhere, one
+candidate for this is the cost function:
+\begin{equation*}
+  C(x,y) = \indicate{ x \neq y}
+\end{equation*}
+
+Under this cost function, our integral over the joint distribution of
+the densities becomes a probability that the two random variables
+are not equal, which is our goal. We now wish to add constraints to
+the optimal transport problem that ensures that the random variables
+are a coupling of the two distributions.
+
+A coupling requires that $\Pr(X = x) = \mu(x)$ and that $\Pr(Y=y) =
+\nu(x)$. Our transport function must meet these same requirements.
+
+\begin{equation*}
+  \int_XT(x,y)dx = \nu(y) \quad \int_Y T(x,y)dy = \mu(x)
+\end{equation*}
+
+Under these conditions our optimal transport problem can be written as
+such:
+
+\begin{equation*}
+  \inf_T \left\{ \int_{X \times Y} \indicate{x \neq y}T(x,y)dxdy \Big\vert \int_XT(x,y)dx = \nu(y) \quad \int_Y T(x,y)dy = \mu(x) \right\}
+\end{equation*}
+
+We can see that this considers all functions of the distributions
+(random variables) such that their marginal distributions have the
+same mass as the defined distributions, and minimizes the probability
+that they are different. This is exactly the question of finding the
+optimal coupling, and therefore must give the total variation norm.
+
+
+\section{Exercise 14}
+Give an example of a pair $(P,\pi)$ where P samples from $\pi$ but is not
+aperiodic.
+
+\vspace{.3in}
+
+\begin{equation*}
+  P =
+  \begin{pmatrix}
+    0 & 1\\
+    1 & 0
+  \end{pmatrix} \quad \pi = \left(\frac{1}{2}, \frac{1}{2}\right)
+\end{equation*}
+
+We may note that this matrix has an expected return time of $2$ from
+either state, and reaches it in 2 steps with probability 1. Therefore
+its stationary distribution is $\pi = (.5, .5)$. All stages have period
+2, so the matrix is not aperiodic.
+
+\vspace{.3in}
+
+Give an example of a pair $(P,\pi)$ where $P$ samples from $\pi$ and is
+aperiodic but does not satisfy detailed balance.
+
+\vspace{.3in}
+
+Consider the pair:
+\begin{equation*}
+  P =
+  \begin{pmatrix}
+    \frac{1}{2} & \frac{1}{2} & 0\\
+    \frac{1}{2} & \frac{1}{2} & 0\\
+    \frac{1}{2} & 0 & \frac{1}{2}
+  \end{pmatrix}
+  \quad \pi = \left(\frac{1}{2}, 0, \frac{1}{2}\right)
+\end{equation*}
+
+Choosing $i = 1, j=3$ we see that $\pi_1 P_{13} = 0$ but
+$P_{31}\pi_3 = \frac{1}{4}$.
+
+
+\section{Exercise 15}
+
+Let P be a transition probability matrix. Show that the null space of P
+has dimension 1, i.e., rank(null(P - I )) = 1
+
+\vspace{.3in}
+
+This is false. Consider $P = I_3$, then $P-I = \bm{0}$ and the rank of the
+null space of this matrix is $3$.
+
+Consider the question, show that $rank(null(P-I)) \geq 1$.
+
+From the rank-nullility theorem, we know that the rank of the matrix
+plus the dimension of the null space equals the number of
+columns. This question is equivalent to showing that a Transition
+probability matrix minus the identity matrix does not have full rank.
+
+Note that the rows of $P-I$ sum to zero. This means that the final
+column must be the negative sum of all the previous columns, and
+therefore it is linearly dependent with the previous columns. This
+means that $P-I$ cannot be full rank, and therefore $rank(null(P - I))
+\geq 1$
+
+\section{Exercise 16}
+
+Let $P^{\infty} = \lim P^l$, and show that $P_i^{\infty} = \pi$, for
+$i = 1., ..., n$
+
+\vspace{.3in}
+
+Assume that $P$ is aperiodic and irreducible, as the limiting
+distribution is not well-defined for periodic matrices.
+
+These conditions give us that the second eigenvalue will be less than
+one, and therefore we can apply theorem 3.
+
+\begin{equation*}
+  \norm{\pi - \mu_l}_2^2 \leq C \lambda_1^l
+\end{equation*}
+
+Where $C \in \setR$ and $\lambda_1 < 1$. Taking the limit of both sides
+implies that:
+\begin{equation*}
+  \lim \norm{\pi - \mu_l}_2^2 \leq C \lim \lambda_1^l = 0
+\end{equation*}
+
+Which implies that $\norm{\mu_l - \pi}_2^2 \rightarrow 0$.
+
+\begin{equation*}
+  \norm{\mu_0 P^l - \pi }_2^2 \rightarrow 0 \quad \forall\mu_0 
+\end{equation*}
+
+In particular, we may take $\mu_0 = e_i^{\prime}$ where $e_i$ is an element of
+the standard basis for $\setR^n$, and this gives us:
+\begin{equation*}
+  \norm{P^l_{i,.} - \pi}_2^2 \rightarrow 0
+\end{equation*}
+This is the result we were looking for.
+
+
+
+
+\section{Exercise 17}
+
+\begin{equation*}
+  P =
+  \begin{pmatrix}
+    1 - p & p\\
+    q & 1-q
+  \end{pmatrix}
+\end{equation*}
+ 
+First we consider the case where this matrix is not
+diagonalizable. This is the case when $p+q = 1$. In this case the
+transition probability matrix can be written as:
+
+\begin{equation*}
+  P =
+  \begin{pmatrix}
+    q & 1 - q\\
+    q & 1 - q 
+  \end{pmatrix}    
+\end{equation*}
+\begin{equation*}
+  P^2 =
+  \begin{pmatrix}
+    q^2 + (1-q)q & (1-q)^2 + q(1-q)\\
+    q^2 + (1-q)q & (1-q)^2 + q(1-q)
+  \end{pmatrix} =
+  \begin{pmatrix}
+    q & 1 - q\\
+    q & 1 - q
+  \end{pmatrix}
+\end{equation*}
+In this case, the powers of this matrix are all equal to $P$.
+
+Since we know that $p+q=1$, $1-p-q = 0$. Therefore
+\begin{equation*}
+  \frac{q}{p+q} + \left(1-\frac{q}{p+q}\right)(1-p-q)^l = q
+\end{equation*}
+
+This is exactly the top right element of $P^l = P$ which is $\mu_l(0)$.
+
+\vspace{.2in}
+
+Now consider the case where this matrix is diagonalizable, i.e. $p+q \neq
+1$.
+
+\vspace{.2in}
+
+The eigenvalues of this matrix are $1,1-p-q$ with eigenvectors of
+\begin{equation*}
+  v_1 =
+  \begin{pmatrix}
+    1\\
+    1
+  \end{pmatrix}
+  \quad v_2 =
+  \begin{pmatrix}
+    -\frac{p}{q}\\
+    1
+  \end{pmatrix}
+\end{equation*}
+
+The diagonalization can be written as:
+
+\begin{equation*}
+  P^k =
+  \begin{pmatrix}
+    1 & -\frac{p}{q}\\
+    1 & 1
+  \end{pmatrix}
+  \begin{pmatrix}
+    1 & 0\\
+    0 & (1-p-q)^k
+  \end{pmatrix}
+  \begin{pmatrix}
+    \frac{q}{p+q} & \frac{p}{p+q}\\
+    \frac{-q}{p+q} & \frac{q}{p+q}
+  \end{pmatrix}
+\end{equation*}
+
+Multiplying back through results in
+\begin{equation*}
+  P^k = \frac{1}{p+q}
+  \begin{pmatrix}
+    q + p(1-p-q)^k & p - p(1-p-q)^k\\
+    q - q(1-p-q)^k &p + q(1-p-q)^k
+  \end{pmatrix}
+\end{equation*}
+
+Using $\mu_0 = (1,0)$ we get that $\mu_k = \frac{1}{p+q} (q + p(1-p-q)^k \quad
+p - p(1-p-q)^k)$
+
+Considering only the first element of this vector we reach that:
+\begin{equation*}
+  \mu_k(0) = \frac{q}{p+q} + \frac{p}{p+q} (1-p-q)^k = \frac{q}{p+q} +
+  \left( 1 - \frac{q}{p+q} \right) (1-p-q)^k
+\end{equation*}
+
+
+From the fact that $\pi = \frac{1}{p+q} (q,p)$ we can then find that
+\begin{align*}
+  \abs{\mu_k -\pi} = \abs{ \left( 1 - \frac{q}{p+q} \right) (1-p-q)^k +
+  \frac{q}{p+q} - \frac{q}{p+q} } = \left( 1 - \frac{q}{p+q} \right) \abs{1-p-q}^k
+\end{align*}
+\end{document}

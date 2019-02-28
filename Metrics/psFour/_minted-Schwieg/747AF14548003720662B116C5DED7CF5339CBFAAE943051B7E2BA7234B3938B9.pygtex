@@ -1,0 +1,127 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+data \PYG{o}{\PYGZlt{}\PYGZhy{}} read.csv\PYG{p}{(} \PYG{l+s}{\PYGZdq{}ps4.csv\PYGZdq{}} \PYG{p}{)}
+
+
+k \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{k+kp}{ncol}\PYG{p}{(}data\PYG{p}{)}
+N \PYG{o}{=} \PYG{k+kp}{nrow}\PYG{p}{(}data\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Since we are not calling lm, we want to do matrix algebra, we need}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} R to not store this stuff as a data frame. What a terrible language.}
+
+Y \PYG{o}{\PYGZlt{}\PYGZhy{}}  \PYG{k+kp}{as.matrix}\PYG{p}{(}data\PYG{o}{\PYGZdl{}}y\PYG{p}{)}
+X \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{k+kp}{as.matrix}\PYG{p}{(}\PYG{k+kp}{cbind}\PYG{p}{(} \PYG{k+kp}{rep}\PYG{p}{(}\PYG{l+m}{1}\PYG{p}{,}N\PYG{p}{),} data\PYG{p}{[,}\PYG{l+m}{2}\PYG{o}{:}\PYG{l+m}{3}\PYG{p}{]} \PYG{p}{))}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Remember that matrix multiplication uses the \PYGZpc{}*\PYGZpc{}}
+mat \PYG{o}{\PYGZlt{}\PYGZhy{}}  \PYG{k+kp}{t}\PYG{p}{(}X\PYG{p}{)}\PYG{o}{\PYGZpc{}*\PYGZpc{}}X
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Rather than using inverses, let\PYGZsq{}s be numerically stable and use the}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Cholesky decomp and forward/back substitution for legitimate answers}
+\PYG{n+nb+bp}{F} \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{k+kp}{chol}\PYG{p}{(}mat\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} We now have $ X' X \beta = X' Y$}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} This is equivalent to $F' F \beta = X' Y$}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Thus $F \beta =  \inv{F'}  X' Y$}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Thus $\beta = \inv{F} \inv{F'}  X' Y$}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Note that F\PYGZsq{} is lower triangular so we use forward substitution.}
+beta \PYG{o}{\PYGZlt{}\PYGZhy{}}  \PYG{k+kp}{backsolve}\PYG{p}{(} \PYG{n+nb+bp}{F}\PYG{p}{,} \PYG{k+kp}{forwardsolve}\PYG{p}{(} \PYG{k+kp}{t}\PYG{p}{(}\PYG{n+nb+bp}{F}\PYG{p}{),} \PYG{k+kp}{t}\PYG{p}{(}X\PYG{p}{)}\PYG{o}{\PYGZpc{}*\PYGZpc{}}Y \PYG{p}{)} \PYG{p}{)}
+
+\PYG{k+kp}{print}\PYG{p}{(} \PYG{l+s}{\PYGZdq{}Beta is: \PYGZdq{}} \PYG{p}{)}
+\PYG{k+kp}{print}\PYG{p}{(} beta \PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Now lets build our variance estimates.}
+
+outerproduct \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{k+kr}{function}\PYG{p}{(} row \PYG{p}{)\PYGZob{}}
+    \PYG{k+kp}{row}\PYG{o}{\PYGZpc{}*\PYGZpc{}}\PYG{k+kp}{t}\PYG{p}{(}\PYG{k+kp}{row}\PYG{p}{)}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} We are interested in estimating $\inv{\left (\frac{1}{n} \sum_{i=1}^n X_i X_i' \right )}$}
+
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} The inner apply() forms the outer product matrices, the outer averages over them}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} The matrix() reforms them as a matrix since apply fattens them.}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} This is equivalent to just doing $\frac{1}{n} X' X$, I just wanted some R practice.}
+outerProductGradient \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{k+kt}{matrix}\PYG{p}{(} \PYG{k+kp}{apply}\PYG{p}{(} \PYG{k+kp}{apply}\PYG{p}{(} X\PYG{p}{,} \PYG{l+m}{1}\PYG{p}{,} outerproduct \PYG{p}{),} \PYG{l+m}{1}\PYG{p}{,}
+                                      mean \PYG{p}{),} nrow \PYG{o}{=} k\PYG{p}{,} ncol \PYG{o}{=} k \PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Mama told me to never invert a matrix on a computer}
+varF \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{k+kp}{chol}\PYG{p}{(} outerProductGradient \PYG{p}{)}
+informationEstimate \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{k+kp}{backsolve}\PYG{p}{(} varF\PYG{p}{,} \PYG{k+kp}{forwardsolve}\PYG{p}{(} \PYG{k+kp}{t}\PYG{p}{(}varF\PYG{p}{),} \PYG{k+kp}{diag}\PYG{p}{(}k\PYG{p}{)} \PYG{p}{)} \PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Now lets get the heteroskedasticity\PYGZhy{}robust version of this bad boy.}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} We multiply the matrix of $X_i X_i'$ by $\hat{u_i}^2$ component wise, hence no \PYGZpc{}}
+monstronsity \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{k+kt}{matrix}\PYG{p}{(} \PYG{k+kp}{apply}\PYG{p}{(}
+    \PYG{k+kt}{matrix}\PYG{p}{(} \PYG{k+kp}{rep}\PYG{p}{(} \PYG{p}{(}Y \PYG{o}{\PYGZhy{}} X\PYG{o}{\PYGZpc{}*\PYGZpc{}}\PYG{k+kp}{beta}\PYG{p}{)}\PYG{o}{\PYGZca{}}\PYG{l+m}{2}\PYG{p}{,} k\PYG{o}{*}k \PYG{p}{),} nrow\PYG{o}{=}k\PYG{o}{*}k\PYG{p}{,} ncol \PYG{o}{=} N\PYG{p}{,} byrow \PYG{o}{=} \PYG{k+kc}{TRUE} \PYG{p}{)}
+     \PYG{o}{*} \PYG{k+kp}{apply}\PYG{p}{(} X\PYG{p}{,} \PYG{l+m}{1}\PYG{p}{,} outerproduct \PYG{p}{),} \PYG{l+m}{1}\PYG{p}{,} mean \PYG{p}{),} nrow \PYG{o}{=} k\PYG{p}{,} ncol \PYG{o}{=} k \PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Honestly the notation of R makes this look much worse than it actually is.}
+condVarHetero \PYG{o}{\PYGZlt{}\PYGZhy{}} informationEstimate\PYG{o}{\PYGZpc{}*\PYGZpc{}}monstronsity\PYG{o}{\PYGZpc{}*\PYGZpc{}}informationEstimate
+
+\PYG{k+kp}{print}\PYG{p}{(} \PYG{l+s}{\PYGZdq{}Heteroskedastic\PYGZhy{}robust covariance matrix: \PYGZdq{}} \PYG{p}{)}
+\PYG{k+kp}{print}\PYG{p}{(} condVarHetero \PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Note that is was completely possible to just use matrix operations to get there}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} I just chose this way for practice and to have it look like the notes.}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} One could always do $\inv{ ( X' X ) } X' \est{\Sigma} X \inv{ ( X' X ) }$}
+
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Now we face multiple linear restrictions in the form of $R \beta = r$}
+
+fischerFTest \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{k+kr}{function}\PYG{p}{(} R\PYG{p}{,} r\PYG{p}{,} N\PYG{p}{,} \PYG{k+kp}{beta}\PYG{p}{,} Var \PYG{p}{)\PYGZob{}}
+    N\PYG{o}{*}\PYG{k+kp}{t}\PYG{p}{(}R\PYG{o}{\PYGZpc{}*\PYGZpc{}}beta \PYG{o}{\PYGZhy{}} r \PYG{p}{)}\PYG{o}{\PYGZpc{}*\PYGZpc{}}\PYG{k+kp}{solve}\PYG{p}{(}R\PYG{o}{\PYGZpc{}*\PYGZpc{}}Var\PYG{o}{\PYGZpc{}*\PYGZpc{}}\PYG{k+kp}{t}\PYG{p}{(}R\PYG{p}{))}\PYG{o}{\PYGZpc{}*\PYGZpc{}}\PYG{p}{(}R\PYG{o}{\PYGZpc{}*\PYGZpc{}}beta \PYG{o}{\PYGZhy{}}r  \PYG{p}{)}
+\PYG{p}{\PYGZcb{}}
+
+
+R \PYG{o}{\PYGZlt{}\PYGZhy{}}  \PYG{k+kt}{matrix}\PYG{p}{(} \PYG{k+kt}{c}\PYG{p}{(} \PYG{l+m}{0}\PYG{p}{,} \PYG{l+m}{0}\PYG{p}{,} \PYG{l+m}{1}\PYG{p}{,} \PYG{l+m}{0} \PYG{p}{,}\PYG{l+m}{0}\PYG{p}{,}\PYG{l+m}{1} \PYG{p}{),} nrow \PYG{o}{=} \PYG{l+m}{2}\PYG{p}{,} ncol \PYG{o}{=} \PYG{l+m}{3} \PYG{p}{)}
+r \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{k+kt}{c}\PYG{p}{(}  \PYG{l+m}{1}\PYG{p}{,} \PYG{l+m}{1} \PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} This is free to be changed.}
+alpha \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{l+m}{.05}
+
+\PYG{k+kt}{c} \PYG{o}{\PYGZlt{}\PYGZhy{}} qchisq\PYG{p}{(} alpha\PYG{p}{,} df \PYG{o}{=} \PYG{l+m}{2}\PYG{p}{,} lower.tail \PYG{o}{=} \PYG{k+kc}{FALSE} \PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} We don\PYGZsq{}t really know anything about the nature of $R \Vari{ \est{ \beta } }$}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} So we can\PYGZsq{}t rely on any decompositions, and we\PYGZsq{}ll let BLAS solve() work here}
+testStat \PYG{o}{\PYGZlt{}\PYGZhy{}} fischerFTest\PYG{p}{(} R\PYG{p}{,} r\PYG{p}{,} N\PYG{p}{,} \PYG{k+kp}{beta}\PYG{p}{,} condVarHetero \PYG{p}{)}
+pValue \PYG{o}{\PYGZlt{}\PYGZhy{}}  pchisq\PYG{p}{(} testStat\PYG{p}{,} df \PYG{o}{=} \PYG{l+m}{2}\PYG{p}{,} lower.tail \PYG{o}{=} \PYG{k+kc}{FALSE} \PYG{p}{)}
+reject \PYG{o}{\PYGZlt{}\PYGZhy{}} testStat \PYG{o}{\PYGZgt{}} \PYG{k+kt}{c}
+
+\PYG{k+kp}{print}\PYG{p}{(} \PYG{l+s}{\PYGZdq{}First test returns a test stat of: \PYGZdq{}} \PYG{p}{)}
+\PYG{k+kp}{print}\PYG{p}{(} testStat \PYG{p}{)}
+
+print \PYG{p}{(}\PYG{l+s}{\PYGZdq{}     and a p\PYGZhy{}value of: \PYGZdq{}} \PYG{p}{)}
+\PYG{k+kp}{print}\PYG{p}{(} pValue \PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Testing: $f( \beta ) = (\beta_1 - \beta_2 )^2 = 0$}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} However we need the rows of the total derivative to be linearly independent.}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} $\nabla f( \beta ) = ( 0, 2( \beta_1 - \beta_2 ), -2 ( \beta_1 - \beta_2 ) )'$}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} The rows are not linearly independent \PYGZhy{} The standard nonlinear test will not work.}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Worse yet, if we attempt to simply take the square root of both}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} sides we lose the reliablility as this is a Wald\PYGZhy{}Test. Wald Tests}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} are not invariant to non\PYGZhy{}linear Transforms. This means we want to}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} use a likelihood\PYGZhy{}ratio test, which is. However if we do not want to}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} assume normality of Y and then the GLM frameowrk to get a}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} likelhood\PYGZhy{}ratio test, we can just stand for the errors in the Wald Test.}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Our test is simply testing if $\beta_1 - \beta_2 = 0$}
+
+R \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{k+kt}{matrix}\PYG{p}{(} \PYG{k+kt}{c}\PYG{p}{(} \PYG{l+m}{0}\PYG{p}{,} \PYG{l+m}{1}\PYG{p}{,} \PYG{l+m}{\PYGZhy{}1} \PYG{p}{),} nrow \PYG{o}{=} \PYG{l+m}{1}\PYG{p}{,} ncol \PYG{o}{=} \PYG{l+m}{3} \PYG{p}{)}
+r \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{k+kt}{c}\PYG{p}{(}\PYG{l+m}{0}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} I just copy and pasted the previous code}
+\PYG{k+kt}{c} \PYG{o}{\PYGZlt{}\PYGZhy{}} qchisq\PYG{p}{(} alpha\PYG{p}{,} df \PYG{o}{=} \PYG{l+m}{1}\PYG{p}{,} lower.tail \PYG{o}{=} \PYG{k+kc}{FALSE} \PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} We don\PYGZsq{}t really know anything about the nature of $R \Vari{ \est{ \beta } }$}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} So we can\PYGZsq{}t rely on any decompositions, and we\PYGZsq{}ll let BLAS solve() work here}
+testStat \PYG{o}{\PYGZlt{}\PYGZhy{}} fischerFTest\PYG{p}{(} R\PYG{p}{,} r\PYG{p}{,} N\PYG{p}{,} \PYG{k+kp}{beta}\PYG{p}{,} condVarHetero \PYG{p}{)}
+pValue \PYG{o}{\PYGZlt{}\PYGZhy{}}  pchisq\PYG{p}{(} testStat\PYG{p}{,} df \PYG{o}{=} \PYG{l+m}{1}\PYG{p}{,} lower.tail \PYG{o}{=} \PYG{k+kc}{FALSE} \PYG{p}{)}
+reject \PYG{o}{\PYGZlt{}\PYGZhy{}} testStat \PYG{o}{\PYGZgt{}} \PYG{k+kt}{c}
+
+\PYG{k+kp}{print}\PYG{p}{(} \PYG{l+s}{\PYGZdq{}Second test returns a test stat of: \PYGZdq{}} \PYG{p}{)}
+\PYG{k+kp}{print}\PYG{p}{(} testStat \PYG{p}{)}
+
+print \PYG{p}{(}\PYG{l+s}{\PYGZdq{}     and a p\PYGZhy{}value of: \PYGZdq{}} \PYG{p}{)}
+\PYG{k+kp}{print}\PYG{p}{(} pValue \PYG{p}{)}
+\end{Verbatim}

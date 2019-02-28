@@ -1,0 +1,28 @@
+using Distributions
+
+
+
+function Metropolis( start, N, pFun, qFun, qSimFun, vargs... )
+    #The uniforms are not conditional on any values of $\theta$
+    #So we might as well simulate them all up-front
+    coinFlips = rand( Uniform(), N)
+    #This allocates the vector for all the thetas.
+    theta = ones(N+1)*start
+    for i in 1:N
+        #First simulate from q
+        thetaStar = qSimFun( theta[i], vargs... )
+
+        #Now go through all the mess of calculating the ratio of p and q's
+        quotient = pFun( thetaStar)*qFun(theta[i],thetaStar,vargs...) / ( pFun( theta[i])*qFun(thetaStar,theta[i],vargs...))
+
+        #Decide if we are going to let this guy through or not.
+        if( coinFlips[i] < quotient)
+            theta[i+1] = thetaStar
+        else
+            theta[i+1] = theta[i]
+        end
+    end
+    #Return the entire vector of paths to do with however you please
+    return theta
+end
+

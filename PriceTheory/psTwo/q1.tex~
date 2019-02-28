@@ -1,0 +1,11 @@
+\documentclass[12pt]{paper}
+
+\usepackage{Schwieg}
+\usepackage[margin=1in]{geometry}
+
+\begin{document}
+\section{Setup}
+Consider a world with three agents: Consumers, Firms producing food,
+and firms producing cars.
+
+\end{document}

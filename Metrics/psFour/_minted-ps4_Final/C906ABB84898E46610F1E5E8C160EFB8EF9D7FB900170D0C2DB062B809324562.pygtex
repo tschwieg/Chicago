@@ -1,0 +1,23 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Now we face multiple linear restrictions in the form of $R \beta = r$}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} We don\PYGZsq{}t really know anything about the nature of $R \Vari{ \est{ \beta } }$}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} So we can\PYGZsq{}t rely on any decompositions, and we\PYGZsq{}ll let solve() work here}
+multipleLinearTest \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{k+kr}{function}\PYG{p}{(} R\PYG{p}{,} r\PYG{p}{,} N\PYG{p}{,} \PYG{k+kp}{beta}\PYG{p}{,} Var \PYG{p}{)\PYGZob{}}
+    N\PYG{o}{*}\PYG{k+kp}{t}\PYG{p}{(}R\PYG{o}{\PYGZpc{}*\PYGZpc{}}beta \PYG{o}{\PYGZhy{}} r \PYG{p}{)}\PYG{o}{\PYGZpc{}*\PYGZpc{}}\PYG{k+kp}{solve}\PYG{p}{(}R\PYG{o}{\PYGZpc{}*\PYGZpc{}}Var\PYG{o}{\PYGZpc{}*\PYGZpc{}}\PYG{k+kp}{t}\PYG{p}{(}R\PYG{p}{))}\PYG{o}{\PYGZpc{}*\PYGZpc{}}\PYG{p}{(}R\PYG{o}{\PYGZpc{}*\PYGZpc{}}beta \PYG{o}{\PYGZhy{}}r  \PYG{p}{)}
+\PYG{p}{\PYGZcb{}}
+
+
+R \PYG{o}{\PYGZlt{}\PYGZhy{}}  \PYG{k+kt}{matrix}\PYG{p}{(} \PYG{k+kt}{c}\PYG{p}{(} \PYG{l+m}{0}\PYG{p}{,} \PYG{l+m}{0}\PYG{p}{,} \PYG{l+m}{1}\PYG{p}{,} \PYG{l+m}{0} \PYG{p}{,}\PYG{l+m}{0}\PYG{p}{,}\PYG{l+m}{1} \PYG{p}{),} nrow \PYG{o}{=} \PYG{l+m}{2}\PYG{p}{,} ncol \PYG{o}{=} \PYG{l+m}{3} \PYG{p}{)}
+r \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{k+kt}{c}\PYG{p}{(}  \PYG{l+m}{1}\PYG{p}{,} \PYG{l+m}{1} \PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} This is free to be changed.}
+alpha \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{l+m}{.05}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} This c is the critical value used in a hypothesis test}
+\PYG{k+kt}{c} \PYG{o}{\PYGZlt{}\PYGZhy{}} qchisq\PYG{p}{(} alpha\PYG{p}{,} df \PYG{o}{=} \PYG{l+m}{2}\PYG{p}{,} lower.tail \PYG{o}{=} \PYG{k+kc}{FALSE} \PYG{p}{)}
+
+
+testStat \PYG{o}{\PYGZlt{}\PYGZhy{}} multipleLinearTest\PYG{p}{(} R\PYG{p}{,} r\PYG{p}{,} N\PYG{p}{,} \PYG{k+kp}{beta}\PYG{p}{,} condVarHetero \PYG{p}{)}
+pValue \PYG{o}{\PYGZlt{}\PYGZhy{}}  pchisq\PYG{p}{(} testStat\PYG{p}{,} df \PYG{o}{=} \PYG{l+m}{2}\PYG{p}{,} lower.tail \PYG{o}{=} \PYG{k+kc}{FALSE} \PYG{p}{)}
+\end{Verbatim}

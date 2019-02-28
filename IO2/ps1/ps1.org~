@@ -1,0 +1,299 @@
+#+OPTIONS: toc:nil 
+#+TITLE: Advanced Industrial Organization 2 Pset 1
+#+AUTHOR: Timothy Schwieg
+#+PROPERTY: header-args :cache yes :exports both :tangle yes
+#+PROPERTY: header-args:julia :session *julia*
+
+#+LaTeX_CLASS: paper
+#+LaTeX_CLASS_OPTIONS: [12pt, letterpaper]
+
+#+LATEX_HEADER: \usepackage[margin=1in]{geometry}
+#+LATEX_HEADER: \usepackage{fontspec}
+#+LATEX_HEADER: \setmonofont{DejaVu Sans Mono}[Scale=MatchLowercase]
+
+* 8
+#+BEGIN_SRC julia :exports none
+using DataFrames
+using CSVFiles
+using LinearAlgebra
+#+END_SRC
+
+#+RESULTS[b3315ddb189ef2fb1bf411d248b45b1872835029]:
+
+#+BEGIN_SRC julia
+  #This takes a vector of M codified values and splits it into M-1
+  #columns of vectors that are dummies indiciating deviation from the
+  #first value.
+  function ReturnDummyMat( v::Vector)
+
+      return mat
+  end
+
+  #Builds the Y,X,Z matrices using columns from data as specified.
+  #regCols - exogenous X
+  #dummyCols - exogenous codified X to be turned into dummy variables
+  #endCols - endogenous X
+  #instCols - instruments
+  function DoEstimation( data, yCol, regCols, dummyCols, endCols, instCols)
+
+      Y = data[yCol]
+      N = length(Y)
+
+      #base is the collection of exogenous variables in X
+      base = ones(N)
+      for col in regCols
+          base = hcat( base, data[col] )
+      end
+      dummycolNames = []
+      for col in dummyCols
+          difVals = unique(data[col])
+          mat = zeros(length(data[col]),length(difVals)-1)
+          for i in 1:(length(difVals)-1)
+              dummycolNames = vcat( dummycolNames,string(col)*string(difVals[i])  )
+              mat[:,i] = (data[col] .== difVals[i])
+          end
+          base = hcat( base, mat)
+
+      end
+
+      X = copy(base)
+      for col in endCols
+          X = hcat( X, data[col])
+      end
+
+      Z = copy(base)
+      for col in instCols
+          Z = hcat(Z, data[col])
+      end
+
+      #TSLS estimation using Z as the instruments.
+      ProjectMat = Z*((Z'*Z) \ Z')
+      β = (X' * ProjectMat * X) \ X'*ProjectMat*Y
+
+
+      colNames = vcat( "constant", string.(regCols), dummycolNames, string.(endCols))
+      return colNames,β
+  end
+#+END_SRC
+
+#+RESULTS[7a04ff6cd2b2623ee9f4311158bf087b2c2909ab]:
+
+#+BEGIN_SRC julia    
+  cereal = DataFrame(load("cereal_ps3.csv"))
+
+  yCol = :share
+  regCols = [:sugar, :mushy]
+  dummyCols = [:firm, :brand, :city, :quarter]
+  endCols = [:price]
+  #This just grabs z1-z20
+  instCols = [convert(Symbol, "z"*string(i)) for i in 1:20]
+
+  (names, full_̂θ) = DoEstimation( cereal, yCol, regCols, dummyCols, endCols, instCols)
+
+
+  result = hcat(names, full_̂θ )
+#+END_SRC
+
+#+RESULTS[0bfc4cc36d9fb9d38f655d302d2e1048b56c2167]:
+
+#+BEGIN_SRC julia :session *julia*
+result
+#+END_SRC
+
+#+RESULTS[e84da80ad81e1c4be2deabb67683118126b3b5a7]:
+| constant |     0.09452395286016772 |
+| sugar    |  -0.0036229003407306204 |
+| mushy    |    -0.05377938298265536 |
+| firm1    |     0.03025786949566205 |
+| firm2    |     0.06859188738411108 |
+| firm3    |    0.017978251937311094 |
+| firm4    |     0.08862672938445004 |
+| brand4   |   -0.007827751293794498 |
+| brand6   |     0.09808416013471244 |
+| brand7   |    0.030575366792363553 |
+| brand9   |    -0.04825803737216904 |
+| brand11  |     0.05735877752524789 |
+| brand13  |     0.01072391036024938 |
+| brand17  |    0.029119260410598823 |
+| brand30  |    -0.03612509805211942 |
+| brand45  |   0.0059055060053192585 |
+| brand5   |    -0.06968351847038054 |
+| brand8   |     -0.0394232794856651 |
+| brand15  |    -0.03513508260073791 |
+| brand16  |   -0.005315366607306169 |
+| brand19  |   -0.028417105361929304 |
+| brand26  |    -0.02486210761643548 |
+| brand28  |     0.06989582394749617 |
+| brand40  |   -0.052421957007616565 |
+| brand48  |    -0.07615382696309982 |
+| brand14  |     0.02039964933132369 |
+| brand2   |    -0.03098345892470701 |
+| brand10  |    -0.09702027200792152 |
+| brand12  |   -0.061518504996531234 |
+| city1    |    0.007263281793424108 |
+| city3    |  -0.0006626629602255662 |
+| city4    |    0.011914398011016077 |
+| city5    |    0.002399802961171884 |
+| city7    |    0.010924546268865729 |
+| city8    |     0.00932447811166075 |
+| city11   |    0.005745892986811458 |
+| city12   |    0.003110754303612967 |
+| city13   |    0.004401560374064275 |
+| city14   |    0.006153561691822627 |
+| city15   |   0.0027736388066075253 |
+| city16   |    0.003921133678888184 |
+| city18   |    0.004731411889285651 |
+| city20   |    0.004818703133951892 |
+| city23   |   0.0040707736798448356 |
+| city24   |  0.00016891403114496122 |
+| city25   |  -0.0024205063419679646 |
+| city26   |    0.007704726917316753 |
+| city27   |    0.008505680174688147 |
+| city29   |    0.002831657936010673 |
+| city30   |    0.006000805226445476 |
+| city31   |    0.008436895025156085 |
+| city32   |   0.0009855572647901648 |
+| city33   | -0.00030116308363990806 |
+| city34   |    0.003581621715548837 |
+| city35   |     0.01168142467672599 |
+| city36   |   0.0011702741536025452 |
+| city37   |    0.001405238160069809 |
+| city38   |   0.0004038396752910203 |
+| city39   |   0.0029994546786393126 |
+| city40   |    0.004087699180677084 |
+| city41   |    0.003371997487892595 |
+| city43   |      0.0103272707974997 |
+| city44   |   0.0005021099791386084 |
+| city45   |    0.010408520797499717 |
+| city47   |    0.012480811198165482 |
+| city48   |   0.0037799346017207756 |
+| city49   |    0.011365515299537469 |
+| city52   |    0.007204436146408087 |
+| city53   |   0.0009256060457633699 |
+| city54   |   -0.002282108454361214 |
+| city55   |    0.002289142389639406 |
+| city56   |    0.004372253109269109 |
+| city58   |    0.010830505497957093 |
+| city61   |    0.005756215921392387 |
+| city63   |     0.00925526052216169 |
+| quarter1 |  -0.0008332849742770259 |
+| price    |     -0.5692740301934274 |
+
+#+BEGIN_SRC julia
+  dummyCols = [:firm, :quarter]
+  (names, none_̂θ) = DoEstimation( cereal, yCol, regCols, dummyCols, endCols, instCols)
+  hcat(names, none_̂θ )
+#+END_SRC
+
+#+RESULTS[3b39c6157dfdaaa952e1b191b58ca5971afac57e]:
+| constant |   0.05093554458055989 |
+| sugar    | 0.0009067176441928651 |
+| mushy    | 0.0007475677536836593 |
+| firm1    | -0.009333572805316397 |
+| firm2    | -0.012142491752576461 |
+| firm3    |  -0.00917113263273654 |
+| firm4    | -0.016357883490273836 |
+| quarter1 | -0.000619776913080898 |
+| price    |  -0.22274583878442455 |
+
+#+BEGIN_SRC julia
+  dummyCols = [:firm, :brand, :quarter]
+  (names, brand_̂θ) = DoEstimation( cereal, yCol, regCols, dummyCols, endCols, instCols)
+  hcat(names, brand_̂θ )
+#+END_SRC
+
+#+RESULTS[e783ad3606de5ece0576b1b7f86166a616867260]:
+| constant |    0.09829258100648783 |
+| sugar    |   0.004712655794150292 |
+| mushy    |  -0.014843261854955044 |
+| firm1    |    0.33855207691133316 |
+| firm2    |    -0.1731209631718661 |
+| firm3    |     0.3095807178340259 |
+| firm4    |  -0.012738751356021216 |
+| brand4   |    -0.3712881270664309 |
+| brand6   |    -0.3990433609574691 |
+| brand7   |    -0.3497553981268808 |
+| brand9   |    -0.3812533163390119 |
+| brand11  |   -0.35120447630723817 |
+| brand13  |    -0.4141575870057549 |
+| brand17  |    -0.3429980534843888 |
+| brand30  |   -0.37764418549265855 |
+| brand45  |    -0.4190220104550446 |
+| brand5   |    0.16386565852093773 |
+| brand8   |    0.11081936194339437 |
+| brand15  |    0.13460050910320015 |
+| brand16  |     0.1724918604725708 |
+| brand19  |     0.1050836830116646 |
+| brand26  |    0.10848909782068171 |
+| brand28  |     0.1389873679030841 |
+| brand40  |     0.1060373926955723 |
+| brand48  |    0.14064781766528192 |
+| brand14  |   -0.32958227754682845 |
+| brand2   |   -0.04643419433718314 |
+| brand10  |   -0.04538382862628028 |
+| brand12  |   -0.05990341627001738 |
+| quarter1 | -0.0008284478190168549 |
+| price    |     -0.561423222807172 |
+
+#+BEGIN_SRC julia
+  dummyCols = [:firm, :city, :quarter]
+  (names, city_̂θ) = DoEstimation( cereal, yCol, regCols, dummyCols, endCols, instCols)
+  hcat(names, city_̂θ )
+#+END_SRC
+
+#+RESULTS[a10f3164fec589381b4b1dab0cd6a4a2f71792a2]:
+| constant |     0.04636531879189724 |
+| sugar    |    0.000899764365574375 |
+| mushy    |   0.0007679230385243365 |
+| firm1    |   -0.009214632375958834 |
+| firm2    |   -0.012050568893326131 |
+| firm3    |   -0.009064997363407502 |
+| firm4    |   -0.016211508144466952 |
+| city1    |    0.004825259194445694 |
+| city3    |  -0.0006407645536495724 |
+| city4    |    0.010819477682132652 |
+| city5    |    0.001399775727458221 |
+| city7    |    0.010705562203087078 |
+| city8    |    0.007061642765303374 |
+| city11   |    0.003964822585162112 |
+| city12   |   0.0029720643952864125 |
+| city13   |   0.0034453299535059123 |
+| city14   |   0.0058615829374526265 |
+| city15   |    0.002116686609276903 |
+| city16   |    0.006680332907668951 |
+| city18   |    0.006016118408505643 |
+| city20   |    0.005198275514629498 |
+| city23   |    0.005851844081491139 |
+| city24   |  -0.0011595893012333017 |
+| city25   |  -0.0037709080809238526 |
+| city26   |    0.005763068200764806 |
+| city27   |    0.007929022134809819 |
+| city29   |   0.0021236094566655338 |
+| city30   |     0.00337299643712737 |
+| city31   |    0.008144916270786525 |
+| city32   | -0.00015315987724855281 |
+| city33   |  -0.0012646929730575035 |
+| city34   |    0.004464857447511922 |
+| city35   |    0.011564633174976968 |
+| city36   |   0.0018053279443524745 |
+| city37   |   0.0005147029592442998 |
+| city38   |   0.0017542414142437234 |
+| city39   |   0.0009264055226213303 |
+| city40   |    0.002474516562789547 |
+| city41   |    0.003028922451507969 |
+| city43   |     0.00880898127478192 |
+| city44   |  -0.0036074909885995803 |
+| city45   |    0.008890231274781857 |
+| city47   |     0.00824711925982067 |
+| city48   |    0.004050014949509956 |
+| city49   |     0.01030709231495004 |
+| city52   |    0.005021894957501958 |
+| city53   |    -890201256688592e-19 |
+| city54   |    -0.00571285881819259 |
+| city55   |   0.0006686603028926497 |
+| city56   |    0.004554739830747775 |
+| city58   |    0.010370638959825042 |
+| city61   |       0.004734290281101 |
+| city63   |    0.009481544056795571 |
+| quarter1 |  -0.0006174070654620801 |
+| price    |     -0.2188995249512379 |

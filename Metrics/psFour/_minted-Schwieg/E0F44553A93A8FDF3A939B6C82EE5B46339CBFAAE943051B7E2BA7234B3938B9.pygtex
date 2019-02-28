@@ -1,0 +1,34 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Now lets build our variance estimates.}
+
+outerproduct \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{k+kr}{function}\PYG{p}{(} row \PYG{p}{)\PYGZob{}}
+    \PYG{k+kp}{row}\PYG{o}{\PYGZpc{}*\PYGZpc{}}\PYG{k+kp}{t}\PYG{p}{(}\PYG{k+kp}{row}\PYG{p}{)}
+\PYG{p}{\PYGZcb{}}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} We are interested in estimating $\inv{\left (\frac{1}{n} \sum_{i=1}^n X_i X_i' \right )}$}
+
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} The inner apply() forms the outer product matrices, the outer averages over them}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} The matrix() reforms them as a matrix since apply fattens them.}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} This is equivalent to just doing $\frac{1}{n} X' X$, I just wanted some R practice.}
+outerProductGradient \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{k+kt}{matrix}\PYG{p}{(} \PYG{k+kp}{apply}\PYG{p}{(} \PYG{k+kp}{apply}\PYG{p}{(} X\PYG{p}{,} \PYG{l+m}{1}\PYG{p}{,} outerproduct \PYG{p}{),} \PYG{l+m}{1}\PYG{p}{,}
+                                      mean \PYG{p}{),} nrow \PYG{o}{=} k\PYG{p}{,} ncol \PYG{o}{=} k \PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Mama told me to never invert a matrix on a computer}
+varF \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{k+kp}{chol}\PYG{p}{(} outerProductGradient \PYG{p}{)}
+informationEstimate \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{k+kp}{backsolve}\PYG{p}{(} varF\PYG{p}{,} \PYG{k+kp}{forwardsolve}\PYG{p}{(} \PYG{k+kp}{t}\PYG{p}{(}varF\PYG{p}{),} \PYG{k+kp}{diag}\PYG{p}{(}k\PYG{p}{)} \PYG{p}{)} \PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Now lets get the heteroskedasticity\PYGZhy{}robust version of this bad boy.}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} We multiply the matrix of $X_i X_i'$ by $\hat{u_i}^2$ component wise, hence no \PYGZpc{}}
+monstronsity \PYG{o}{\PYGZlt{}\PYGZhy{}} \PYG{k+kt}{matrix}\PYG{p}{(} \PYG{k+kp}{apply}\PYG{p}{(}
+    \PYG{k+kt}{matrix}\PYG{p}{(} \PYG{k+kp}{rep}\PYG{p}{(} \PYG{p}{(}Y \PYG{o}{\PYGZhy{}} X\PYG{o}{\PYGZpc{}*\PYGZpc{}}\PYG{k+kp}{beta}\PYG{p}{)}\PYG{o}{\PYGZca{}}\PYG{l+m}{2}\PYG{p}{,} k\PYG{o}{*}k \PYG{p}{),} nrow\PYG{o}{=}k\PYG{o}{*}k\PYG{p}{,} ncol \PYG{o}{=} N\PYG{p}{,} byrow \PYG{o}{=} \PYG{k+kc}{TRUE} \PYG{p}{)}
+     \PYG{o}{*} \PYG{k+kp}{apply}\PYG{p}{(} X\PYG{p}{,} \PYG{l+m}{1}\PYG{p}{,} outerproduct \PYG{p}{),} \PYG{l+m}{1}\PYG{p}{,} mean \PYG{p}{),} nrow \PYG{o}{=} k\PYG{p}{,} ncol \PYG{o}{=} k \PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Honestly the notation of R makes this look much worse than it actually is.}
+condVarHetero \PYG{o}{\PYGZlt{}\PYGZhy{}} informationEstimate\PYG{o}{\PYGZpc{}*\PYGZpc{}}monstronsity\PYG{o}{\PYGZpc{}*\PYGZpc{}}informationEstimate
+
+
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} Note that is was completely possible to just use matrix operations to get there}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} I just chose this way for practice and to have it look like the notes.}
+\PYG{c+c1}{\PYGZsh{}\PYGZsh{} One could always do $\inv{ ( X' X ) } X' \est{\Sigma} X \inv{ ( X' X )}$}
+\end{Verbatim}

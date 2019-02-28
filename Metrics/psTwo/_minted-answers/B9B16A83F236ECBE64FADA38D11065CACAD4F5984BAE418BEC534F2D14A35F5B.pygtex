@@ -1,0 +1,40 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k}{using} \PYG{n}{Distributions}
+
+\PYG{n}{srand}\PYG{p}{(}\PYG{l+m+mi}{235711}\PYG{p}{)}
+
+\PYG{n}{theta} \PYG{o}{=} \PYG{p}{[}\PYG{o}{.}\PYG{l+m+mi}{001}\PYG{p}{,}\PYG{o}{.}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{o}{.}\PYG{l+m+mi}{25}\PYG{p}{,}\PYG{o}{.}\PYG{l+m+mi}{5}\PYG{p}{]}
+\PYG{n}{N} \PYG{o}{=} \PYG{p}{[}\PYG{l+m+mi}{5}\PYG{p}{,}\PYG{l+m+mi}{20}\PYG{p}{,}\PYG{l+m+mi}{50}\PYG{p}{,}\PYG{l+m+mi}{100}\PYG{p}{,}\PYG{l+m+mi}{500}\PYG{p}{,}\PYG{l+m+mi}{1000}\PYG{p}{]}
+
+\PYG{n}{critVal} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{n}{quantile}\PYG{p}{(} \PYG{n}{Normal}\PYG{p}{(} \PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{),} \PYG{o}{.}\PYG{l+m+mi}{025}\PYG{p}{)}
+
+\PYG{n}{M} \PYG{o}{=} \PYG{l+m+mi}{1000}
+\PYG{n}{confCheck} \PYG{o}{=} \PYG{n}{zeros}\PYG{p}{(}\PYG{n}{M}\PYG{p}{,}\PYG{n}{length}\PYG{p}{(}\PYG{n}{theta}\PYG{p}{),} \PYG{n}{length}\PYG{p}{(}\PYG{n}{N}\PYG{p}{))}
+\PYG{n}{NconfCheck} \PYG{o}{=} \PYG{n}{zeros}\PYG{p}{(}\PYG{n}{M}\PYG{p}{,}\PYG{n}{length}\PYG{p}{(}\PYG{n}{theta}\PYG{p}{),} \PYG{n}{length}\PYG{p}{(}\PYG{n}{N}\PYG{p}{))}
+\PYG{k}{for} \PYG{n}{m} \PYG{k+kp}{in} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{M}
+    \PYG{k}{for} \PYG{n}{t} \PYG{k+kp}{in} \PYG{n}{theta}
+        \PYG{k}{for} \PYG{n}{n} \PYG{k+kp}{in} \PYG{n}{N}
+            \PYG{n}{Yes} \PYG{o}{=} \PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Int64}\PYG{p}{\PYGZcb{}(}\PYG{n}{n}\PYG{p}{)}
+            \PYG{n}{coinFlips} \PYG{o}{=} \PYG{n}{rand}\PYG{p}{(}\PYG{n}{Uniform}\PYG{p}{(),}\PYG{n}{n}\PYG{p}{)}
+            \PYG{n}{questions} \PYG{o}{=} \PYG{n}{rand}\PYG{p}{(}\PYG{n}{Uniform}\PYG{p}{(),}\PYG{n}{n}\PYG{p}{)}
+            \PYG{k}{for} \PYG{n}{i} \PYG{k+kp}{in} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{n}
+                \PYG{k}{if}\PYG{p}{(} \PYG{n}{coinFlips}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{\PYGZgt{}} \PYG{o}{.}\PYG{l+m+mi}{5}\PYG{p}{)}
+                    \PYG{n}{Yes}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{questions}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{\PYGZlt{}=} \PYG{o}{.}\PYG{l+m+mi}{1}
+                \PYG{k}{else}
+                    \PYG{n}{Yes}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{questions}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{\PYGZlt{}=} \PYG{n}{t}
+                \PYG{k}{end}
+            \PYG{k}{end}
+
+            \PYG{n}{yBar} \PYG{o}{=} \PYG{n}{mean}\PYG{p}{(}\PYG{n}{Yes}\PYG{p}{)}
+            \PYG{n}{thetaHat} \PYG{o}{=} \PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{yBar} \PYG{o}{\PYGZhy{}} \PYG{o}{.}\PYG{l+m+mi}{1}
+
+            \PYG{n}{MarkovBound} \PYG{o}{=} \PYG{n}{sqrt}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{/}\PYG{p}{(}\PYG{o}{.}\PYG{l+m+mi}{05}\PYG{o}{*}\PYG{n}{n}\PYG{p}{))}
+            \PYG{n}{confCheck}\PYG{p}{[}\PYG{n}{m}\PYG{p}{,}\PYG{n}{findfirst}\PYG{p}{(}\PYG{n}{theta}\PYG{p}{,}\PYG{n}{t}\PYG{p}{),}\PYG{n}{findfirst}\PYG{p}{(}\PYG{n}{N}\PYG{p}{,}\PYG{n}{n}\PYG{p}{)]} \PYG{o}{=} \PYG{n}{abs}\PYG{p}{(}\PYG{n}{thetaHat} \PYG{o}{\PYGZhy{}} \PYG{n}{t}\PYG{p}{)} \PYG{o}{\PYGZlt{}} \PYG{n}{MarkovBound}
+            \PYG{n}{vHat} \PYG{o}{=} \PYG{p}{(}\PYG{l+m+mi}{4}\PYG{o}{/}\PYG{n}{n}\PYG{p}{)}\PYG{o}{*}\PYG{p}{((}\PYG{l+m+mf}{1.0}\PYG{o}{+}\PYG{l+m+mf}{10.0}\PYG{o}{*}\PYG{n}{thetaHat}\PYG{p}{)}\PYG{o}{/}\PYG{l+m+mf}{20.0}\PYG{p}{)}\PYG{o}{*}\PYG{p}{((}\PYG{l+m+mf}{19.0} \PYG{o}{\PYGZhy{}} \PYG{n}{thetaHat}\PYG{o}{*}\PYG{l+m+mf}{10.0}\PYG{p}{)}\PYG{o}{/}\PYG{l+m+mf}{20.0}\PYG{p}{)}
+
+            \PYG{n}{nBound} \PYG{o}{=} \PYG{n}{critVal}\PYG{o}{*}\PYG{n}{sqrt}\PYG{p}{(}\PYG{n}{vHat}\PYG{p}{)}
+            \PYG{n}{NconfCheck}\PYG{p}{[}\PYG{n}{m}\PYG{p}{,}\PYG{n}{findfirst}\PYG{p}{(}\PYG{n}{theta}\PYG{p}{,}\PYG{n}{t}\PYG{p}{),}\PYG{n}{findfirst}\PYG{p}{(}\PYG{n}{N}\PYG{p}{,}\PYG{n}{n}\PYG{p}{)]} \PYG{o}{=} \PYG{n}{abs}\PYG{p}{(}\PYG{n}{thetaHat} \PYG{o}{\PYGZhy{}} \PYG{n}{t}\PYG{p}{)} \PYG{o}{\PYGZlt{}} \PYG{n}{nBound}
+        \PYG{k}{end}
+    \PYG{k}{end}
+\PYG{k}{end}
+\end{Verbatim}

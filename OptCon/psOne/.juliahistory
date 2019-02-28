@@ -1,0 +1,12 @@
+ls
+ls()
+import Pkg
+Pkg.add( "StatsBase" )
+Pkg.add( "Plots" )
+Pkg.add( "PyPlot" )
+Pkg.add( "Distributions" )
+using Distributions
+using Plots
+using StatsBase
+pyplot()
+Pkg.add( "DelimitedFiles" )

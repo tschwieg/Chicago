@@ -1,0 +1,35 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{c}{\PYGZsh{}Start is the value for the initial position of the sampler}
+\PYG{c}{\PYGZsh{}N is the number of iterations to perform}
+\PYG{c}{\PYGZsh{}pFun is the function that evaluates p}
+\PYG{c}{\PYGZsh{}qFun is the function that evaluations q}
+\PYG{c}{\PYGZsh{}qSimFun is a function that simulates from the q\PYGZhy{}law}
+\PYG{c}{\PYGZsh{}pargs is a vector of the arguments passed to p}
+\PYG{c}{\PYGZsh{}qargs is a vector of the function arguments that are passed to qFun and qSimFun}
+
+\PYG{k}{function} \PYG{n}{Metropolis}\PYG{p}{(} \PYG{n}{startVal}\PYG{p}{,} \PYG{n}{N}\PYG{o}{::}\PYG{k+kt}{Int64}\PYG{p}{,} \PYG{n}{pFun}\PYG{p}{,} \PYG{n}{qFun}\PYG{p}{,} \PYG{n}{qSimFun}\PYG{p}{,} \PYG{n}{pargs}\PYG{p}{,} \PYG{n}{qargs} \PYG{p}{)}
+    \PYG{c}{\PYGZsh{}The uniforms are not conditional on any values of $\theta$}
+    \PYG{c}{\PYGZsh{}So we might as well simulate them all up\PYGZhy{}front}
+    \PYG{n}{coinFlips} \PYG{o}{=} \PYG{n}{rand}\PYG{p}{(} \PYG{n}{Uniform}\PYG{p}{(),} \PYG{n}{N}\PYG{p}{)}
+    \PYG{c}{\PYGZsh{}This allocates the vector for all the thetas.}
+    \PYG{c}{\PYGZsh{}theta = ones(N+1)*startVal}
+    \PYG{n}{theta} \PYG{o}{=} \PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{n}{typeof}\PYG{p}{(}\PYG{n}{startVal}\PYG{p}{)\PYGZcb{}(}\PYG{n}{undef}\PYG{p}{,}\PYG{n}{N}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{)}
+    \PYG{n}{theta}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{n}{startVal}
+    \PYG{k}{for} \PYG{n}{i} \PYG{k+kp}{in} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{N}
+        \PYG{c}{\PYGZsh{}First simulate from q}
+        \PYG{n}{thetaStar} \PYG{o}{=} \PYG{n}{qSimFun}\PYG{p}{(} \PYG{n}{theta}\PYG{p}{[}\PYG{n}{i}\PYG{p}{],} \PYG{n}{qargs}\PYG{o}{...} \PYG{p}{)}
+
+        \PYG{c}{\PYGZsh{}Now go through all the mess of calculating the ratio of p and q\PYGZsq{}s}
+        \PYG{n}{quotient} \PYG{o}{=} \PYG{n}{pFun}\PYG{p}{(} \PYG{n}{thetaStar}\PYG{p}{,} \PYG{n}{pargs}\PYG{o}{...}\PYG{p}{)}\PYG{o}{*}\PYG{n}{qFun}\PYG{p}{(}\PYG{n}{theta}\PYG{p}{[}\PYG{n}{i}\PYG{p}{],}\PYG{n}{thetaStar}\PYG{p}{,}\PYG{n}{qargs}\PYG{o}{...}\PYG{p}{)} \PYG{o}{/} \PYG{p}{(} \PYG{n}{pFun}\PYG{p}{(} \PYG{n}{theta}\PYG{p}{[}\PYG{n}{i}\PYG{p}{],} \PYG{n}{pargs}\PYG{o}{...}\PYG{p}{)}\PYG{o}{*}\PYG{n}{qFun}\PYG{p}{(}\PYG{n}{thetaStar}\PYG{p}{,}\PYG{n}{theta}\PYG{p}{[}\PYG{n}{i}\PYG{p}{],}\PYG{n}{qargs}\PYG{o}{...}\PYG{p}{))}
+
+        \PYG{c}{\PYGZsh{}Decide if we are going to let this guy through or not.}
+        \PYG{k}{if}\PYG{p}{(} \PYG{n}{coinFlips}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{\PYGZlt{}} \PYG{n}{quotient}\PYG{p}{)}
+            \PYG{n}{theta}\PYG{p}{[}\PYG{n}{i}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{n}{thetaStar}
+        \PYG{k}{else}
+            \PYG{n}{theta}\PYG{p}{[}\PYG{n}{i}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{n}{theta}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}
+        \PYG{k}{end}
+    \PYG{k}{end}
+    \PYG{c}{\PYGZsh{}Return the entire vector of paths to do with however you please}
+    \PYG{k}{return} \PYG{n}{theta}
+\PYG{k}{end}
+\end{Verbatim}

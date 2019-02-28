@@ -1,0 +1,234 @@
+Quantifying Social Influence in an Online Cultural Market
+Coco Krumme, Manuel Cebrian, Galen Pickard, Sandy Pentland
+May 9, 2012
+
+We revisit experimental data from an online cultural market in which
+14,000 users interact to download songs, and develop a simple model
+that can explain seemingly complex outcomes. Our results suggest that
+individual behavior is characterized by a two-step processthe
+decision to sample and the decision to download a song.  Contrary to
+conventional wisdom, social influence is material to the first step
+only. The model also identifies the role of placement in mediating
+social signals, and suggests that in this market with anonymous
+feedback cues, social influence serves an informational rather than
+normative role.
+
+This paper somewhat creates a stuctural model, creating this two-stage
+discrete choice situation, and focusing on conditional probabilities
+between the two stages to predict if a consumer will listen. It still
+relies on simulation, and has no endogenized notions of inequality or
+unpredictability. The structure only serves to create a predictive
+model for whether someone will listen rather than a casual one.
+
+https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0033785
+------------------------------------------------------
+
+Of songs and men: a model for multiple choice with herding
+Christian Borghesi Jean-Philippe Bouchaud
+03 March 2007
+
+We propose a generic model for multiple choice situations in the
+presence of herding and compare it with recent empirical results from
+a Web-based music market experiment. The model predicts a phase
+transition between a weak imitation phase and a strong imitation,
+fashion phase, where choices are driven by peer pressure and
+the ranking of individual preferences is strongly distorted at the
+aggregate level. The model can be calibrated to reproduce the main
+experimental results of Salganik et al. (Science, 311, 854856
+(2006)); we show in particular that the value of the social influence
+parameter can be estimated from the data. In one of the experimental
+situation, this value is found to be close to the critical value of
+the model.
+
+This paper proposes a model for multiple choice, and then simulates
+the model with some estimated values used in the paper, and shows that
+these simulated results are consistent with the results noted in the
+experiment. It is not fitting a model structurally, but does have
+quite a bit of structure for their model.
+
+https://link.springer.com/article/10.1007/s11135-007-9074-6
+
+------------------------------------------------------
+
+An empirical study of observational learning
+Peter W. Newberry
+
+This article provides an empirical examination of observational
+learning. Using data from an online market for music, I find that
+observational learning benefits consumers, producers of high- quality
+music, and the online platform. I also study the role of pricing as a
+friction to the learning process by comparing outcomes under
+demand-based pricing to counterfactual pricing schemes.  I find that
+employing a fixed price (the industry standard) can hamper learning by
+reducing the incentive to experiment, resulting in less consumer
+surplus, but more expected revenue for the platform.
+
+This paper Structurally estimates the online market for music, but
+uses a seperate data set rather than the one used by Salganik.  While
+he references Salganik's paper he states that their results show the
+long-run effect of what his paper is describing.  'In a project
+closely related to the current study, Salganik, Dodds, and Watts
+(2006) show descriptive evidence of the long-run effect of social
+learning in an experimental music market. I quantify these effects by
+estimating a structural model.'
+
+------------------------------------------------------
+
+PARAMETER EVALUATION OF A SIMPLE MEAN-FIELD MODEL OF SOCIAL INTERACTION
+
+IGNACIO GALLO, ADRIANO BARRA and PIERLUIGI CONTUCCI
+
+The aim of this work is to implement a statistical mechanics theory of
+social interaction, generalizing econometric discrete choice models. A
+class of simple mean-field discrete models is introduced and discussed
+both from the theoretical and phenomenological point of view. We
+propose a parameter evaluation procedure and test it by fitting the
+model against three families of data coming from different cases: the
+estimated interaction parameters are found to have similar positive
+values, giving a quantitative confirmation of the peer imitation
+behavior found in social psychology. Furthermore, all the values of
+the interaction parameters belong to the phase transition regime
+suggesting its possible role in the study of social systems.
+
+This is an attempt to generalize the discrete choice model further
+with interaction parameters, but not really related to 'learning'
+about the enviorment, just enjoying what they believe others to
+enjoy. This data is then used in census data on several social matters
+in Italy. This would only really be relevant for adding to papers
+using the discrete choice model.
+
+----------------------------------------------------
+
+Aligning Popularity and Quality in Online Cultural Markets
+Pascal Van Hentenryck, Andres Abeliuk, Franco Berbeglia, Felipe Maldonado, Gerardo Berbeglia
+
+Social influence is ubiquitous in cultural markets and plays an
+important role in recommendations for books, songs, and news articles
+to name only a few. Yet social influence is often presented in a bad
+light, often because it supposedly increases market
+unpredictability. Here we study a model of trial-offer markets, in
+which participants try products and later decide whether to
+purchase. We consider a simple policy which recovers product quality
+and ranks the products by quality when presenting them to market
+participants. We show that, in this setting, market efficiency always
+benefits from social influence.  Moreover, we prove that the market
+converges almost surely to a monopoly for the product of highest
+quality, making the market both predictable and asymptotically
+optimal.  Computational experiments confirm that the quality ranking
+policy quickly identifies blockbusters, outperforms other
+policies, and is highly predictable.
+
+This paper finds results opposite to Salganik's paper, directly
+contrasting the results from his experimental approach. He uses
+simulations to try to model the music lab experiments. His estimate of
+quality is derived from the data used in the Music Lab even if there
+is not a structural estimation from the data set. This paper finds
+instead that markets are still efficient, and converges to a monopoly.
+
+-----------------------------------------------------
+The success of art galleries: a dynamic model with competition and information effects
+Aloys Prinz, Jan Piening,Thomas Ehrmann
+08 April 2014
+
+An intrinsic characteristic of cultural goods is the unpredictability
+of their economic success. Arts goods in particular share
+characteristics with credence, inspection, and experience
+goods. Accordingly, art collectors rely on the experience and the
+reputation of art galleries when investing in artwork. Some
+qualitative sociological studies have found that only a few very
+successful galleries represent the bulk of the most visible and most
+successful artists (e.g., Crane in The transformation of the
+avant-garde: the New York art world, 1940–1985. The University of
+Chicago Press, Chicago, 1989; Currid in The Warhol economy: How
+fashion, art and music drive New York City. Princeton University
+Press, Princeton, 2007). This paper investigates the success of art
+galleries in a dynamic model, which elaborates different statistical
+processes that allow us to analyze the development of different types
+of success distributions in the market for art galleries. Instead of
+applying standard economic analysis only, we employ methods from
+statistical physics to construct a model of gallery investment and
+competition. Our model entails information, competition, and
+innovation effects. Subsequently, art market data are used to test
+which version of the model fits best. We find that the lognormal
+distribution provides the best fit and conclude that the data
+generating process is compatible with the version of the model, which
+entails an inhomogeneous geometric Brownian motion. Hence, the success
+of art galleries depends strongly on information and innovation
+effects, but is hardly affected by competition effects. We argue that
+the superstar effect in the case of art galleries can be understood as
+an appropriation of search and entrance costs, which emerge whenever
+consumption requires special knowledge and social inclusion.
+
+This paper examines art-galleries rather than music markets, and
+treats them as a two-sided market. They estimate the dynamics of the
+world with a pretty nasty mean-reverting brownian motion, then fit
+art-market data. Their conclusion is that the information provided
+reduces search costs for individuals and that this drives the
+super-star effect.
+-----------------------------------------------------
+
+Charts and demand: Empirical generalizations on social influence
+Olaf Maecker, Nadja Sophia Grabenströer, Michel Clement, Mark Heitmann
+2 September 2013
+
+Social influence on consumer behavior has long been a subject of
+academic research in various scientific fields.  According to research
+by Salganik, Dodds, and Watts (2006), music demand is a function of
+social influence between consumers. Market concentration tends to
+increase when information on demand becomes publicly available. In
+addition, stochastic agglomeration caused by social influence
+decreases the predictability of market success. These heavily cited
+findings challenge traditional market research and provide important
+insights on the impact of social media and sales charts. We test the
+stability of their results by replicating the study on music demand in
+a slightly different setting. We further investigate the
+generalizability of findings by probing other product categories and
+different phases of purchase decisions, i.e., interest, consideration,
+and actual demand.  Across all categories and across all dependent
+variables, we are able to replicate the direction of the effects.  We
+do, however, consistently obtain smaller effect sizes than reported in
+the original paper.
+
+This is a separate replication experiment of the original paper, and
+may be useful for creating a test set on any predictive models
+developed. They expanding the experiment to also include movies and
+scarves, but only so far as self-reporting on interest. Since this is
+not the same as downloading a song, I do not know whether that
+particular data could be useful.
+
+-----------------------------------------------------
+
+Social Networks and the Diffusion of User-Generated
+Content: Evidence from YouTube
+Anjana Susarla, Jeong-Ha Oh, Yong Tan
+March 2012
+
+
+This paper is motivated by the success of YouTube, which is attractive
+to content creators as well as corporations for its potential to
+rapidly disseminate digital content. The networked structure of
+interactions on YouTube and the tremendous variation in the success of
+videos posted online lends itself to an inquiry of the role of social
+influence. Using a unique data set of video information and user
+information collected from YouTube, we find that social interactions
+are influential not only in determining which videos become successful
+but also on the magnitude of that impact. We also find evidence for a
+number of mechanisms by which social influence is transmitted, such as
+(i) a preference for conformity and homophily and (ii) the role of
+social networks in guiding opinion formation and directing product
+search and discovery. Econometrically, the problem in identifying
+social influence is that individuals’ choices depend in great part
+upon the choices of other individuals, referred to as the reflection
+problem. Another problem in identification is to distinguish between
+social contagion and user heterogeneity in the diffusion process. Our
+results are in sharp contrast to earlier models of diffusion, such as
+the Bass model, that do not distinguish between different social
+processes that are responsible for the process of diffusion. Our
+results are robust to potential self-selection according to user
+tastes, temporal heterogeneity and the reflection
+problem. Implications for researchers and managers are discussed.
+
+This paper is examining social influence from a very
+network-orientated approach. It examines youtube data rather than
+music data. It applies a structural approach, and attempts to control
+for many interaction terms and endogeneity concerns.

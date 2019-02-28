@@ -1,0 +1,155 @@
+\documentclass[12pt]{paper}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{Schwieg}
+\usepackage{tikz}
+\usepackage{dsfont}
+\newcommand{\Expect}{{\rm I\kern-.3em E}}
+\usepackage{graphicx}
+\newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
+
+\begin{document}
+
+\section{Question 3}
+In what sense is $\smallO_P(1)=\bigO_P(1)$? Is $\bigO_P(1)=\smallO_p(1)$?
+\\
+
+We say that a sequence of random variables, $X_n$, is $\smallO_P(1)$ if $X_n \plim 0$. We say that $X_n$ is $\bigO_P(1)$ if $X_n$ is tight. Since we have that 
+\begin{align*}
+X_n=\smallO_P(1) &\implies X_n \convDist 0
+\end{align*}
+and
+\begin{align*}
+X_n \convDist X &\implies X_n=\bigO_P(1),
+\end{align*}
+(where $X$ is a random variable) we have,
+\begin{align*}
+X_n=\smallO_P(1) &\implies X_n=\bigO_P(1).
+\end{align*}
+In this sense,
+\begin{align*}
+\smallO_P(1)&=\bigO_P(1).
+\end{align*}
+
+However, the converse is not true in general. For instance, realize that $X_n \convDist X$ is a sufficient condition for tightness, but not for convergence in probability. Only when $X$ is a constant does it imply convergence in probability, but even then, $X$ must equal $0$ for $X_n=\smallO_P(1)$.
+
+An even stronger statement can be said though: in general, tightness does not imply convergence in distribution, and therefore does not imply convergence in probability. Consider, a sequence of random variables, $X_n$, where $X_{2n} \sim U[0,1]$, and $X_{2n+1} \sim U[2,3]$. It is obvious that $X_n$ does not converge in distribution. However, it is tight. To prove this, take $M_\epsilon=3$. Then, we have
+\begin{align*}
+\sup \Pr (|X_n|> 3)< \epsilon, \forall \epsilon >0.
+\end{align*}
+Thus, $X_n=\bigO_P(1)$, but $X_n \ne \smallO_P(1)$.
+
+\section{Question 7}
+To prove this, notice first that it is essentially Jensen's Inequality with conditional expectations. Thus, we will need the Chordal Slope Lemma. Also, (after defining $c:=\Expect[Y|X]$) the following objects will be helpful:
+\begin{align*}
+\Delta_{+,h(c)} :=& \frac{f(c+h)-f(c)}{h}\\
+\Delta_{-,h(c)}:=&\frac{f(c)-f(c-h)}{h}\\
+D_+(c):=&\lim_{h\downarrow0}\Delta_{+,h(c)}\\
+D_-(c):=&\lim_{h\downarrow0}\Delta_{-,h(c)},
+\end{align*}
+where $f$ is a convex function. It is also easy to see by the Chordal Slope Lemma that $D_-(c)$ and $D_+(c)$ are bounded below and above respectively by $\Delta_{-,h(c)}$ and $\Delta_{+,h(c)}$.
+
+Next, select an $m \in [D_-(c),D_+(c)]$, and define
+\begin{align*}
+L(x)&:=f(c)+m(x-c).
+\end{align*}
+We we now want to show that $L(x)\leq f(x)$. There are three cases: when $c>x$, $c=x$, and when $c<x$. From this point on, we will replace the previous convex function $f$ with another convex function, call it $\phi$.
+
+First consider $c=x$. The inequality holds trivially.
+
+Next, take $c>x=c-h$. Notice that since $m \in [D_-(c),D_+(c)]$, we get:
+\begin{align*}
+m&\geq \frac{\phi(c)-\phi(x)}{c-x}\\
+\phi(c)+m(x-c)&\leq \phi(x)\\
+L(x)&\leq \phi(x).
+\end{align*}
+
+For the last case, take $c<x=c-h$. Just like above, we get:
+\begin{align*}
+m&\leq \frac{\phi(x)-\phi(c)}{x-c}\\
+\phi(c)+m(x-c)&\leq \phi(x)\\
+L(x)&\leq \phi(x).
+\end{align*}
+Thus, $L(x)\leq\phi(x)$.
+
+Next, take, $x=Y$ and recall that $c:=\Expect[Y|X]$. We have that
+\begin{align*}
+L(Y)\leq&~\phi(Y) &\\
+0\leq&~\phi(Y)-L(Y) &\\
+0\leq&~\Expect[\phi(Y)-L(Y)|X] & 3)\\
+0\leq&~\Expect[\phi(Y)|X]-\Expect[L(Y)|X] &1)\\
+\Expect[L(Y)|X]\leq&~\Expect[\phi(Y)|X]\\
+\Expect[\phi(\Expect[Y|X])|X]+\Expect[mY|X]-\Expect[m\Expect[Y|X]|X]\leq&~\Expect[\phi(Y)|X] &1)\\
+\phi(\Expect[Y|X])+m\Expect[Y|X]-m\Expect[Y|X]\leq&~\Expect[\phi(Y)|X] &1) \text{ \& } 2)\\
+\phi(\Expect[Y|X])\leq&~\Expect[\phi(Y)|X].
+\end{align*}
+And thus, our result has been obtained. The steps above can be justified from two properties of conditional expectation (the steps have been labeled accordingly). Namely: $1)$ $\Expect[Y+Z|X]=\Expect[Y|X]+\Expect[Z|X]$; $2)$ If $Y=f(X)$, then $\Expect[Y|X]=f(X)$; and $3)$ we know that if $\Pr(0\leq Y)=1$, then $\Pr(0\leq \Expect[Y|X])=1$. 
+
+
+
+
+
+
+\section{Question 11}
+To answer this question, we are going to need to prove the following fact: that independence of $X$ and $Y$ implies that $\Expect[Y|X]=\Expect[Y]$, which is a constant.
+
+Consider the definition of conditional expectation. Since all we are given is that the first moment for $Y$ exists, we have to work from the following definition: $\Expect[Y|X]$ is any $m^*(X)$ with $\Expect[|m^*(X)|]<\infty$ such that for any Borel set $B$ in $\mathcal{B} \subset \mathbb{R}^k$,
+\begin{align*}
+\Expect[(Y-m^*(X))\mathds{1}_{\{X\in B\}}]=0.
+\end{align*}
+Working from this definition, we can obtain our result. First, let $m^*(X)=\Expect[Y]$ and $B$ an arbitrary Borel set, then test to see if it solves the following:
+\begin{align*}
+\Expect[(Y-m^*(X))\mathds{1}_{\{X\in B\}}]&=0\\
+\Expect[(Y-\Expect[Y])\mathds{1}_{\{X\in B\}}]&=0\\
+\Expect[Y\mathds{1}_{\{X\in B\}}]&=\Expect[\Expect[Y]]\Expect[\mathds{1}_{\{X\in B\}}]\\
+\Expect[Y]\Expect[\mathds{1}_{\{X\in B\}}]&=\Expect[\Expect[Y]]\Expect[\mathds{1}_{\{X\in B\}}]&\text{ by } Y \indep X\\
+\Expect[Y]\Expect[\mathds{1}_{\{X\in B\}}]&=\Expect[Y]\Expect[\mathds{1}_{\{X\in B\}}]\\
+\Expect[Y]\Pr\{X\in B\}&=\Expect[Y]\Pr\{X\in B\}.
+\end{align*}
+Since $\Expect[Y]$ works above, and $\Expect[Y|X]:=m^*(X)$ we have that $\Expect[Y|X]=\Expect[Y]$. Thus, $\Expect[Y|X]$ is equal to a constant with probability one, and that constant is $\Expect[Y]$.
+
+
+
+
+
+\section{Question 15}
+We are given that $\Expect[Y|X]=X' \beta$, and that $Y=X'\beta+U$. This implies that $\Expect[U|X]=0$. To see this take the conditional expectation of $Y=X'\beta+U$:
+\begin{align*}
+\Expect[Y|X]&=\Expect[X'\beta+U|X]\\
+\Expect[Y|X]&=\Expect[X'\beta|X]+\Expect[U|X] &1)\\
+\Expect[Y|X]&=X'\beta+\Expect[U|X]. &2)
+\end{align*}
+And since we are given that $\Expect[Y|X]=X' \beta$, it is immediate that:
+\begin{align*}
+\Expect[U|X]=0.
+\end{align*}
+As in Question 7, the steps above can be justified from two properties of conditional expectation (the steps have been labeled accordingly). Namely: $1)$ $\Expect[Y+Z|X]=\Expect[Y|X]+\Expect[Z|X]$; and $2)$ If $Y=f(X)$, then $\Expect[Y|X]=f(X)$.
+
+Although this implies that $U$ is mean independent of $X$, it does not imply independence. Notice that because $Y$ takes values in $\{0,1\}$, we have that $Y|X$ is Bernoulli with $p=\Expect[Y|X]$, i.e.
+\begin{align*}
+Var[Y|X]=\Expect[Y|X](1-\Expect[Y|X]).
+\end{align*} 
+We can also observe that $Var[U|X]=Var[Y|X]=\Expect[Y|X](1-\Expect[Y|X])$. And since it is given that $\Expect[Y|X]=X' \beta$, we have that:
+\begin{align*}
+Var[U|X]=X' \beta(1-X' \beta)
+\end{align*} 
+which does depend on $X$.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}

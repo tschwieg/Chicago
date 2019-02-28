@@ -1,0 +1,48 @@
+\documentclass{paper}
+
+\usepackage{Schwieg}
+
+\begin{document}
+\section{Rust (1987) Bus engine replacement problem}
+
+\subsection{1}
+
+Since the data in the .csv file gives us the end of period mileage, we
+must find that it increases unless there is an engine replacement at
+the start of that time period. In this case, the mileage would have
+decreased.
+
+It is possible that we could miss a case where the engine is replaced,
+and then there is more mileage used in that single time period than
+wear that it had previously. We will abstract from this case and
+continue as if this never occurs.
+
+\subsection{2}
+
+What is Rust (1987)'s condition independence assumption which we will
+maintain for the rest of the problem? Discuss briefly.
+\vspace{.3in}
+
+The conditional independence assumption is that $x_{t+1}$ is independent
+of both $(\epsilon_t, \epsilon_{t+1})$
+\begin{align*}
+  \Pr( x_{t+1},\epsilon_{t+1} \vert x_t, \epsilon_t, a_t, \phi ) &= \Pr( \epsilon_{t+1} \vert
+                                              x_{t+1},x_t, \epsilon_t, \alpha_t,
+                                              \phi) \Pr( x_{t+1} \vert x_t,
+                                              \epsilon_t, a_t, \phi)\\
+  &= \Pr( \epsilon_{t+1}) \Pr( x_{t+1} \vert x_t a_t \phi)
+\end{align*}
+
+This means that the different draws of $\epsilon$ can only affect $x_t$
+through $a_t$, and ensures that we will be able to obtain closed form
+likelihood functions for $\Pr( a_t = j \vert x_t, \theta, \phi)$.
+
+\subsection{3}
+
+Discretize $x_t$ and estimate the Markov transition probability
+$p(x_{t+1} \vert x_t, t_t, \theta_3)$ using the hint that it is an upper
+triangular stochastic matrix.
+
+\vspace{.3in}
+
+\end{document}

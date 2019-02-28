@@ -1,0 +1,67 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\title{Problem Set 1}
+\author{ }
+\date{October 2018}
+
+\begin{document}
+
+\maketitle
+
+\section{Question 1}
+\subsection*{a}
+For the purposes of exposition, we can take the special case of our production function being Cobb-Douglas. We will not rely on any facets of the functional form and only use it to guide the intuition.
+\begin{equation}
+Y = F(QX,K,L) = (QX)^{\alpha}K^{\beta}L^{1-\alpha - \beta}
+\end{equation}
+As capital and people are freely mobile across regions, we have that competitive pressure will push labor and capital to the regions where they get the maximum return for their input. Across regions, we must have that the factor prices for labor and capital are equal.
+Within a region, we will have that 
+$$\frac{\partial{F(QX,K,L)}}{\partial L} = \frac{\partial F(QX,K,L)}{\partial K} = \frac{\partial F(QX,K,L)}{\partial (QX)} $$
+Now, we see that MPL is decreasing in L, as the more labor we use, the lower the marginal product of labor becomes. However, it is increasing in K and (QX); labor is a complement to capital and land quality. This is true because there is a higher return to moving somewhere where the land is more productive as the individual is able to get higher returns to her input.   \par
+Note, though the aggregate production function is constant returns to scale, within a region, we have that there is decreasing returns to scale in the two inputs that are mobile across regions (land and capital). Thus, this scenario is similar to a diminishing marginal returns to scale with the rate of which it is diminishing ($\gamma = (1-\alpha) <1$ in our Cobb-Douglas example) depending on how important the land is to the production function.\par 
+This intuitively adds to our understanding that the quantities of labor and capital will not vary within a region depending on the quality of the land, as long as it does not change relative to that in other regions. \par
+We note that the other factor prices (for labor and capital) must be equal or else people will shift until they are. However, the land will be worth more in the areas where the land is more productive as it will.
+\pagebreak
+
+\subsection*{b}
+Note that now we have the production function so that 
+$$ Y = F(Q(X-aL),K,L)$$
+
+$$\frac{\partial{F(Q(X-aL),K,L)}}{\partial L} = \frac{\partial F(Q(X-aL),K,L)}{\partial K} = \frac{\partial F(Q(X-aL),K,L)}{\partial (QX)} $$
+Now, we see that in addition to the opportunity cost workers face from different regions ($w_i$ = $w-j$ for all regions $i,j$) there is an additional physical cost of moving to a region that is proportional to the quality in the region. This is akin to a housing price. \par
+Two important facets of this to note are that the housing price (i.e the price that a person must move to a region) is increasing in quality, $Q$ but decreasing in the amount of land, X. This follows from noting how Q and X enter into the production function i.e $F(QX-QaL,.)$. In words, the quality of land enters in (as a multiplicative factor) as to how much houses are removing from the productive stock of the region as well as through the positive effect they have on the total production possibility through QX. X however only enters in through the positive effect it has on the total production. \par 
+Therefore, wages need to be higher in regions with more quality to compensate for the higher housing price the individuals must pay when moving there. In equilibrium, we will have again that $ MB = MC$, so the benefit of moving to one region is the same as the benefit of moving to another region (i.e the opportunity cost). Thus, [\textit{need to clean up language}].  \\
+\begin{align}
+    w_i - g(Q_1,X_1) = w_j - g(Q_2,X_2) 
+    w_i - w_j = g(Q_1,X_1) - g(Q_2,X_2)
+\end{align} \par
+Here, we see that the wages differentials depend on both the quality and the amount of land. and can either increase or decrease in the amount of land, depending on how that factors into the 
+\pagebreak
+\subsection*{c}
+In (a), the Q and land values are directly related so that as the quality (i.e productivity) increases in the region, the land price is higher. In (b), the price of land is directly through the price regions charge as well as through how it increases labor and (indirectly) exerts a price on the land through taking up more of it.  
+
+
+\pagebreak
+\section{Question 2}
+\subsection{a}
+We assume individuals are the same in preferences for temperature and X and in numbers of hours worked. Thus, we can normalize the number of hours worked to 1 and view everything in terms of $w$. Their budget constraints (in North, $n$, and South, $s$):
+\begin{align*}
+    pX + KC(I) &= w_s(N_s) \\
+    pX + KC(I) &= w_n(N_n)
+\end{align*}
+Individuals are motivated to raise their house temperature above H. We can call $T_n$ and $T_s$ the outside temperatures in the north and the south. Their maximization problem (indexing regions by $k$):
+\begin{align*}
+    \max_{K,X} U(T_k + K,X) \text{ subject to } pX + KC(I) = w_k(N_k) \\
+\end{align*}
+Delineating the cost minimization process, we get:
+\begin{align*}
+    \frac{\partial U(T_k + K,X)}{\partial K}  &= \lambda C(I) \\
+    \frac{\partial U(T_k + K,X)}{\partial X}  & = \lambda p
+\end{align*}
+Thus, the wages in the two areas will be such that the wage from working in an area will be compensated by the difference in the amount people have to spend on heating their homes. The wages will thus be lower in the South. 
+\subsection{b}
+\subsection{c}
+
+\end{document}

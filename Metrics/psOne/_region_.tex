@@ -1,0 +1,62 @@
+\message{ !name(ps1.tex)}\documentclass[12pt, letterpaper]{paper}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usepackage{bm}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{Schwieg}
+
+\begin{document}
+
+\message{ !name(ps1.tex) !offset(229) }
+
+\end{question}
+
+\begin{question}
+  Let $\{ X_n | n \geq 1\}$ and $\{ Y_n | n \geq 1 \}$ be sequences of
+  random vectors converging in distribution to random vectors $X$ and
+  $Y$ respectively as $n \to \infty$. Suppose further that $X_n$ is
+  independent of $Y_n$ for all $n \geq 1$. Show that $(X_n, Y_n)$ then
+  converges in distribution to $(X,Y)$ with $X,Y$ independent.
+\end{question}
+
+\begin{question}
+  True or False. Provide a formal justification of your answer. All
+  limits are as $n \to \infty$.
+  \begin{enumerate}
+  \item If $X_n \convDist X$ and $Y_n \convDist Y$ then $X_n + Y_n
+    \convDist X + Y$
+  \item If $X_n \plim 0$ and $\Pr( X_n \geq 0) = 1$ then $\exV{X_n} \to 0$
+  \item Suppose that $X_n$ has a continuous cdf on $\setR$ for all $n
+    \geq 1$. If $X_n \convDist X$, then $X$ has a continuous cdf on
+    $\setR$.
+  \item If $X_1, ..., X_n$ are i.i.d. and $\epsilon > 0$ then
+    \begin{equation*}
+      \Pr \left( \abs{\frac{1}{n} \sum_{i = 1}^n \brak{ \indicate{ X_i \leq
+              x} - \Pr( X_i \leq x)}} > \sqrt{\epsilon} \right) \leq \frac{1}{4 n \epsilon}
+    \end{equation*}
+  \item Answer the previous question if they are independent, but not
+    identically distributed.
+  \item If $\exV{X_n^k} \to \exV{X^k}$ for all $k \geq 1$, then $X_n \plim X$.
+
+  \end{enumerate}
+
+\end{question}
+
+
+\message{ !name(ps1.tex) !offset(226) }
+
+\end{document}

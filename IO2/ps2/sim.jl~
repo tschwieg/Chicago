@@ -1,0 +1,54 @@
+using Distributions
+using JuMP
+using Gurobi
+
+srand(235711)
+
+S = 50
+T = 10000
+α = 3
+δ = 6
+
+function SimulateFirmEntry(  α::Float64, δ::Float64, T::Int64)
+    x = rand(Bernoulli(.5),T)+1.0
+    ϵ₁ = rand(Gumbel(),T)
+    ϵ₂ = rand(Gumbel(),T)
+
+    pEntry = .6917
+    #Firm One believes firm 2 enters w.p. 0.6917
+    #$y_{it} = \indicate{ \alpha x_t + \epsilon_{it} - \delta \Pr( y_{-it} = 1) \geq 0}$
+
+    entryOne = (α*x + ϵ₁ - δ*.6917) .>= 0
+    entryTwo = (α*x + ϵ₂ - δ*.6917) .>= 0
+    return entryOne,entryTwo,x
+end
+
+function PrintAMPLFile( x::Vector, name)
+    text= ""
+    for i in 1:T
+        text *= string(x[i]) * "   "
+    end
+    f = open( name, "w")
+    write( f, text)
+    close(f)
+end
+
+
+
+    
+function EstimateData( entryOne::Vector{Int64}, entryTwo::Vector{Int64},
+                       T::Int64)
+
+    m = Model(solver = GurobiSolver())
+    @variable( m, 0.0 <= p[1:2,1:T] <= 1.0)
+    @constraint( m, fit[i=1:M],
+                 sum( X[i,j]*β⁺[j] for j in 1:p )
+                 - sum( X[i,j]*β⁻[j] for j in 1:p)
+                 + u[i] - v[i] == Y[i] )
+    @objective( m, Min, τ*sum( u[i] for i in 1:M )
+                + (1-τ)*sum(v[i] for i in 1:M) )
+    status = solve(m)
+    println(getvalue(β⁺))
+    println(getvalue(β⁻))
+    return [getvalue(β⁺), getvalue(β⁻), getvalue(u), getvalue(v)]
+end

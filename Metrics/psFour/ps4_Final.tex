@@ -1,0 +1,868 @@
+\documentclass[12pt]{paper}
+
+ \usepackage{Schwieg}
+\usepackage[margin=1in]{geometry}
+\usepackage{tikz}
+\usepackage{dsfont}
+
+\newcommand{\E}{{\rm I\kern-.3em E}}
+\newcommand{\Var}{{\rm \textbf{V\kern-.3em ar}}}
+\newcommand{\Cov}{{\rm \textbf{C\kern-.3em ov}}}
+\usepackage{graphicx}
+\newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
+\usepackage{minted}
+
+\begin{document}
+\section*{Question 1}
+First, we need to show that:
+\begin{align*}
+\rho^2=\frac{(\Cov[X,Y])^2}{\Var[X]\Var[Y]}=1-\frac{\Var[U]}{\Var[Y]}.
+\end{align*}
+Further, given $Y=\beta_0+\beta_1 X+U$,
+\begin{align*}
+\Var[Y]=&\Var[\beta_0+\beta_1 X+U]\\
+=& \beta_1^2 \Var[X]+\Var[U]+2\Cov[X,U]\\
+=& \left( \frac{\Cov[X,Y]}{\Var[X]} \right)^2\Var[X]+\Var[U]\\
+=&  \frac{(\Cov[X,Y])^2}{\Var[X]}+\Var[U].
+\end{align*}
+This implies that:
+\begin{align*}
+\Var[U]=& \Var[Y]-\frac{(\Cov[X,Y])^2}{\Var[X]}\\
+\end{align*}
+Since we are interested in $\rho^2$, and since $\rho^2=\frac{\Var[U]}{\Var[Y]}$, we need to divide by $\Var[Y]$.
+\begin{align*}
+\frac{\Var[U]}{\Var[Y]}=& 1-\frac{(\Cov[X,Y])^2}{\Var[X]}\\
+=& 1-\rho^2\\
+\rho^2=& 1-\frac{\Var[U]}{\Var[Y]}.
+\end{align*}\\
+
+
+Next, we need to actually determine $\Var[U]$ and $\Var[Y]$. We have shown earlier in lectures that $\beta=\E[XX']\E[XY]$. Given the vector $(1,X)$, and $Y=\gamma X + X^2]$, we can say:
+
+\begin{align*}
+\beta=\E \left[
+\begin{pmatrix} 
+1\\
+X
+\end{pmatrix}
+\begin{pmatrix}
+1 & X
+\end{pmatrix}
+\right]
+\E \left[
+\begin{pmatrix}
+Y\\
+YX
+\end{pmatrix}
+\right]\\
+=\E \left[
+\begin{pmatrix}
+1 & X\\
+X & X^2
+\end{pmatrix}
+\right]
+\E \left[
+\begin{pmatrix}
+\gamma X+X^2\\
+\gamma X^2 +X^3
+\end{pmatrix}
+\right].
+\end{align*}
+
+Since we know $\E[1]=1$, $\E[X]=0$, $\E[X^2]=1$, and $\E[X^3]$, the above is equal to:
+\begin{align*}
+\begin{pmatrix}
+1 & 0\\
+0 & 1
+\end{pmatrix}
+\begin{pmatrix}
+1\\
+\gamma
+\end{pmatrix}
+=
+\begin{pmatrix}
+1\\
+\gamma
+\end{pmatrix}=\beta.
+\end{align*}
+
+It is given that $U=Y-\beta_0+\beta_1X$. Using the $\beta$ above, we can plug in for $U=\gamma X+X^2-1-\gamma X= X^2-1$. Thus, we have
+\begin{align*}
+\Var[U]=\Var[X^2-1]=2.
+\end{align*}
+Next, consider $Y=\gamma X+X^2$.
+\begin{align*}
+\Var[Y]=\gamma \Var[X]+\Var[X^2]+\gamma \Cov[X,X^2].
+\end{align*}
+$\Cov[X,X^2]=0$, since $\Cov[X,X^2]=\E[X^3]-\E[X]\E[X^2]$, and we know that both right hand side terms are zero. Further, since $\Var[X]=1$, and $\Var[X^2]=2$, we have
+\begin{align*}
+\Var[Y]=\gamma^2+2.
+\end{align*}
+Using our previous result that $\rho^2=1-\frac{\Var[U]}{\Var[Y]}$ and substituting in from above,
+\begin{align*}
+\rho^2=1-\frac{\Var[U]}{\Var[Y]}=1-\frac{2}{\gamma^2+2}=\frac{\gamma^2}{\gamma^2 +2}.
+\end{align*}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Question 2}
+
+\subsection*{a}
+
+In class we proved that there is no perfect colinearity in a matrix $W$ if and only if $\exV{WW'}$ is invertible. So, if we show that $\exV{WW'}$ is invertible, then we have shown that there is no perfect colinearity in $W$.
+
+Assume, to contrary, that $\exV{WW'}$ is not invertible. This means that there exists $c\ne0$ such that $\exV{WW'}c=0$. But then we have:
+\begin{equation}
+\begin{split}
+0&=c'\exV{WW'}c\\
+&=c'\exV{AXX'A'}c=\exV{c'AXX'A'c}\\
+&=\exV{d'XX'd}=\exV{(d'X)^2},
+\end{split}
+\end{equation}
+
+\noindent where $d:=A'c\ne0$, because $c\ne0$ and $A$ is invertible. But because $(d'X)^2>0$ always, $\exV{(d'X)^2}=0$ implies $\Pr(d'X=0)=1$, contradicting the assumption that there is no perfect colinearity in $X$. Thus we cannot have $\exV{WW'}c=0$ for $c\ne0$, making $\exV{WW'}$ invertible, and implying the result we wanted.
+
+\subsection*{b}
+
+Due to the first-order condition, $-2\exV{X(Y-X'\beta)}=0$ (and the assumptions that $\exV{XX'}$ and $\exV{XY}$ exist, and that there is no perfect colinearity in $X$), we have that 
+
+\begin{equation}
+\beta=\exV{XX'}^{-1}\exV{XY}.
+\end{equation}
+
+Similarly for $BLP(Y|W)$, the first order condition is $-2\exV{W(Y-W'\gamma)}=0$, which - using the no perfect colinearity of $W$ and if $\exV{WW'}=A\exV{XX'}A'$ and $\exV{WY}=A\exV{XY}$ both exist (which is the case if $A$ has only finite real values, since $\exV{XX'}$ and $\exV{XY}$ exist) -  gives us that:
+\begin{equation}
+\begin{split}
+\gamma&=\exV{WW'}^{-1}\exV{WY}=(A\exV{XX'}A')^{-1}A\exV{XY}\\
+&=A'^{-1}\exV{XX'}^{-1}A^{-1}A\exV{XY}=A'^{-1}\beta
+\end{split}
+\end{equation}
+
+\subsection*{c}
+
+Define $\textbf{W}:=[W'_i]$, a matrix with vectors $W'_i$ as rows $(1\le i \le n)$, where $W'_i=X'_iA'$, so that $\textbf{W}=\textbf{XA'}$. Similarly, $\textbf{X}:=[X'_i]$ and $\textbf{Y}=[Y'_i]$. Then our estimates of $\beta$ and $\gamma$ using OLS are:
+\begin{equation}
+\begin{split}
+\hat{\beta}_n&=(\textbf{X'X})^{-1}\textbf{X'Y}\\
+\hat{\gamma}_n&=(\textbf{W'W})^{-1}\textbf{W'Y}=(\textbf{AX'XA'})^{-1}\textbf{AX'Y}\\
+&=\textbf{A'}^{-1}\textbf{(X'X)}^{-1}\textbf{A}^{-1}\textbf{AX'Y}=\textbf{A'}^{-1}\hat{\beta}_n
+\end{split}
+\end{equation}
+
+The conditionsl variance of the $\hat{\beta}_n$:
+\begin{equation}
+\begin{split}
+Var(\hat{\beta}_n|\textbf{X})&=Var((\textbf{X'X})^{-1}\textbf{X'Y}|\textbf{X})\\
+&=Var((\textbf{X'X})^{-1}\textbf{X'}(\textbf{X}\beta+\textbf{u})|\textbf{X})\\
+&=Var((\textbf{X'X})^{-1}\textbf{X'}\textbf{u}|\textbf{X})\\
+&=(\textbf{X'X})^{-1}\textbf{X'}Var(\textbf{u}|\textbf{X})\textbf{X}(\textbf{X'X})^{-1}\\
+\end{split}
+\end{equation}
+
+First notice that, because $\textbf{A}$ is invertible, there is a one-to-one relation between $\textbf{W}$ and $\textbf{X}$. That is, given $\textbf{X}$, we know $\textbf{W}=\textbf{XA'}$, and given $\textbf{W}$, we know $\textbf{X}=\textbf{W}(\textbf{A'}^{-1})$. They both have the same information.
+
+ Therefore, since any function of $\textbf{W}$ can be written as a function of $\textbf{X}$ and vice-versa, the space of functions of $\textbf{W}$ is the same as the space of functions of $\textbf{X}$. Then, if a function of $\textbf{W}$ is the conditional expectation $\exV{\hat{\gamma}_n^2|\textbf{W}}$, then the same function is also $\exV{\hat{\gamma}_n^2|\textbf{X}}$. Similarly we have $(\exV{\hat{\gamma}_n|\textbf{W}})^2=(\exV{\hat{\gamma}_n|\textbf{X}})^2$. Thus, because $Var(\hat{\gamma}_n|\textbf{W})=\exV{\hat{\gamma}_n^2|\textbf{W}}-(\exV{\hat{\gamma}_n|\textbf{W}})^2$,  we have $Var(\hat{\gamma}_n|\textbf{W})=Var(\hat{\gamma}_n|\textbf{X})$.
+
+And since $\hat{\gamma}_n=\textbf{A'}^{-1}\hat{\beta}_n$, we have:
+\begin{equation}
+\begin{split}
+Var(\hat{\gamma}_n|\textbf{W})=Var(\hat{\gamma}_n|\textbf{X})&=Var(\textbf{A'}^{-1}\hat{\beta}_n|\textbf{X})\\
+&=\textbf{{A'}}^{-1}Var(\hat{\beta}_n|\textbf{X})\textbf{A}^{-1}\\
+&=\textbf{{A'}}^{-1}(\textbf{X'X})^{-1}\textbf{X'}Var(\textbf{u}|\textbf{X})\textbf{X}(\textbf{X'X})^{-1}\textbf{A}^{-1}\\
+\end{split}
+\end{equation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Question 3}
+\subsection*{a}
+$\Rightarrow$ \\
+Take $\mathbbm{A}\mathbbm{X} = \mathbbm{I}$
+\begin{align}
+    E(\tilde \beta | X_1,...,X_n) & = E(\mathbbm{A} \mathbbm{Y}|X_1,...,X_n ) \\
+&=  \mathbbm{A} E(\tilde \beta | X_1,...,X_n)
+\end{align}
+Note, this follows as $E(f(x)y|x) = E(f(x))E(y|x)$
+Now, we have that this becomes
+\begin{align*}
+ & = \mathbbm{A'}(E(Y_1|X_1,...,X_n) \dots E(Y_n|X_1,...,X_n))' \\
+&=  \mathbbm{A'}(E(Y_1|X_1) \dots E(Y_n|X_n))' \\
+&=  \mathbbm{A'}(X_1\beta \dots X_n\beta)' \\
+&=  \mathbbm{A'}\mathbbm{X}\beta \\
+&=  \mathbbm{I}\beta = \beta \\
+\end{align*}
+The second equality above follows from the fact that $(X_i,Y_i)$ is iid so $Y_i$ is independent of all of the $X_j$ for $j \neq i$. \\
+$\Leftarrow$ \\
+Suppose $ E(\tilde \beta | X_1,...,X_n) = \beta$. Then, we have, from the equalities above, that  
+$$E(\tilde \beta | X_1,...,X_n) =  \mathbbm{A'}\mathbbm{X}\beta $$
+Thus,
+\begin{align*}
+     & \mathbbm{A'}\mathbbm{X}\beta - \beta = 0  \Rightarrow \\
+    & (\mathbbm{A'}\mathbbm{X} - \mathbbm{I})\beta = 0
+\end{align*}  
+As this must hold true for all $\beta$, we must have that $\mathbbm{A}\mathbbm{X} = \mathbbm{I}$ (i.e the only eigenvalue is $\lambda = 1$ for all $\beta \in \mathbbm{R}^{k+1}$)
+
+\subsection*{b}
+\begin{align*}
+    Var(\tilde \beta | X_1,...,X_n) & = E((\mathbbm{A} \mathbbm{Y})^2|X_1,...,X_n ) - E(\mathbbm{A} \mathbbm{Y}|X_1,...,X_n )^2 \\
+&= \mathbbm{A}'(E( \mathbbm{Y})^2|X_1,...,X_n )\mathbbm{A} - \mathbbm{A}'E( \mathbbm{Y}|X_1,...,X_n )) \mathbbm{A} \\
+\end{align*}
+Note, again, $(X_i,Y_i)$ is iid so $Y_i$ is independent of all of the $X_j$ for $j \neq i$ and thus $E(Y_i|X_1,...,X_N) = E(Y_i|X_i)$. Furthermore, we have that $Y_i$ is
+independent of all of the $Y_j$ for $j \neq i$. Thus, $E(Y_jY_i) = 0$ for $i \neq j$ and thus:
+\begin{align*}
+&= \mathbbm{A}'(diag(E( Y_1^2|X_1 ),...,E( Y_n^2|X_n ) - E( Y_1|X_ 1)^2...E( Y_n|X_n )^2)) \mathbbm{A} \\
+&= \mathbbm{A}'(diag(Var( Y_1|X_1 )...Var( Y_n|X_n )) \mathbbm{A} \\
+& = \mathbbm{A}'diag(\sigma^2(X_1 )...\sigma^2(X_n )) \mathbbm{A} \\ 
+& = \mathbbm{A}'\mathbbm{D} \mathbbm{A}
+\end{align*}
+
+\subsection*{c}
+We take
+\begin{align*}
+    \mathbbm{X}' \mathbbm{D}^{-1} \mathbbm{X} &= (X_1 ... X_n) diag(\frac{1}{\sigma^2(X_1)},...,\frac{1}{\sigma^2(X_n)})(X_1 ... X_n)'\\
+    & =\frac{X_1'X_1}{\sigma^2(X_1)}+...+\frac{X_n'X_n}{\sigma^2(X_n)} \\
+\end{align*}
+Now, note that as $\mathbbm{X}$ has all its columns linearly independent, $\mathbbm{X}a \neq 0 \Leftrightarrow a \neq 0$. 
+Take such an a$\neq 0$: 
+\begin{align*}
+    a^T \mathbbm{X}' \mathbbm{D}^{-1} \mathbbm{X}a &= \frac{a^2_1X_1'X_1}{\sigma^2(X_1)}+...+\frac{a^2_nX_n'X_n}{\sigma^2(X_n)} \\
+\end{align*}
+We have that $a_i^2\geq 0$ (and, by definition, $a_i^2>0$ for some $i$). Thus, the above sum is strictly positive. This shows that $\mathbbm{X}' \mathbbm{D}^{-1} \mathbbm{X}$ is positive definite, which in turn establishes that it is invertible.
+
+\subsection*{c}
+Take\footnote{for a diagonal matrix D, D' = D}
+\begin{align*}
+ Var(\tilde \beta |X_1,...,X_n] &= \mathbbm{A}'\mathbbm{D}\mathbbm{A} \\
+    &= (\mathbbm{X}'\mathbbm{D}^{-1}\mathbbm{X})^{-1} \mathbbm{X}'\mathbbm{D}^{-1}\mathbbm{D}
+    \mathbbm{D}^{-1}\mathbbm{X}(
+    \mathbbm{X}\mathbbm{D}'^{-1}\mathbbm{X})^{-1} \\
+    &= (\mathbbm{X}'\mathbbm{D}^{-1}\mathbbm{X})^{-1} \mathbbm{X}'
+    \mathbbm{D}^{-1}\mathbbm{X}(
+    \mathbbm{X}\mathbbm{D}'^{-1}\mathbbm{X})^{-1} \\
+    &= (\mathbbm{X}'\mathbbm{D}^{-1}\mathbbm{X})^{-1}  \\
+\end{align*}
+Also, clearly:
+\begin{align*}
+  ((\mathbbm{X}'\mathbbm{D}^{-1}\mathbbm{X})^{-1} \mathbbm{X}'\mathbbm{D}^{-1})\mathbbm{X} = (\mathbbm{X}'\mathbbm{D}^{-1}\mathbbm{X})^{-1} (\mathbbm{X}'\mathbbm{D}^{-1}\mathbbm{X}) = \mathbbm{I} 
+\end{align*}
+By (a), the estimator $\tilde \beta_n$ is then unbiased
+
+\subsection*{e}
+Take $\tilde{ \mathbbm{A}} \mathbbm{Y}$ as
+another unbiased estimator of $\beta$ wherein $\gamma_n \equiv \tilde{\mathbbm{A}}\mathbbm{Y}$. As 
+$E(\gamma_n|X_1,...,X_n) = \beta$, we have that $\tilde{\mathbbm{A}'}\mathbbm{X} = \mathbbm{I}$.
+Now, we rum through the argument used in the Gauss-Markov theorem:
+Take $C = \mathbbm{A} - \tilde{\mathbbm{A}}$, then:
+\begin{align*}
+Var(\gamma_n|X_1,...,X_n) - Var(\tilde \beta_n|X_1,...,X_n) & = (C+ \mathbbm{A})' \mathbbm{D} (C + \mathbbm{A}) - \mathbbm{A}'\mathbbm{D}\mathbbm{A} \\
+& = C'\mathbbm{D}C + \mathbbm{A'}\mathbbm{D}C + C'\mathbbm{D}\mathbbm{A} \\
+& = C'\mathbbm{D}C +(\mathbbm{X}'\mathbbm{D}^{-1}\mathbbm{X})^{-1}\mathbbm{X}'\mathbbm{D}^{-1}\mathbbm{D}C + C'\mathbbm{D}\mathbbm{D}^{-1}\mathbbm{X}(\mathbbm{X}'\mathbbm{D}^{-1}\mathbbm{X}) \\
+& = C'\mathbbm{D}C +(\mathbbm{X}'\mathbbm{D}^{-1}\mathbbm{X})^{-1}\mathbbm{X}'C + C'\mathbbm{X}(\mathbbm{X}'\mathbbm{D}^{-1}\mathbbm{X}) \\
+& = C'\mathbbm{D}C +(\mathbbm{X}'\mathbbm{D}^{-1}\mathbbm{X})^{-1}\mathbbm{X}'(\mathbbm{A} - \tilde{\mathbbm{A}}) + (\mathbbm{A} - \tilde{\mathbbm{A}})\mathbbm{X}(\mathbbm{X}'\mathbbm{D}^{-1}\mathbbm{X}) \\
+&= C'\mathbbm{D}C
+\end{align*}
+Again, using the above argument in (c), we see that the differences in the variances is a positive semidefinite matrix s.t
+
+$$a^T C' \mathbbm{D} C a = \sum_{i=1}^n \frac{a_i^2}{\sigma^2(X_i)} \geq 0$$
+This establishes that the estimator in the previous part is \textit{best} as the variance of any other predictor is the same or greater.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Question 4}
+
+
+Let $\seq{(Y_i,X_i)}_{i=1}^n$ be an i.i.d. sequence of random
+vectors. Suppose that $\exV{X_i X_i'}$ and $\exV{X_i Y_i}$
+exists. Suppose further that there is no perfect colinearity in
+$X_i$, Hence $\exV{X_i X_i'}$ is invertible.
+
+\subsection*{a}
+
+Does it also follow that
+\begin{equation*}
+  \frac{1}{n} \sum_{i=1}^n X_i X_i'
+\end{equation*} 
+is invertible? \newline \newline
+
+No. As a trivial case, consider when $n=1, k=2$ and $X_2 \sim \normal( 1, 1
+)$. Let $a$ be any realization of $X_2$.
+\begin{equation*}
+  \frac{1}{n} \sum_{i=1}^n X_i X_i' = (1,a)' (1,a) =
+  \begin{pmatrix}
+    1 & a\\ a & a^2
+  \end{pmatrix}
+\end{equation*}
+
+We can see that the second column is $a$ times the first column, and
+the matrix is not invertible. This occurs because for any vector $x \in
+\setR^k$, $x x'$ always has rank 1.
+
+\subsection*{b}
+
+For any $\lambda_n > 0$ show that
+\begin{equation*}
+  \frac{1}{n} \sum_{i=1}^n ( X_i X_i' + \lambda_n \eye )
+\end{equation*}
+is invertible. \newline \newline
+
+Note that this can be rewritten as
+\begin{equation*}
+  \brak{\frac{1}{n} \sum_{i=1}^n  X_i X_i'} + \lambda_n \eye 
+\end{equation*}
+
+For any given $i$, $X_i X_i'$ is positive semi-definite. The sum of
+positive semi-definite matrices is also positive semi-definite. This
+tells us that the first matrix is always positive semi-definite.
+
+\begin{equation*}
+  \frac{1}{n} \sum_{i=1}^n  X_i X_i' \succeq 0
+\end{equation*}
+
+It is obvious that $\lambda_n \eye$ is a positive definite matrix. The sum
+of a positive definite matrix and a positive semi-definite matrix is
+positive definite.
+
+Proof: Let $A$ be a positive semi-definite matrix, and $B$ be a
+positive definite matrix. Then $\forall x \in \setR^k, x' B x > 0$ and $x' A x
+\geq 0$. Consider two cases:
+
+Case 1: $x \in \setR^k, x' A x > 0, x' B x > 0$. Then:
+\begin{align*}
+  \left( x' A + x' B \right) X &> 0\\
+  x' ( A + B ) x &> 0
+\end{align*}
+
+Case 2: $x \in \setR^k, x' A x = 0, x' B x > 0$ Then:
+\begin{align*}
+  x' A x + x' B x &> 0\\
+  \left( x' A + x' B \right) X &> 0\\
+  x' ( A + B ) x &> 0
+\end{align*}
+
+This tells us that:
+\begin{equation*}
+  \brak{\frac{1}{n} \sum_{i=1}^n  X_i X_i'} + \lambda_n \eye \succ 0
+\end{equation*}
+
+Any positive definite matrix has strictly positive eigenvalues, and
+therefore has a strictly positive determinant. This implies that the
+matrix is invertible.
+
+\subsection*{c}
+
+Suppose that $\lambda_n \rightarrow 0$ as $n \rightarrow \infty$. Find the limit in probability of
+\begin{equation*}
+  \tilde{\beta_n} = \inv{ \left( \frac{1}{n} \sum_{i=1}^n ( X_i X_i' + \lambda_n
+      \eye) \right)} \left( \frac{1}{n} \sum_{i=1}^n X_i Y_i \right)
+\end{equation*}
+
+From the weak law of large numbers, we know that $\frac{1}{n}
+\sum_{i=1}^n X_i X_i' \plim \exV{X X'}$ and $\frac{1}{n} \sum_{i=1}^n X_i
+Y_i \plim \exV{XY}$.
+
+We wish to show that
+\begin{equation*}
+  \frac{1}{n} \sum_{i=1}^n X_i X_i' + \lambda_n \eye \plim \frac{1}{n} \sum_{i=1}^n X_i X_i'
+\end{equation*}
+
+Applying the definition of convergence in probability.
+\begin{align*}
+  \lim_{n\rightarrow\infty} \Pr\left( \abs{ \frac{1}{n} \sum_{i=1}^n X_i X_i' + \lambda_n \eye -
+  \frac{1}{n} \sum_{i=1}^n X_i X_i' } < \epsilon\right) &= \lim_{n\rightarrow\infty} \Pr( \abs{ \lambda_n
+                                          \eye } < \epsilon)\\
+                                        %&= \lim_{n\rightarrow\infty} \Pr( \sqrt{ k \lambda_n^2} < \epsilon)\\
+                                        %&= \lim_{n\rightarrow\infty} \indicate{ \sqrt{ k \lambda_n^2} < \epsilon} \\
+  %= 1
+\end{align*}
+We will consider this on an element-wise basis. Note that if we are
+not on a diagonal, $\left( \lambda_n \eye \right)_{ij} = 0$. So we may
+restrict ourselves to the diagonal elements of this matrix. However
+all the diagonal elements are the same, so this question amounts to
+the convergence of $\abs{\lambda_n}$. Since $\lambda_n$ is non-random: 
+\begin{align*}
+  \lim_{n\rightarrow\infty} \Pr( \abs{ \lambda_n} < \epsilon) = 1
+\end{align*}
+
+As we have assumed that $\lambda_n \rightarrow 0$ above.
+
+
+
+
+Thus
+\begin{equation*}
+  \frac{1}{n} \sum_{i=1}^n X_i X_i' + \lambda_n \eye \plim \frac{1}{n}
+  \sum_{i=1}^n X_i X_i' \plim \exV{X X'}
+\end{equation*}
+
+As multiplication and inverting a matrix are continuous functions, we
+may apply the continuous mapping theorem to get that 
+
+\begin{equation*}
+  \tilde{\beta_n} = \inv{ \left( \frac{1}{n} \sum_{i=1}^n ( X_i X_i' + \lambda_n
+      \eye) \right)} \left( \frac{1}{n} \sum_{i=1}^n X_i Y_i \right)
+  \plim \inv{ \exV{X X'}} \exV{XY} = \beta
+\end{equation*}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\section*{Question 5}
+
+\subsection*{A)} Simply by the Delta Method we get:
+\begin{align*}
+n^{\frac{1}{2}}(f(\hat{\beta_n})-f(\beta))\convDist N(0,D_{\beta}f(\beta)\Omega D_{\beta}f(\beta)').
+\end{align*}
+
+
+\subsection*{B)}
+With $\hat{\beta_n}$ and $\hat{\Omega_n}$ being a consistent estimators of $\beta$ and $\Omega$ respectively, using the CMT, we have:
+
+\begin{align*}
+\frac{\sqrt{n}(f(\hat{\beta_n})-f(\beta))}{\sqrt{D_{\hat{\beta_n}}f(\hat{\beta_n})\Omega D_{\hat{\beta_n}}f(\hat{\beta_n})'}} \convDist N(0,1).
+\end{align*}
+
+Since our test is one-sided we only want to reject the null ($H_0$: $f(\beta) \leq 0$) in one direction. The critical value is based on the standard normal distribution:
+
+\begin{align*}
+c_n:=\Phi^{-1}(1-\alpha):=z_{1-\alpha},
+\end{align*}
+
+where $\Phi$ is the CDF of $N(0,1)$. We want our $c_n$ to be such that the probability of $z$ being less than $c_n$ is $1-\alpha$. Thus, out test is:
+
+\begin{align*}
+\Phi_n=\textbf{1}_{\{T_n>c_n\}}.
+\end{align*}
+
+To show that this test is consistent in level, we have to show that, under the null:
+
+\begin{align*}
+\lim_{n \to \infty} \sup \E_P[\Phi_n] \leq \alpha
+\end{align*}
+
+Consider,
+
+\begin{align*}
+\E_P[\Phi_n]=\textbf{Pr}(T_n>c_n)=\textbf{Pr}\left(\frac{\sqrt{n}f(\hat{\beta_n})}{\sqrt{D_{\hat{\beta_n}}f(\hat{\beta_n}) \hat{\Omega_n} D_{\hat{\beta_n}}f(\hat{\beta_n})'}}>z_{1-\alpha} \right).
+\end{align*}
+
+Add and subtract $f(\beta)$,
+
+\begin{align*}
+\textbf{Pr}\left(
+\frac{\sqrt{n}(f(\hat{\beta_n})-f(\beta))}{\sqrt{D_{\hat{\beta_n}}f(\hat{\beta_n}) \hat{\Omega_n} D_{\hat{\beta_n}}f(\hat{\beta_n})'}}
++
+\frac{\sqrt{n}f(\beta)}{\sqrt{D_{\hat{\beta_n}}f(\hat{\beta_n}) \hat{\Omega_n} D_{\hat{\beta_n}}f(\hat{\beta_n})'}}
+>
+z_{1-\alpha}
+\right).
+\end{align*}
+
+Under the null, we have that $f(\hat{\beta_n})\leq0$, and so
+
+\begin{align*}
+\E[\Phi_n]
+\leq
+\textbf{Pr}\left(
+\frac{\sqrt{n}(f(\hat{\beta_n})-f(\beta))}{\sqrt{D_{\hat{\beta_n}}f(\hat{\beta_n}) \hat{\Omega_n} D_{\hat{\beta_n}}f(\hat{\beta_n})'}}
+>
+z_{1-\alpha}
+\right)
+\leq
+\textbf{Pr}\left(
+\frac{\sqrt{n}(f(\hat{\beta_n})-f(\beta))}{\sqrt{D_{\hat{\beta_n}}f(\hat{\beta_n}) \hat{\Omega_n} D_{\hat{\beta_n}}f(\hat{\beta_n})'}}
+\geq
+z_{1-\alpha}
+\right),
+\end{align*}
+
+where the weak inequality is so that we can apply the Portmanteau Lemma. Thus, taking lim sup of both sides,
+
+\begin{align*}
+\lim_{n \to \infty}\sup \E[\Phi_n] 
+\leq
+\lim_{n \to \infty} \sup \textbf{Pr}\left(
+\frac{\sqrt{n}(f(\hat{\beta_n})-f(\beta))}{\sqrt{D_{\hat{\beta_n}}f(\hat{\beta_n}) \hat{\Omega_n} D_{\hat{\beta_n}}f(\hat{\beta_n})'}}
+\geq
+z_{1-\alpha}
+\right)
+\end{align*}
+
+We already know that the inside the probability on the RHS converges in distribution to a standard normal. Thus,
+
+\begin{align*}
+\lim_{n \to \infty} \sup \E[\Phi_n]  \leq& ~\textbf{Pr}\left(Z \geq z_{1-\alpha} \right)\\
+=&~1-\textbf{Pr}(Z<z_{1-\alpha})\\
+=&~1-\Phi(z_{1-\alpha})\\
+=&~1-(1-\alpha)\\
+=&~\alpha.
+\end{align*}
+
+
+Our test is consistent in level.
+
+
+
+\subsection*{C)}
+
+
+We can easily construct a confidence region with the result from \textbf{B)}.
+
+\begin{align*}
+C_n:=\left \{ 
+x \in \mathbb{R}|
+\textbf{Pr}\left(
+\frac{\sqrt{n}(f(\hat{\beta_n})-x)}{\sqrt{D_{\hat{\beta_n}}f(\hat{\beta_n}) \hat{\Omega_n} D_{\hat{\beta_n}}f(\hat{\beta_n})'}}
+\geq
+z_{1-\alpha}
+\right)
+\right \}.
+\end{align*}
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Question 6}
+
+\subsection*{a}
+
+Due to the first-order condition of $BLP(Y_i|W_i)$, we have $\exV{W_iU_i}=0$, which is equivalent to $\exV{U_i}=0$, $\exV{X_iU_i}=0$ and $\exV{Z_iU_i}=0$. Therefore, we have that $Cov(U_i,W_i)=\exV{U_iW_i}-\exV{U_i}\exV{W_i}=0$ and thus $W_i$ and $U_i$ are uncorrelated.
+
+In this case, they are also mean independent. Since $\exV{Y_i|W_i}=W'_i\beta$ is the best predictor of $Y_i$ and it is also linear, then $BLP(Y_i|W_i)=W'_i\beta$, and we have $Y_i=W'_i\beta+U_i$. Taking conditional expectations we get:
+\begin{equation}
+\exV{Y_i|W_i}=W'_i\beta+\exV{U_i|W_i} \Longrightarrow \exV{U_i|W_i}=0.
+\end{equation}
+
+Thus $U_i$ is mean independent of $W_i$. This is due to, in this case, the best linear predictor being actually equal to the conditional expectation. 
+
+\subsection*{b}
+
+Since, as seen in letter (a) above, $Y_i=W'_i\beta+U_i$, we have that:
+\begin{equation}
+Var(U_i|W_i)=Var(Y_i-W'_i\beta|W_i)=Var(Y_i|W_i)
+\end{equation}
+
+Also, we have that $Var(U_i|W_i)=\exV{U_i^2|W_i}-(\exV{U_i|W_i})^2=\exV{U_i^2|W_i}$, since we have shown $\exV{U_i|W_i}=0$ above. Homoskedasticity would mean both $\exV{U_i|W_i}=0$ and $\exV{U_i^2|W_i}$ not depending on $W_i$.
+
+Because $\exV{Y_i|W_i}=W'_i\beta$, and $Y_i$ takes values in $\{0,1\}$, we then have $Y_i|W_i$ distributed as bernoulli with $p=W'_i\beta$. This implies that $Var(U_i|W_i)=Var(Y_i|W_i)=W'_i\beta(1-W'_i\beta)$. Thus $Var(U_i|W_i)=\exV{U_i^2|W_i}$ depends on $W_i$, unless $\beta=0$, making it unreasonable to assume homoskedasticity, since this would imply $W_i$ is not useful in predictiong $Y_i$, and therefore our model is flawed from the start.
+
+\subsection*{c}
+
+Define $W:=[W'_i]$, that is, a matrix with $W'_i$ as its rows ($1\le i\le n$). Similarly define $Y:=[Y_i]$. With that, the OLS estimator of $\beta$ is:
+ \begin{equation}
+\hat{\beta}_n=(W'W)^{-1}W'Y
+\end{equation}
+
+Now take the conditional expectation of $\hat{\beta}_n$:
+\begin{equation}
+\exV{\hat{\beta}_n|W}=\exV{(W'W)^{-1}W'(W\beta+U)|W}=\beta+(W'W)^{-1}W'\exV{U|W}=\beta
+\end{equation}
+
+\noindent the last equality being due to $\exV{U|W}=0$, since $\exV{U_i|W_i}=0$ and the observations are i.i.d.. Thus we have conditional unbiasedness of $\hat{\beta}_n$. Applying the Law of Iteraded expectations we obtain unconditional as well: $\exV{\hat{\beta}_n}=\exV{\exV{\hat{\beta}_n|W}}=\exV{\beta}=\beta$.
+
+\subsection*{d}
+
+We can use CLT, WLLN and CMT to show:
+
+\begin{equation}
+\begin{split}
+\sqrt{n}(\hat{\beta}_n-\beta)&=\sqrt{n}\Big(\big(\frac{1}{n}\sum_{i=1}^{n}{W_iW'_i}\big)^{-1}\big(\frac{1}{n}\sum_{i=1}^{n}{W_iY_i}\big)-\beta\Big)\\
+&=\sqrt{n}\Big(\big(\frac{1}{n}\sum_{i=1}^{n}{W_iW'_i}\big)^{-1}\big(\frac{1}{n}\sum_{i=1}^{n}{W_i(W'_i\beta+U_i)}\big)-\beta\Big)\\
+&=\sqrt{n}\Big(\beta+\big(\frac{1}{n}\sum_{i=1}^{n}{W_iW'_i}\big)^{-1}\big(\frac{1}{n}\sum_{i=1}^{n}{W_iU_i}\big)-\beta\Big)\\
+&=\Big(\frac{1}{n}\sum_{i=1}^{n}{W_iW'_i}\Big)^{-1}\Big(\frac{1}{\sqrt{n}}\sum_{i=1}^{n}{W_iU_i}\Big)\\
+&\overset{d}{\to}N(0,\exV{W_iW'_i}^{-1}Var(W_iU_i)\exV{W_iW'_i}^{-1})=N(0,\Omega),
+\end{split}
+\end{equation}
+\noindent where we define $\Omega$ accordingly. The last result is due to: (i) $\Big(\frac{1}{n}\sum_{i=1}^{n}{W_iW'_i}\Big)^{-1}\plim\exV{W_iW'_i}^{-1}$ due to WLLN and CMT; (ii) $\Big(\frac{1}{\sqrt{n}}\sum_{i=1}^{n}{W_iU_i}\Big)\overset{d}{\to}N(0,Var(W_iU_i))$ due to CLT and $\exV{W_iU_i}=0$, as we have shown above; (iii) using slutsky and the fact that $\exV{W_iW'_i}^{-1}$ is symmetric we get the final result.
+
+Because it is not reasonable to assume homoskedasticity, a consistent estimate of $\Omega$ would be:
+\begin{equation}
+\hat{\Omega}_n=\Big(\frac{1}{n}\sum_{i=1}^{n}{W_iW'_i}\Big)^{-1}\Big(\frac{1}{n}\sum_{i=1}^{n}{W_iW'_i\hat{U}^2_i}\Big)\Big(\frac{1}{n}\sum_{i=1}^{n}{W_iW'_i}\Big)^{-1},
+\end{equation}
+\noindent where $\hat{U}$ are the residuals, since we do not know the true errors. In words, we are substituting the terms in $\Omega$ by sample analogs. In class we proved this leads to a consistent estimator. We will use this fact below.
+
+Now, using the CMT and $r:=\begin{pmatrix}
+0&0&1\\
+\end{pmatrix}'$ we have:
+\begin{equation}
+\begin{split}
+\sqrt{n}(r'\hat{\beta}_{n}-r'\beta)&\overset{d}{\to}N(0,r'\Omega r)\\
+\sqrt{n}(\hat{\beta}_{n,2}-\beta_2)&\overset{d}{\to}N(0,\begin{pmatrix}
+0&0&1\\
+\end{pmatrix}
+\Omega\begin{pmatrix}
+0\\
+0\\
+1\\
+\end{pmatrix})=N(0,\Omega_{3,3}),
+\end{split}
+\end{equation}
+\noindent where $\Omega_{3,3}$ is the $(3,3)$ element of the matrix $\Omega$.
+
+Because the function that maps from a vector to a coordinate is continuous, we can use the CMT to conclude that $\hat{\Omega}_{3,3}\plim\Omega_{3,3}$, where $\hat{\Omega}_{3,3}$ is the $(3,3)$ element of the matrix $\hat{\Omega}_n$. Again by the CMT we have $\sqrt{\hat{\Omega}_{3,3}}\plim\sqrt{\Omega_{3,3}}$.
+
+Using Slutsky (and CMT when applying the absolute value function), we then have:
+\begin{equation}
+\begin{split}
+\frac{\sqrt{n}(|\hat{\beta}_{n,2}-\beta_2|)}{\sqrt{\hat{\Omega}_{3,3}}}&\overset{d}{\to}|N(0,1)|,
+\end{split}
+\end{equation}
+
+Then, to test the null $H_0: \beta_2=0$, we could use the test statistic $T_n:=\frac{\sqrt{n}(|\hat{\beta}_{n,2}|)}{\sqrt{\hat{\Omega}_{3,3}}}$, and reject the null if $T_n>z_{1-\frac{\alpha}{2}}$. Then we have, using Portmanteau:
+\begin{equation}
+\begin{split}
+\limsup{\Pr(T_n>z_{1-\frac{\alpha}{2}})}&\le \limsup{\Pr(Tn\ge z_{1-\frac{\alpha}{2}})}\\
+&\le \Pr(|z|\ge z_{1-\frac{\alpha}{2}})=\alpha,
+\end{split}
+\end{equation}
+\noindent where $|z|$ is standard normal, and $z_{1-\frac{\alpha}{2}}$ the $1-\frac{\alpha}{2}$ quantile. Thus, we have a test consistent at level $\alpha$.
+
+\subsection*{e}
+
+We know that, because the regression without $Z_i$ still has a constant, the estimate for $\beta_1$ would be (where variables with overlines are sample means):
+\begin{equation}
+\begin{split}
+\hat{\beta}_{n,1}&=\big(\frac{1}{n}\sum_{i=1}^{n}{(X_i-\overline{X}_n)^2}\big)^{-1}\big(\frac{1}{n}\sum_{i=1}^{n}{(X_i-\overline{X}_n)(Y_i-\overline{Y}_n)}\big)\\
+&=\big(\frac{1}{n}\sum_{i=1}^{n}{(X_i-\overline{X}_n)^2}\big)^{-1}\big(\frac{1}{n}\sum_{i=1}^{n}{(X_i-\overline{X}_n)(\beta_0+X_i\beta_1+Z_i\beta_2+U_i-\beta_0-\overline{X}_n\beta_1-\overline{Z}_n\beta_2-\overline{U}_n)}\big)\\
+&=\big(\frac{1}{n}\sum_{i=1}^{n}{(X_i-\overline{X}_n)^2}\big)^{-1}\big(\frac{1}{n}\sum_{i=1}^{n}{(X_i-\overline{X}_n)((X_i-\overline{X}_n)\beta_1+(Z_i-\overline{Z}_n)\beta_2+(U_i-\overline{U}_n))}\big)\\
+&=\beta_1+\beta_2\frac{\big(\frac{1}{n}\sum_{i=1}^{n}{(X_i-\overline{X}_n)(Z_i-\overline{Z}_n)}\big)}{\big(\frac{1}{n}\sum_{i=1}^{n}{(X_i-\overline{X}_n)^2}\big)}+\frac{\big(\frac{1}{n}\sum_{i=1}^{n}{(X_i-\overline{X}_n)(U_i-\overline{U}_n)}\big)}{\big(\frac{1}{n}\sum_{i=1}^{n}{(X_i-\overline{X}_n)^2}\big)}
+\end{split}
+\end{equation}
+
+We know the last term in the last line converges in probabiliy to $\frac{Cov(X_i,U_i)}{Var(X_i)}=\frac{\exV{(X_i-\exV{X_i})(U_i-\exV{U_i})}}{\exV{(X_i-\exV{X_i})^2}}$ due to WLLN and CMT, since observations are i.i.d.. But we also know, from item (a) above, that $Cov(X_i,U_i)=0$; thus, the last term is converging in probability to zero. Also, again using WLLN and CMT, since observations are i.i.d., we have that the second fraction in the last line in converging in probability to $\beta_2\frac{Cov(X_i,Z_i)}{Var(X_i)}=\beta_2\frac{\exV{(X_i-\exV{X_i})(Z_i-\exV{Z_i})}}{\exV{(X_i-\exV{X_i})^2}}$.
+
+Therefore, for $\hat{\beta}_{n,1}\plim\beta_1$ to hold, we need either $\beta_2=0$ or $Cov(X_i,Z_i)=0$. That is, for the estimate of $\beta_1$ omitting $Z_i$ to be consistent, we need $X_i$ and $Z_i$ to be uncorrelated.
+
+\subsection*{f}
+
+Using $\hat{\beta}_n=(W'W)^{-1}W'Y$, we have that:
+\begin{equation}
+Var(\hat{\beta}_n|W)=(W'W)^{-1}W'Var(U|W)W(W'W)^{-1}
+\end{equation}
+
+We know $Var(U|W)$ is a matrix with diagonal elements equal to $W'_i\beta(1-W'_i\beta)$, and off-diagonal elements zero, because the observations are i.i.d.. We do not know $\beta$, but we can proceed by first obtaining an OLS estimate $\hat{\beta}_n=(W'W)^{-1}W'Y$. Then we use this OLS estimate to estimate $Var(U|W)$ by the matrix $\hat{\Omega}_n$ that has $W'_i\hat{\beta}_n(1-W'_i\hat{\beta}_n)$ in its diagonals and zero off-diagonals. Because OLS is consistent, using the CMT we obtain that $\hat{\Omega}_n\plim Var(U|W)$.
+
+Now we reestimate $\beta$ using $\hat{\beta}_n^{*}=(W'\hat{\Omega}_n^{-1}W)^{-1}W'\hat{\Omega}_n^{-1}Y$. This gives us that:
+\begin{equation}
+\begin{split}
+Var(\hat{\beta}_n^{*}|W)&=(W'\hat{\Omega}_n^{-1}W)^{-1}W'\hat{\Omega}_n^{-1}Var(U|W)\hat{\Omega}_n^{-1}W(W'\hat{\Omega}_n^{-1}W)^{-1}\\
+&\plim (W'\Omega^{-1}W)^{-1}W'\Omega^{-1}\Omega\Omega^{-1}W(W\Omega^{-1}W)^{-1}=(W\Omega^{-1}W)^{-1}
+\end{split}
+\end{equation}
+
+Thus, by the results of question 2, using $\Omega$ as our $D$, we obtain an estimator whose variance converges to the best variance possible among unbiased estimators, in the gauss-markov sense.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section*{Question 7}
+\subsection*{a}
+Note that this follows simply from the random assignment. Because individuals are not aware of their assignment before the experiment and have equal likelihood of being assigned to treatment or control groups, their probability of being assigned to the treatment is independent of their $\alpha_i$ and $\beta_i$. Thus, $D_i$ is independent of $(a_i,\beta_i)$
+\subsection*{b}
+Note, that we can write down the $\beta$ (i.e from class) as $Var(D_i,D_i')^{-1}Cov(D_i,Y_i)$ for the special case of a bivariate regression. 
+\begin{align*}
+    \beta &= Var(D_iD_i')^{-1}Cov(D_iY_i) \\
+    &= Var(D_iD_i')^{-1}Cov(D_i\alpha_i + \beta_i D_i) \\
+    &= Var(D_iD_i')^{-1}(Cov(D_i\alpha_i) + Cov(\beta_i D_iD_i)) 
+\end{align*}
+Since $(\alpha_i,\beta_i)$ are independent of $D_i$, the first term is just 0, and the second term is $E(\beta_i)E(D_iD_i')$. Thus, we have:
+\begin{align*}
+    & = Var(D_iD_i')^{-1} E(\beta_i)Cov(D_iD_i') \\
+    & = Var(D_iD_i')^{-1} E(D_iD_i')E(\beta_i)\\
+    & = E(\beta_i)
+\end{align*}
+Using the above, note we can also solve for $\alpha$:
+$$ \alpha = E(y-\beta D_i)$$
+\begin{align*}
+    \alpha & = E(Y_i) - \beta E(D_i) \\
+    & = E(\alpha_i + \beta_i D_i) - \beta E(D_i) \\
+    & = E(\alpha_i) + E(\beta_i D_i) - \beta E(D_i) \\
+\end{align*}
+Again, by the independence of $\beta_i$ and $D_i$, we get that this equals
+\begin{align*}
+    & = E(\alpha_i) + E(\beta_i) E(D_i) - \beta E(D_i) \\
+    & = E(\alpha_i) + \beta E( D_i) - \beta E(D_i) \\
+    & = E(\alpha_i)  \\
+\end{align*}
+\subsection*{c}
+Note that since we aren't given homoskedasticity\footnote{In fact, in this setup it is probable that $Var(\epsilon_i)$ is not constant as $\alpha_i$ and $\beta_i$ depend on $i$, and indeed, $Var(\epsilon_i|D_i) = (1-D_i)Var(\alpha_i) + D_iVar(\alpha_i + \beta_i)$}, we can use robust standard errors:
+\begin{align*}
+    \hat \Omega &= (\frac{1}{n}\sum_{i=1}^n X_i X_i')^{-1}(\frac{1}{n}\sum_{i=1}^n X_i X_i' \hat \epsilon_i)(\frac{1}{n}\sum_{i=1}^n X_i X_i')^{-1} \\
+    & \rightarrow \Omega
+\end{align*}
+Now, note that the errors in $\beta$ are just the component of $\Omega$ in position (2,2). As $\hat \Omega$ is a consistent estimator of $\Omega$ (from class and delineated above), we can construct the confidence region:
+$$C_n = [\hat \beta_n - \Phi^{-1}({1-\alpha/2})\times \sqrt{\frac{\hat \Omega_{2,2}}{n}}, \hat \beta_n +  \Phi^{-1}({1-\alpha/2})\times \sqrt{\frac{\hat \Omega_{2,2}}{n}}]  $$
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Question 8}
+
+\subsection*{a}
+
+\begin{minted}[mathescape,
+               linenos,
+               breaklines,
+               numbersep=5pt,
+               frame=lines]{R}
+
+
+data <- read.csv( "ps4.csv" )
+
+k <- ncol(data)
+N <- nrow(data)
+
+## Since we are not calling lm, we want to do matrix algebra, we need
+## R to not store this stuff as a data frame. What a terrible language.
+
+Y <-  as.matrix(data$y)
+X <- as.matrix(cbind( rep(1,N), data[,2:3] ))
+
+## Remember that matrix multiplication uses the %*%
+mat <-  t(X)%*%X
+
+## Rather than using inverses, let's be numerically stable and use the
+## Cholesky decomp and forward/back substitution for legitimate answers
+F <- chol(mat)
+
+## We now have $ X' X \beta = X' Y$
+## This is equivalent to $F' F \beta = X' Y$
+## Thus $\beta = \inv{F} \inv{F'}  X' Y$
+
+## Note that F' is lower triangular so we use forward substitution.
+beta <-  backsolve( F, forwardsolve( t(F), t(X)%*%Y ) )
+
+\end{minted}
+
+Our estimated values of $\beta$ are: $(0.1680066, 1.0843565, 0.9203671)'$.
+
+\subsection*{b}
+
+
+
+\begin{minted}[mathescape,
+               linenos,
+               breaklines,
+               numbersep=5pt,
+               frame=lines,
+               firstnumber=last]{R}
+
+## Now lets build our variance estimates.
+
+outerproduct <- function( row ){
+    row%*%t(row)
+}
+
+## We are interested in estimating $\inv{\left (\frac{1}{n} \sum_{i=1}^n X_i X_i' \right )}$
+
+
+## The inner apply() forms the outer product matrices, the outer
+## averages over them The matrix() reforms them as a matrix since
+## apply flattens them.  This is equivalent to just doing
+## $\frac{1}{n} X' X$, I just wanted some R practice.
+outerProductGradient <- matrix( apply( apply( X, 1, outerproduct ), 1,
+                                      mean ), nrow = k, ncol = k )
+
+## Mama told me to never invert a matrix on a computer
+varF <- chol( outerProductGradient )
+informationEstimate <- backsolve( varF, forwardsolve( t(varF), diag(k) ) )
+
+## Now lets get the heteroskedasticity-robust version of this bad boy.
+## We multiply the matrix of $X_i X_i'$ by $\hat{u_i}^2$ component wise, hence no % 
+monstronsity <- matrix( apply(
+    matrix( rep( (Y - X%*%beta)^2, k*k ), nrow=k*k, ncol = N, byrow = TRUE )
+     * apply( X, 1, outerproduct ), 1, mean ), nrow = k, ncol = k )
+
+## This is what are interested in: $\Vari{\est{\beta} \vert X }$
+condVarHetero <- informationEstimate%*%monstronsity%*%informationEstimate
+
+
+## Note that it's  possible to just use matrix operations to get there
+## I just chose this way for practice and to have it look like the notes.
+## One could always do $\inv{ ( X' X ) } X' \est{\Sigma} X \inv{ ( X' X )}$
+
+\end{minted}
+
+Our estimated Variance-Covariance Matrix of $\est{\beta}$ is:
+\begin{equation*}
+  \Vari{ \est{\beta} \vert X} =
+  \begin{pmatrix}
+     4.8905355 &  0.4493318 & -1.6478739\\
+  0.4493318 &  0.4517238 & -0.3702895\\
+ -1.6478739 & -0.3702895 &  0.7567006\\
+  \end{pmatrix}
+\end{equation*}
+
+\subsection*{c}
+
+\begin{minted}[mathescape,
+               linenos,
+               breaklines,
+               numbersep=5pt,
+               frame=lines,
+               firstnumber=last]{R}
+## Now we face multiple linear restrictions in the form of $R \beta = r$
+
+## We don't really know anything about the nature of $R \Vari{ \est{ \beta } }$
+## So we can't rely on any decompositions, and we'll let solve() work here
+multipleLinearTest <- function( R, r, N, beta, Var ){
+    N*t(R%*%beta - r )%*%solve(R%*%Var%*%t(R))%*%(R%*%beta -r  )
+}
+
+
+R <-  matrix( c( 0, 0, 1, 0 ,0,1 ), nrow = 2, ncol = 3 )
+r <- c(  1, 1 )
+
+## This is free to be changed.
+alpha <- .05
+
+## This c is the critical value used in a hypothesis test
+c <- qchisq( alpha, df = 2, lower.tail = FALSE )
+
+
+testStat <- multipleLinearTest( R, r, N, beta, condVarHetero )
+pValue <-  pchisq( testStat, df = 2, lower.tail = FALSE )
+
+\end{minted}
+
+Our test statistic value is $1.599558$ and our p-value is: $0.4494283$
+
+\subsection*{d}
+
+
+\begin{minted}[mathescape,
+               linenos,
+               breaklines,
+               numbersep=5pt,
+               frame=lines,
+               firstnumber=last]{R}
+## Testing: $f( \beta ) = (\beta_1 - \beta_2 )^2 = 0$
+## However we need the rows of the total derivative to be linearly independent.
+## $\nabla f( \beta ) = ( 0, 2( \beta_1 - \beta_2 ), -2 ( \beta_1 - \beta_2 ) )'$
+## The rows are not linearly independent - The standard nonlinear test will not work.
+
+## Worse yet, if we attempt to simply take the square root of both
+## sides we lose the reliability as this is a Wald-Test. Wald Tests
+## are not invariant to non-linear Transforms. This means we want to
+## use a likelihood-ratio test, which is. However if we do not want to
+## assume normality of Y and then the GLM framework to get a
+## likelihood-ratio test, we can just stand for the errors in the Wald Test.
+
+## Our test is simply testing if $\beta_1 - \beta_2 = 0$
+
+R <- matrix( c( 0, 1, -1 ), nrow = 1, ncol = 3 )
+r <- c(0)
+
+## I just copy and pasted the previous code
+c <- qchisq( alpha, df = 1, lower.tail = FALSE )
+testStat <- fischerFTest( R, r, N, beta, condVarHetero )
+pValue <-  pchisq( testStat, df = 1, lower.tail = FALSE )
+   
+\end{minted}
+Our test statistic value is $1.379809$ and our p-value is: $0.2401337$
+
+
+\end{document}

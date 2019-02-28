@@ -1,0 +1,15 @@
+mean(entryOne)
+mean(entryTwo)
+e1,e2,x = SimulateFirmEntry( α, δ, T )
+e1,e2,x = SimulateFirmEntry( α, δ, T )
+x
+e1
+e2
+PrintAMPLFile( e1, "entryOne.txt" )
+PrintAMPLFile( e2, "entryTwo.txt" )
+PrintAMPLFile( x, "x.txt" )
+getvalue(α)
+getvalue(δ )
+PrintAMPLFile( e1, "entryOne.txt" )
+PrintAMPLFile( e2, "entryTwo.txt" )
+PrintAMPLFile( x, "x.txt" )

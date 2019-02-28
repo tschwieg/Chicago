@@ -1,0 +1,188 @@
+\documentclass[12pt]{paper}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{Schwieg}
+\usepackage{tikz}
+
+
+
+\begin{document}
+
+\section{Question 2}
+
+
+Show that $\smallO_P(1) + \bigO_P(1) = \bigO(1)$.
+\newline\newline
+Note that $X_n = \smallO_P(1)$ if $X_n \plim 0$ and $X_n = \bigO_P(1)$
+if $X_n$ is tight. Note that $X_n \plim 0$ implies that $X_n \convDist
+0$ and therefore $X_n$ is tight.
+
+Let $X_n = \smallO_P(1)$ and $Y_N = \bigO(1)$. By the above logic,
+$X_n$ is tight. So $\forall \epsilon > 0, \exists B_x, B_y$ such that:
+
+\begin{align*}
+  \inf_n \Pr( \abs{X_n} \leq B_x) &\geq 1- \frac{\epsilon}{2}\\
+  \inf_n \Pr( \abs{Y_n} \leq B_y) &\geq 1 - \frac{\epsilon}{2}
+\end{align*}
+
+For any such $\epsilon > 0$, choose $M$ such that
+\begin{equation*}
+  \frac{M}{2} > B_x \quad \quad \frac{M}{2} > B_y
+\end{equation*}
+
+Define $A$ and $B$ such that:
+\begin{equation*}
+  A := \{ \abs{X_n} + \abs{Y_n} > M \} \Rightarrow \left \{\abs{X_n} >
+    \frac{M}{2} \right\} \cup
+\left\{\abs{Y_n} > \frac{M}{2} \right\} =: B
+\end{equation*}
+
+Note that:
+\begin{equation*}
+  \Pr( A) \leq \Pr(B) \leq \Pr\left( \abs{X_n} > \frac{M}{2}\right) + \Pr\left( \abs{Y_n} > \frac{M}{2}\right) < \epsilon
+\end{equation*}
+From the definition of tightness, and our choice of $M$. 
+
+Define $C := \{ \abs{ X_n + Y_n} > M \}$. From the triangle inequality
+we know that $\abs{X_n + Y_n} \leq \abs{X_n} + \abs{Y_n}$
+
+Thus:
+\begin{align*}
+  \abs{X_n + Y_n} > M \Rightarrow \abs{X_n} + \abs{Y_n} &> M \\
+  \Pr( \abs{X_n + Y_n } > M) \leq \Pr( \abs{X_n} + \abs{Y_n} > M) &< \epsilon\\
+  \Pr( \abs{X_n + Y_n} \leq M ) &\geq 1 - \epsilon
+\end{align*}
+ This tells us that
+$X_n + Y_n$ is tight, and therefore
+$\bigO_P(1) + \bigO_P(1) = \bigO_P(1)$. So:
+\begin{equation*}
+  \smallO_P(1) + \bigO_P(1) = \bigO_P(1) 
+\end{equation*}
+
+\section{Question 6}
+
+\begin{equation*}
+  \Vari{ Y \vert X} = \exV{ \left( Y - \exV{Y \vert X} \right)^2 \vert X}
+\end{equation*}
+
+Let $Z = Y^2$. Then
+\begin{equation*}
+\exV{\exV{Y^2 \vert X}} = \exV{\exV{Z \vert X}}= \exV{Z} = \exV{Y^2}  
+\end{equation*}
+
+\subsection{A}
+
+\begin{align*}
+  \Vari{ Y \vert X} &= \exV{ Y^2 \vert X } - 2  \exV{ Y \exV{ Y \vert X} \vert X} +
+                  \exV{\exV{Y \vert X}^2\vert X}\\
+                &= \exV{ Y^2 \vert X} - 2 \exV{ Y \vert X} \exV{ Y \vert X} + \exV{Y \vert X}^2\\
+  &= \exV{Y^2 \vert X} - \exV{Y \vert X}^2
+\end{align*}
+
+\subsection{B}
+
+\begin{align*}
+  \exV{\Vari{Y\vert X}} &= \exV{ \exV{ Y^2 | X}} - \exV{\exV{ Y \vert X}^2}\\
+  \Vari{\exV{Y\vert X}} &= \exV{\exV{Y \vert X}^2} - \exV{\exV{Y\vert X}}^2\\
+  \\
+  \exV{\Vari{Y\vert X}} + \Vari{\exV{Y\vert X}} &= \exV{ \exV{Y^2 \vert X}} -
+                                       \exV{\exV{Y\vert X}}^2\\
+                   &= \exV{\exV{Y^2 \vert X}} - \exV{Y}^2\\
+                   &=\exV{Y^2} - \exV{Y}^2\\
+                   &= \Vari{Y}
+\end{align*}
+
+\section{Question 10}
+Let $(Y,X)$ be a bivariate normal random variable. Find $\exV{Y \vert
+  X}$. \newline \newline
+
+\begin{equation*}
+  (Y,X) \sim \normal \left( \binom{\mu_Y}{\mu_X},
+    \begin{pmatrix}
+      \sigma_Y^2 & \rho \sigma_Y \sigma_X\\
+      \rho \sigma_Y \sigma_X & \sigma_X^2
+    \end{pmatrix}
+  \right)
+\end{equation*}
+Any bivariate normal random variable can be rewritten as:
+\begin{align*}
+  X &= \sigma_X Z_1 + \mu_X\\
+  Y &= \sigma_Y \rho Z_1 + Z_2 \sqrt{ 1 - \rho^2} + \mu_Y
+\end{align*}
+
+This allows us to rewrite $Z_1$ and then $Y$.
+\begin{align*}
+  Z_1 &= \frac{X - \mu_X}{\sigma_X}\\
+  Y &= \sigma_Y \rho \left( \frac{X - \mu_X}{\sigma_X} \right) + Z_2\sqrt{ 1 - \rho^2} + \mu_Y\\
+\end{align*}
+
+Taking the expectation conditioned on $X$.
+
+\begin{align*}
+  \exV{Y \vert X} &= \exV{ \sigma_Y \rho \frac{X - \mu_X}{\sigma_X} \vert X} + \exV{ \sqrt{ 1 - \rho^2}
+            Z_2 \vert X} + \exV{\mu_Y \vert X}\\
+  &= \frac{\sigma_Y \rho}{\sigma_X} \exV{X \vert X} - \frac{\sigma_Y \rho \mu_X}{\sigma_X} + \sqrt{ 1
+    - \rho^2} \exV{ Z_2 \vert X} + \mu_Y\\
+  &= \frac{\sigma_Y \rho}{\sigma_X} X - \frac{\sigma_Y \rho \mu_X}{\sigma_X} + \mu_Y
+\end{align*}
+
+where $\exV{Z_2 \vert X} = \exV{Z_2} = 0$ by the fact that $Z_1, Z_2$ are
+independent, and $X$ is a function of $Z_1$ only.
+
+
+\section{Question 14}
+The best linear predictor of $Y$ conditioned on $\vec{X}$ is given by:
+\begin{equation*}
+  \min_{\vec{b} \in \setR^3} \exV{ \brak{Y - X' \vec{b}}^2}
+\end{equation*}
+Note that $X_1 b_1 + X_2 b_2 + X_3 b_3 = X_1 \left( b_1
+  + \alpha_1 b_3 \right) + X_2 \left( b_2 + \alpha_2 b_3  \right) := ( \gamma_1, \gamma_2)$. 
+
+
+The best linear predictor of $Y$ given $(X_1,X_2)$ is given by:
+\begin{equation*}
+  \min_{\vec{\beta} \in \setR^2} \exV{ \brak{ Y - X_1 \beta_1 - X_2 \beta_2}^2}
+\end{equation*}
+
+It would not be possible to minimize over two dimensions and do better
+than minimizing over three. One could fix $b_3 = 0$ and then reach
+the same problem as minimizing over two dimensions.
+
+This tells us that
+\begin{equation*}
+  \min_{\vec{\beta} \in \setR^2} \exV{ \brak{ Y - X_1 \beta_1 - X_2 \beta_2}^2} \geq
+  \min_{\vec{b} \in \setR^3} \exV{ \brak{Y - X' \vec{b}}^2}
+\end{equation*}
+
+One cannot do any worse minimizing over the two dimensions either. For
+any value of $\vec{b}$, choose $\vec{\gamma}$ as above, and $\exV{ \brak{ Y -
+  X' \vec{b}}^2} = \exV{ \brak{ Y - (X_1, X_2)' \vec{\gamma}}^2}$. Thus the two
+dimensional case can always do as well as the three dimensional case
+and:
+
+\begin{equation*}
+  \min_{\vec{\beta} \in \setR^2} \exV{ \brak{ Y - X_1 \beta_1 - X_2 \beta_2}^2} \leq
+  \min_{\vec{b} \in \setR^3} \exV{ \brak{Y - X' \vec{b}}^2}  
+\end{equation*}
+
+This leads us to conclude that:
+\begin{equation*}
+  \min_{\vec{\beta} \in \setR^2} \exV{ \brak{ Y - X_1 \beta_1 - X_2 \beta_2}^2} =
+  \min_{\vec{b} \in \setR^3} \exV{ \brak{Y - X' \vec{b}}^2}
+\end{equation*}
+
+This means the best linear predictor of $Y$ given $\vec{X}$ is equivalent to
+the best linear predictor of $Y$ given $(X_1,X_2)$. Since we know that
+there is no perfect colinearity between $(X_1,X_2)$ we may apply the
+standard Linear Regression approach.
+
+\begin{equation*}
+  \vec{\beta} = \exV{ (X_1, X_2) (X_1, X_2)'}\exV{ (X_1, X_2)Y} 
+\end{equation*}
+
+The solution to the minimization problem over all $X$ is any
+combination of $b_1, b_2, b_3$ such that
+$\vec{\beta} = (b_1 + \alpha_1 b_3, b_2 + \alpha_2 b_3)'$.
+
+
+\end{document}

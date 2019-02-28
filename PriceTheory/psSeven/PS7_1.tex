@@ -1,0 +1,356 @@
+\documentclass[12pt]{paper}
+
+\usepackage{fullpage} % Package to use full page
+\usepackage{parskip} % Package to tweak paragraph skipping
+\usepackage{tikz} % Package for drawing
+\usepackage{amsmath}
+\usepackage{hyperref}
+\usepackage{setspace}
+\usepackage[margin=1in]{geometry}
+
+%\setstretch{1.5}
+\title{Price Theory I: Question 7.1}
+\author{Samuel Barker, Daniel Noriega, Rafeh Qureshi, Timothy Schwieg}
+
+\begin{document}
+
+\maketitle
+\subsection*{Question:}
+Development economics has observed that giving cash assistance to
+households affects their investment in children (e.g., money and
+effort put toward children’s health and education) differently if the
+cash is paid to the mother rather than the father. Here we assume that
+each adult cares about personal consumption activities as well as the
+output from a joint production activity (a house, children). The joint
+production requires multiple tasks and has output that is non-rival in
+that one parent’s enjoyment does not preclude the other parent’s.
+
+The mother has a comparative advantage in some of the joint-production
+tasks while the father has a comparative advantage in others.
+
+\subsection*{Setup}
+
+There are multiple inputs for and outputs from household production. We are given that there are multiple tasks for joint production (multiple inputs). Further, the question gives an example of the house and children--two outputs.
+\\
+
+Thus, the household production function is:
+\begin{align*}
+    F(T_m,T_f)&=H,
+\end{align*}
+where $H$ is a vector of outputs, and $T_m$ and $T_f$ are the tasks
+for production that the mother and father respectively have
+comparative advantages in. We will model this comparative advantage by
+saying that they face lower prices for the input/task which they have
+an advantage in. Denote the price that father faces for $T_f$ and
+$T_m$ as $P_{Ff}$ and $P_{Fm}$ respectively. The notation for the
+mother is the same, except switching out the $F$ for an $M$. Thus, the
+first letter (which is also capitalized) signifies which person faces
+the price for the input, and the kind of input is communicated by the
+second (and lowercase) letter. So, to be clear:
+
+\begin{align*}
+    P_{Ff}&<P_{Mf},\\
+    P_{Mm}&<P_{Fm}.
+\end{align*}
+
+Note that this is \textit{absolute advantage}. It will become clear
+later that comparative advantage in our framework is less interesting,
+and this is why we have taken a stronger interpretation.
+\\
+
+We will think about the units of input prices in terms of dollars. Of
+course, some of the cost is really effort or time, but we can just
+convert these easily into dollars by considering the money value that
+they place on the time and effort--probably by thinking about the
+opportunity cost of not working. Thus, in this world, the parents are
+indifferent between working a lot and paying a nanny or tutor, and
+working less and nannying/tutoring their own kids. Presumably,
+everyone will want some amount of money in order to buy $C$--the
+personal consumption good, which functionally plays a role no
+different from the numeraire. We could have just as easily thought
+about prices in terms of time, but since we are thinking about
+transfers of cash between husband and wife, it is better to model this
+with prices in terms of dollars.
+\\
+
+The next step is to show that \textbf{$H$ can be partitioned into
+  $H_f$ and $H_m$,} which are outcomes associated with the inputs
+$T_f$ and $T_m$. The motivation behind this partitioning comes from
+the fact that we expect the father and mother to specialize, and thus
+want to be able to distinguish what outputs come from what input. In
+this framework, we can think of the cost of producing $H_g$ (with
+$g\in\{m,f\}$) as being $T_gP_Gg$, (where $G\in\{M,F\}$ to signify the
+price for the mother or father). Further, we are going to assume CRS
+for the household production function. This allows us to consider
+$P_Gg$ times some constant as the price of $H_g$. From here on out,
+think of $P_Gg$ as the price parent $G$ faces for $H_g$--we have
+effectively constructed this such that $T_f$ and $T_m$ can be
+ignored. Thus, this problem boils down to a utility maximization
+problem.
+\\
+
+We will say that both the father and the mother have preferences over
+three goods: the outputs of household production, $H_f$ and $H_m$; and
+$C$, some consumption good. ``Consumption'' of $H$ if non-rival. Thus,
+we know that the $H_f$ and $H_m$ that enter $u_m$ and $u_f$ have the
+same values. \textbf{Additionally, we assume that $u_m$ and $u_f$ are
+  the same function.}
+\\
+
+\subsection*{Part A} 
+\textbf{Suppose for the moment that the father makes all decisions as he sees fit, including “hiring” the mother to do tasks. Does the mother’s preference for the joint production output affect the amount that is produced? Does it matter whether the father is altruistic toward the mother?}
+\\
+
+The father is maximizing his utility. To see how he will do this,
+consider his maximization problem if he is not married.
+
+\begin{align*}
+    \max u_f&(H_f,H_m,C)\\
+    \text{s.t. } I&=H_fP_{Ff}+H_mP_{Fm}+CP_C.
+\end{align*}
+Note that $I$ is the money value of his time, effort, etc., as well as
+his actual income. Further, his actual income must be greater than
+$CP_C$--he cannot produce that in home.
+\\
+
+Now consider when he is married and is essentially a dictator. We take
+this to mean that the father has all the resources--thus, the mother
+cannot produce anything unless the father gives her some
+money. However, the father is not a dictator in the sense that he
+cannot tell the mother to produce $H_m$ without consuming $C$. He can
+only decide how much money to give her, and then she will maximize her
+utility with that money. \textbf{Thus, he must make his decision in
+  light of what she \textit{will do} with the money that he gives her,
+  rather than what she \textit{could do}.}
+\\
+
+If the father chooses to ``hire'' the mother, then this must mean that
+he can get more for the same amount of money. Effectively, if he
+``hires'' his wife, then he must be facing a lower price for $H_m$
+than $P_{Fm}$. But, this price must be higher than $P_{Mm}$ (this is
+obvious by the fact that the woman consumes $C$ as well as choosing
+$H_m$). Denote this new ``price'' as $P'_{Fm}\in(P_{Mm},P_{Fm})$. In
+particular, notice that this ``price'' is
+
+\begin{align*}
+    P'_{Fm}:=\frac{I_m}{H_m \eta_{H_m}}.
+\end{align*}
+
+Where $I_m$ is the income of the mother (the amount that the father
+gives her in this question), $H_m$ is the amount of $H_m$ that has
+been produced (by either father or mother since it is a non-rival
+good), and $\eta_{H_m}$ is the income elasticity of demand for good
+$H_m$ for the woman.
+\\
+
+This equation comes from the fact that
+
+\begin{align*}
+    \eta_{H_m} \frac{\Delta I_m}{I_m}&=\frac{\Delta H_m}{H_m}\\
+    \frac{\Delta I_m}{\Delta H_m}&=\frac{I_m}{H_m \eta_{H_m}}.
+\end{align*}
+
+This equations tells us how much $H_m$ you will get given an increase
+in $I_m$. Since an increase in $I_m$ comes out of the father's pocket,
+the RHS can be seen as the effective price for the father as stated
+above. Notice from all of this that if the mother only has a
+comparative advantage (as opposed to an absolute advantage) in
+producing $H_m$, then $P_{Fm}>P'_{Fm}$, thus for this to be an
+interesting question, we need absolute advantage.
+\\
+
+\textbf{CLAIM: The mother will never produce $H_f$ if the father is a dictator.}
+\\
+
+To realize this fact, notice that the mother's maximization problem,
+and consider the relation between $H_m$ and $H_f$ (her maximization
+over $C$ has occurred in the background). Notice that she would
+maximize at a point where:
+
+\begin{align*}
+    MRS^m_{H_f,H_m}=-\frac{P_{Mf}}{P_{Mm}}.
+\end{align*}
+
+Whereas the father would maximize at a point where:
+
+\begin{align*}
+    MRS^f_{H_f,H_m}=-\frac{P_{Ff}}{P'_{Fm}}.
+\end{align*}
+
+Notice that since $P'_{Fm}>P_{Mm}$ and $P_{Ff}<P_{Mf}$ we know that:
+
+\begin{align*}
+    |MRS^f_{H_f,H_m}|<|MRS^m_{H_f,H_m}|.
+\end{align*}
+
+Thus, we know that since it is the father which is making the
+maximization decision, he will maximize at a point at which the mother
+will face greater returns to $H_m$ than $H_f$--\textbf{she won't buy
+  $H_f$.}
+\\
+
+\textbf{CLAIM: The mother's preferences between $H_f$ and $H_m$ don't
+  affect the amount that is produced; And her preferences between
+  $H_m$ and $C$ do matter--they affect outcome through $\eta_{H_m}$.}
+\\
+
+The first fact is clear because we know that she will never buy
+$H_f$. Thus, we only need to think about her maximizing over $C$ and
+$H_m$. Further, by our construction of $P'_{Fm}$ we can easily see how
+the second fact is true. Specifically, the father maximizes his
+utility (analogous to deciding how much to produce) according to a
+price which is a function of the mother's income elasticity of demand
+for $H_m$, and she is only choosing between $C$ and $H_m$. Thus, since
+her preferences between $C$ and $H_m$ decide what $\eta_{H_m}$ is, her
+preferences affect what is produced.
+\\
+
+\textbf{CLAIM: An altruistic father results in more $H_m$ and $H_f$ than before}
+\\
+
+If the father is altruistic, then $H_f$ and $H_m$ enter into his
+utility twice. Further, he also cares about $C_m$, which is the $C$
+that the mother has. We will assume that he does not count his wife's
+utility more than his own. Even still, we should expect him to give
+more money to the mother than he did before--he has all the same
+incentives as before and more (he gets utility from $C_m$). In
+addition, we should expect him to consume less $C$ than he did before
+because the returns to $H_f$ and $H_m$ are higher than they were
+before (they are counted twice)--thus he will allocate more to each of
+those than he did before. All of the same arguments above hold, there
+is just a different equilibrium where more $H_m$ and $H_f$ is
+produced.
+\\
+
+\textbf{CLAIM: Mother's preferences affect the consumption of father's goods more in the altruistic case}
+\\
+
+Over here, we view the world where the father is able to pay the
+mother $P_{F_f}$ to commission a certain amount of $H_m$. Clearly, she
+will agree as she also benefits from the production of $H_m$ so she
+will produce the amount the father commissioned for $P_{M_m}$. Thus, the
+father will be solving
+\begin{equation}
+    \max_{H_f,H_m,c} U_f(H_f,H_m,c) \text{ s.t } H_f P_{F_f} + H_m P_{M_m} + p_c c \leq Y
+\end{equation}
+\begin{align*}
+    \frac{\partial U_f}{\partial H_f} & = \lambda P_{F_f} \\
+    \frac{\partial U_f}{\partial H_m} & = \lambda P_{F_m} \\
+    \frac{\partial U_f}{\partial c}  & = \lambda P_{c}
+\end{align*}
+Clearly, here the mother's preferences do not affect the equilibrium
+allocation. Note, here it certainly important that the mother has no
+income; else the mother would use her income to produce some amount of
+$H_f$ and $H_m$ according to her own preferences, wherein the father
+would incorporate that to his initial endowment and so the mother's
+preferences would affect the amount of $H_m$ and $H_f$ produced.  Now,
+note in the world with altruism, we have with an altruism parameter
+$\alpha<1$
+\begin{equation}
+  \max_{H_f,H_m,C} U_f(H_f,H_m,C)  + \alpha U_m(H_f,H_m,C) \text{ s.t  }  H_f P_{F_f} + H_m P_{M_m} + C_C C \leq Y
+\end{equation}
+Here, certainly the father would want to increase the input until
+\begin{align*}
+    \frac{\partial U_f}{\partial H_f} + \alpha  \frac{\partial U_m}{\partial H_f} & = \lambda P_{F_f} \\
+    \frac{\partial U_f}{\partial H_m} + \alpha  \frac{\partial U_m}{\partial H_m} & = \lambda P_{F_m} \\
+    \frac{\partial U_f}{\partial C} + \alpha  \frac{\partial U_m}{\partial C} & = \max\{\frac{\partial U_f}{\partial C},\alpha \frac{\partial U_m}{\partial C}\} = \lambda P_{C}
+\end{align*}
+Here, certainly the mother's preferences matter more for the
+equilibrium allocation. Namely, we can see that the father will invest
+more in producing $H_f$ and will invest more in producing $H_m$
+through paying the mother for it. We will however see the father
+consuming less of the personal consumption good $C$.
+
+
+
+\subsection*{Part B}
+\textbf{Does cash received by father versus mother have a different
+  effect on the joint production? Does it matter whether the father is
+  altruistic toward the mother?}
+\\
+
+If the cash is received by the father, then the case is exactly the same as above.
+\\
+
+If the cash is received by the mother, then there are three different
+potential outcomes. The \textbf{first} is that the amount of cash
+given to the mother is so great that \textit{she} actually finds it in
+her best interest to give some to him (which would follow the same
+argument as above in reverse)--this is an unlikely case given that he
+controls all the household wealth besides this cash inflow. The
+\textbf{second} case is that the amount of cash is great enough that
+the father doesn't want to give her more money, i.e. he finds it
+better to buy more $H_f$ and $C$ than to get $H_m$ at the price
+$P'_{Fm}$. But, unlike the first case, the amount is not great enough
+for her to want to give him money. In this case, each person would
+just maximize their own utilities. Notice that they would again only
+produce the household good which they have comparative advantages
+in. \textbf{The third case is where the amount of cash is less than
+  the amount she would have received from the father anyway. Thus, he
+  will give her more money. In this case, it is no different from if
+  the cash is given to the father.}
+\\
+
+Both the first and second case would have different outcomes from the
+Part A--namely, more $H_m$ would be produced. However, if the father is
+altruistic, they are less likely to occur and case three is more
+likely to occur. To see this, notice that the father is willing to
+give more money to his wife when he is altruistic. This automatically
+means that we are more likely to be in case three when the father is
+altruistic since case three is when the cash amount is less than the
+optimal amount for the wife to have. Thus, cash being received by the
+father and mother is less likely to have an effect on the joint
+production if the father is altruistic.
+
+\subsection*{Part C}
+\textbf{Now drop the assumption that father makes all decisions. Give a definition of an efficient allocation and explain whether/how this allocation depends on the cash received by father versus mother.}
+\\
+
+If we take an efficient allocation to be a Pareto efficient
+allocation, then we end up with some pretty trivial results. Namely,
+all of the results we got already would be efficient--after all, people
+getting cash doesn't make anyone worse off.
+\\
+
+Thus, we are defining efficient as the allocation that maximizes the
+sum of the parent's utilities. First, realize that if the money goes
+to the father, he will buy more $H_f$ and less $H_m$ than the mother
+would have. Thus, if there is a greater marginal return to $H_m$ than
+to $H_f$, it would be efficient to give the money to the mother. Note,
+this is an \textit{objective} maximization. Meaning, giving the money
+to one parent will give an inefficient allocation, and giving it to
+the other will be an efficient allocation.
+
+\subsection*{Part D}
+\textbf{Given that, empirically, redistribution from fathers to mothers increases education/health investment in children, can we conclude that redistribution from fathers to mothers increases the (future) adult living standards of the children?}
+\\
+
+Note, that in looking at the differential investments of mothers and
+fathers in different components of the joint production (i.e $H_m$ and
+$H_f$), we used the differences in the costs the mothers and the
+fathers faced. We did not, however, assume anything about the mothers
+having higher preferences for the children's future living standards
+(indeed, in our base example, the mothers and fathers were assumed to
+have the same utility function). Thus even though redistributing
+income from fathers to mothers increases investment in $H_m$, which in
+turn leads to better schooling and health for children, there is less
+investment in $H_f$. Thus, it is possible that the $H_f$ could have
+more beneficial effects on a child's future living standards. This is
+because the changes in investment we see from the redistribution from
+fathers to mothers is due to the comparative advantage mothers have in
+producing $H_m$ rather than necessarily a higher preference for the
+children's future living standards.
+\\
+
+Additionally, if we transfer too much money from the father to the
+mother, the mother could actually view it as beneficial to give some
+money to the father in order to get additional $H_f$. This case is
+analogous to Part A where the father ``hires'' the mother to get
+$H_m$. Despite this, of course, the mother would keep more money than
+she would give back to the father (since he will use some to buy
+$C$). Thus, we will still get more $H_m$, and therefore more education
+and health investments in children, but less per dollar transferred to
+the mother than before. Thus, transferring more money may lead to less
+additional investment in children than it had in the past.
+
+\end{document}

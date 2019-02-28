@@ -1,0 +1,347 @@
+\documentclass[12pt]{paper}
+
+\usepackage{Schwieg}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{minted}
+
+\begin{document}
+
+\author{
+{Timothy Schwieg}\\
+{Paulo Henrique Ramos}\\
+{Samuel Barker}\\
+{Rafeh}
+}
+
+\date{\today}
+\title{Empirical Analysis I -  Problem Set 3}
+
+
+\maketitle
+
+\section*{Question 1}
+
+Notice that, because we are interested in the limit distribution of the variance estimator, we can assume that the observations are centered (that is, consider that the mean of the distribution was already substracted from the $X_i$; i.e. $X_i=Y_i-\mu$ for some $Y_i$ with the distribution we are interested in). This gives us that $\exV{X_i}=0$ (which we can interpret as the first centered moment, and similarly with higher moments, all being interpreted as centered), and it does not change the variance or its estimator.
+
+Also, notice that $S_n^2=\frac{1}{n-1}\sum{(X_i-\overline{X}_n)^2}=\frac{n}{n-1}\Big[[\frac{1}{n}\sum{X_i^2}]-\overline{X}_n^2\Big]$. Thus we can write $S_n^2=g(\frac{n}{n-1},\overline{X^2}_n,\overline{X}_n)$, where $g(a,b,c)=a[b-c^2]$ is a continuous and differentiable function on the relevant domain.
+
+ Because $\frac{n}{n-1}\plim 1$, $\overline{X^2}_n\plim \exV{X_i^2}$ and $\overline{X}_n\plim \exV{X_i}$ due to the WLLN (which we can apply, because $\exV{X_i^4}\le \infty$), and margianl convergence in probability implies joint convergence in probability, we have $(\frac{n}{n-1},\overline{X^2}_n,\overline{X}_n)\plim (1,\exV{X_i^2},\exV{X_i})$.
+ 
+ Also, when applied to the limits, $g(1,\exV{X_i^2},\exV{X_i}))=[\exV{X_i^2}-\exV{X_i}^2]=\sigma^2$, the true variance of $X_i$.
+ 
+ Also, because $\exV{X_i^4}\le \infty$, we can apply the CLT to this vector:
+ \begin{equation}
+ \begin{split}
+ \sqrt{n}(\begin{bmatrix}
+ \frac{n}{n-1}\\
+ \overline{X^2}_n\\
+ \overline{X}_n\\
+ \end{bmatrix}-
+ \begin{bmatrix}
+ 1\\
+ \exV{X_i^2}\\
+ \exV{X_i}\\
+  \end{bmatrix}
+ )&\overset{d}{\to} N(0,
+ \begin{bmatrix}
+ 0&0&0\\
+ 0&\exV{X_i^4}-\exV{X_i^2}^2&\exV{X_i^3}-\exV{X_i^2}\exV{X_i}\\
+ 0&  \exV{X_i^3}-\exV{X_i^2}\exV{X_i}&\exV{X_i^2}-\exV{X_i}^2\\
+  \end{bmatrix}
+ )\\
+\text{(because $\exV{X_i}=0$)    } &=N(0,
+ \begin{bmatrix}
+ 0&0&0\\
+ 0&\exV{X_i^4}-\exV{X_i^2}^2&\exV{X_i^3}\\
+ 0&  \exV{X_i^3}&\exV{X_i^2}\\
+\end{bmatrix}
+ )
+\end{split}
+\end{equation}
+
+Now we can use the delta method with $g(.)$ (its derivative on $(a,b,c)$ is $(1,1,-2c)$) and conclude:
+ \begin{equation}
+ \begin{split}
+ \sqrt{n}(S_n^2-\sigma^2)&\overset{d}{\to}N(0,\begin{bmatrix}
+ 1&1&-2\exV{X_i}(=0)\\
+ \end{bmatrix}
+ \begin{bmatrix}
+ 0&0&0\\
+ 0&\exV{X_i^4}-\exV{X_i^2}^2&\exV{X_i^3}\\
+ 0&  \exV{X_i^3}&\exV{X_i^2}\\
+\end{bmatrix}
+\begin{bmatrix}
+ 1\\
+ 1\\
+ -2\exV{X_i}(=0)\\
+ \end{bmatrix}\\
+ &=N(0,\exV{X_i^4}-\exV{X_i^2}^2 )
+)
+\end{split}
+\end{equation}
+
+Thus, recalling that $\exV{X_i^4}$ and $\exV{X_i^2}$ are centered moments, we have that  $\sqrt{n}(S_n^2-\sigma^2)\overset{d}{\to}N(0,\exV{(Y_i-\mu)^4}-\sigma^4)$, if we consider $Y_i$ as the uncentered variable.
+
+\section*{Question 5}
+
+\subsection*{a}
+
+($\Longrightarrow$) If $p(1|1)=p(1|0)$ and $p(0|1)=p(0|0)$, then the ratio $\frac{p(1|1)}{p(1|0)}\Big/\frac{p(0|1)}{p(0|0)}=1/1=1=\rho$.
+
+($\Longleftarrow$) If $\rho=1$, then we have:
+\begin{equation}
+\begin{split}
+\frac{p(1|1)}{p(1|0)}&=\frac{p(0|1)}{p(0|0)}\\
+&\Longleftrightarrow\\
+\frac{p(0|0)}{p(1|0)}+\frac{p(1|0)}{p(1|0)}&=\frac{p(0|1)}{p(1|1)}+\frac{p(1|1)}{p(1|1)}\\
+&\Longleftrightarrow\\
+\frac{p(0|0)+p(1|0)}{p(1|0)}&=\frac{p(0|1)+p(1|1)}{p(1|1)}\\
+&\Longleftrightarrow\\
+\frac{1}{p(1|0)}&=\frac{1}{p(1|1)}\\
+&\Longleftrightarrow\\
+p(1|0) &=p(1|1)\\
+\end{split}
+\end{equation}
+
+But, this implies that $1=\frac{p(0|1)}{p(0|0)}$, which implies $p(0|1)=p(0|0)$.
+
+\subsection*{b}
+
+Using bayes rules, we have:
+\begin{equation}
+\begin{split}
+\rho=\frac{\frac{p(1,1)}{p(1)}}{\frac{p(1,0)}{p(0)}}\Big/\frac{\frac{p(0,1)}{p(1)}}{\frac{p(0,0)}{p(0)}}\\
+\rho=\frac{p(1,1)}{p(1,0)}\Big/\frac{p(0,1)}{p(0,0)}
+\end{split}
+\end{equation}
+
+\subsection*{c}
+
+Let's first take $\hat{p}_{n}^{(1,1)}:=\frac{1}{n}\sum{\indicate{Y_i=1,X_i=1}}$. Because $\indicate{Y_i=1,X_i=1}$ is a Bernoulli random variable, it has finite expectation ($p(1,1)$) and variance (($p(1,1)[1-p(1,1)]$). Thus, since the sample of students is i.i.d., the random variable $\indicate{Y_i=1,X_i=1}$ is also i.i.d., and the WLLN gives us that $\hat{p}_{n}^{(1,1)}\plim p(1,1)$. The same rationale applies to $\hat{p}_{n}^{(1,0)},\hat{p}_{n}^{(0,1)}$ and $\hat{p}_{n}^{(0,0)}$. And because marginal convergence in probability implies joint convergence in probability, we have: $(\hat{p}_{n}^{(1,1)},\hat{p}_{n}^{(1,0)},\hat{p}_{n}^{(0,1)},\hat{p}_{n}^{(0,0)})\plim(p(1,1),p(1,0),p(0,1),p(0,0))$. 
+
+Now we know from item (b) that $\rho=\frac{p(1,1)}{p(1,0)}\Big/\frac{p(0,1)}{p(0,0)}$, and no terms in this expression are zero. Thus, $f(a,b,c,d)=\frac{a}{b}\Big/\frac{c}{d}$ is a continuous function on the relevant domain, and we can apply the continuous mapping theorem to conclude that:
+
+\begin{equation}
+\hat{\rho}_n=f(\hat{p}_{n}^{(1,1)},\hat{p}_{n}^{(1,0)},\hat{p}_{n}^{(0,1)},\hat{p}_{n}^{(0,0)})\plim f(p(1,1),p(1,0),p(0,1),p(0,0))=\rho
+\end{equation}
+
+Thus our estimator is $\hat{\rho}_n :=\frac{\hat{p}_{n}^{(1,1)}}{\hat{p}_{n}^{(1,0)}}\Big/\frac{\hat{p}_{n}^{(0,1)}}{\hat{p}_{n}^{(0,0)}}$, and its is consistent.
+
+\subsection*{d}
+
+As seen in item (c) above, $\indicate{Y_i=1,X_i=1}$ is bernoulli, with finite expectation and variance (and similarly with the other indicator functions for different outcomes). Therefore, we can apply the multivariate CLT to conclude that:
+\begin{equation}
+\sqrt{n}(\begin{bmatrix}
+\hat{p}_{n}^{(1,1)}\\
+\hat{p}_{n}^{(1,0)}\\
+\hat{p}_{n}^{(0,1)}\\
+\hat{p}_{n}^{(0,0)}\\
+\end{bmatrix}
+-\begin{bmatrix}
+p(1,1)\\
+p(1,0)\\
+p(0,1)\\
+p(0,0)\\
+\end{bmatrix})
+\overset{d}{\to} N(0, \Sigma),
+\end{equation} 
+\noindent where:
+\begin{equation}
+\Sigma=
+\begin{bmatrix}
+p_{(1,1)}[1-p_{(1,1)}] & -p_{(1,1)}p_{(1,0)} & -p_{(1,1)}p_{(0,1)} & -p_{(1,1)}p_{(0,0)} \\
+-p_{(1,0)}p_{(1,1)} &  p_{(1,0)}[1-p_{(1,0)}] & -p_{(1,0)}p_{(0,1)} & -p_{(1,0)}p_{(0,0)} \\
+-p_{(0,1)}p_{(1,1)} & -p_{(0,1)}p_{(1,0)} & p_{(0,1)}[1-p_{(0,1)}] & -p_{(0,1)}p_{(0,0)}\\
+-p_{(0,0)}p_{(1,1)} & -p_{(0,0)}p_{(1,0)} & -p_{(0,0)}p_{(0,1)} & p_{(0,0)}[1-p_{(0,0)}] \\
+\end{bmatrix}
+\end{equation}
+
+We can then take the function $g(a,b,c,d)=\ln{\frac{a}{b}\Big/\frac{c}{d}}=\ln{a}-\ln{b}-\ln{c}+\ln{d}$, which is continuous and differentiable on $(p(1,1),p(1,0),p(0,1),p(0,0))$, since they are greater than zero. Using the delta method, we obtain that:
+\begin{equation}
+\begin{split}
+\sqrt{n}(g(\hat{p}_{n}^{(1,1)},\hat{p}_{n}^{(1,0)},\hat{p}_{n}^{(0,1)},\hat{p}_{n}^{(0,0)})-&g(p(1,1),p(1,0),p(0,1),p(0,0)))\\
+&\overset{d}{\to} Dg(p(1,1),p(1,0),p(0,1),p(0,0)) N(0,\Sigma)\\
+\sqrt{n}(\ln{\hat{\rho}_n}-\ln{\rho})&\overset{d}{\to}Dg(p(1,1),p(1,0),p(0,1),p(0,0)) N(0,\Sigma)
+\end{split}
+\end{equation}
+
+Now we can calculate the variance of $Dg(.)N(0,\Sigma)$ and call it $\tau^2$ as we wanted:
+\begin{equation}
+\begin{split}
+\begin{bmatrix}
+\frac{1}{p_{(1,1)}}\\
+-\frac{1}{ p_{(1,0)}}\\
+-\frac{1}{p_{(0,1)}}\\
+\frac{1}{p_{(0,0)}}\\
+\end{bmatrix}^{T}
+&\begin{bmatrix}
+p_{(1,1)}[1-p_{(1,1)}] & -p_{(1,1)}p_{(1,0)} & -p_{(1,1)}p_{(0,1)} & -p_{(1,1)}p_{(0,0)} \\
+-p_{(1,0)}p_{(1,1)} &  p_{(1,0)}[1-p_{(1,0)}] & -p_{(1,0)}p_{(0,1)} & -p_{(1,0)}p_{(0,0)} \\
+-p_{(0,1)}p_{(1,1)} & -p_{(0,1)}p_{(1,0)} & p_{(0,1)}[1-p_{(0,1)}] & -p_{(0,1)}p_{(0,0)}\\
+-p_{(0,0)}p_{(1,1)} & -p_{(0,0)}p_{(1,0)} & -p_{(0,0)}p_{(0,1)} & p_{(0,0)}[1-p_{(0,0)}] \\
+\end{bmatrix}
+\begin{bmatrix}
+\frac{1}{p_{(1,1)}}\\
+-\frac{1}{ p_{(1,0)}}\\
+-\frac{1}{p_{(0,1)}}\\
+\frac{1}{p_{(0,0)}}\\
+\end{bmatrix}=\\
+&\begin{bmatrix}
+1&-1&-1&1\\
+\end{bmatrix}
+\begin{bmatrix}
+\frac{1}{p_{(1,1)}}\\
+-\frac{1}{ p_{(1,0)}}\\
+-\frac{1}{p_{(0,1)}}\\
+\frac{1}{p_{(0,0)}}\\
+\end{bmatrix}=\frac{1}{p_{(1,1)}}+\frac{1}{ p_{(1,0)}}+-\frac{1}{p_{(0,1)}}+\frac{1}{p_{(0,0)}}=:\tau^2
+\end{split}
+\end{equation}
+
+\subsection*{e}
+
+The estimator is: $\hat{\tau^2}_n:=1/\hat{p}_{n}^{(1,1)}+1/\hat{p}_{n}^{(1,0)}+1/\hat{p}_{n}^{(0,1)}+1/\hat{p}_{n}^{(0,0)}$. As seen in item (c) above, we have $(\hat{p}_{n}^{(1,1)},\hat{p}_{n}^{(1,0)},\hat{p}_{n}^{(0,1)},\hat{p}_{n}^{(0,0)})\plim(p_{(1,1)},p_{(1,0)},p_{(0,1)},p_{(0,0)})$. Thus, because all terms are greater than zero, the function $f(a,b,c,d)=1/a+1/b+1/c+1/d$ is continuous on the relevant domain, and we can apply the CMT to conclude that $\hat{\tau^2}_n\plim \tau^2$.
+
+\subsection*{f}
+
+We know from previous items that $\sqrt{n}(\ln{\hat{\rho}_n}-\ln{\rho})\overset{d}{\to}N(0,\tau^2)$. Because the function $g(x)=\exp{x}$ is continuous and differentiable at the true $\rho$, we can apply the delta method to obtain:
+\begin{equation}
+\begin{split}
+\sqrt{n}(\hat{\rho}_n-\rho)\overset{d}{\to}\rho N(0,\tau^2)=N(0,\tau^2\rho^2)
+\end{split}
+\end{equation}
+
+\subsection*{g}
+
+If gender is independent of supporting Obama, the we have that the conditional probabilities equal the unconditional ones: $p(1|0)=p(1|1)$ and $p(0|0)=p(0|1)$. As seen in item (a), this is equivalent to $\rho=1$, thus we can define $H_0: \rho=1$ and $H_1:\rho\ne 1$.
+
+Now define $T_n:= \abs{\frac{\sqrt{n}(\hat{\rho}_n-1)}{\sqrt{\hat{\tau^2}_n}}}=\frac{\sqrt{n}(\abs{\hat{\rho}_n-1})}{\sqrt{\hat{\tau^2}_n}}$. We will reject the null if $T_n>z_{1-\frac{\alpha}{2}}$.
+
+Under the null hypothesis and using CMT and slutsky (because $\hat{\tau^2}_n\plim \tau^2>0$, $g(x)=1/\sqrt{x}$ is continuous on the relevant domain, and $\tau^2$ is constant), we know that: $Tn\overset{d}{\to}\abs{z}\sim N(0,1)$. Therefore, we have:
+\begin{equation}
+ \limsup{\Pr(Tn> z_{1-\frac{\alpha}{2}})}\le \limsup{\Pr(Tn\ge z_{1-\frac{\alpha}{2}})}\le \Pr(\abs{z}\ge z_{1-\frac{\alpha}{2}})=\alpha.
+\end{equation}
+\noindent Thus the test is consistent in level $\alpha$. And we can also calculate the $p-$value using the following:
+\begin{equation}
+\begin{split}
+p-value&=\inf{\{\alpha\in(0,1)|T_n\ge z_{1-\frac{\alpha}{2}}\}}\\
+&=\inf{\{\alpha\in(0,1)|\phi(T_n)\ge \phi(z_{1-\frac{\alpha}{2}})\}}\\
+&=\inf{\{\alpha\in(0,1)|\phi(T_n)\ge 1-\frac{\alpha}{2}\}}\\
+&=\inf{\{\alpha\in(0,1)|\alpha\ge 2(1-\phi(T_n))\}}=2(1-\phi(T_n))\\
+\end{split}
+\end{equation}
+\noindent where $T_n$ is as defined above and $\phi(.)$ is the cdf of the standard normal distribution.
+
+
+\section*{Question 9}
+
+Mean independence means that $\exV{Y|X}=c$, a constant, and using the law of iterated expectations, we have that $c=\exV{c}=\exV{\exV{Y|X}}=\exV{Y}$. Thus we have:
+\begin{equation}
+\begin{split}
+Cov[Y,X]&=\exV{YX}-\exV{X}\exV{Y}\\
+\text{(By LIE)  }&=\exV{\exV{YX|X}}-\exV{X}\exV{Y}\\
+\text{(Because X is a function of X)  }&=\exV{X\exV{Y|X}}-\exV{X}\exV{Y}\\
+\text{(Because of mean independence)  }&=\exV{X}\exV{Y}-\exV{X}\exV{Y}=0\\
+\end{split}
+\end{equation}
+
+But $Cov[Y,X]=0$ does not imply mean independence. Take, for instance, $X\sim N(0,1)$ and $Y=X^2$. Then we have $Cov[Y,X]=\exV{X^3}-\exV{X}\exV{X^2}=0$ (because the mean and third moment of the normal are zero), but $\exV{Y|X}=Y=X^2$, because $Y$ is a function of $X$. 
+
+Also, mean independence does not imply independence. Take $Y|X\sim N(0,\sigma^2 X)$, with a non-degenerate random variable. Then we do have $\exV{Y|X}=0$, a constant, but the distributions of $Y$ and $X$ are dependent (by construction, the conditional distribution of $Y$ changes with $X$, and thus cannot be equal the unconditional distribution for all $X$). 
+
+\section*{Question 13}
+
+\subsection*{a}
+
+\subsubsection*{i}
+
+Yes. Because we are interpreting the regression as the best linear predictor of $Y$ given $X$, the vector $\beta:=(\beta_0,\beta_1)'$ minimizes $\exV{(Y-\overline{X}'\beta)^2}$, where $\overline{X}=(1,X)$. This results in the first order conditions:
+\begin{equation}
+\begin{split}
+-2\exV{\overline{X}(Y-\overline{X}'\beta)}&=0\\
+\exV{\begin{pmatrix}
+1\\
+X\\
+\end{pmatrix}
+\Big(Y-\begin{pmatrix}
+1&X\\
+\end{pmatrix}
+\begin{pmatrix}
+\beta_0\\
+\beta_1\\
+\end{pmatrix}\Big)
+}&=0\\
+\exV{\begin{pmatrix}
+Y-\beta_0-\beta_1 X\\
+X(Y-\beta_0-\beta_1 X)\\
+\end{pmatrix}
+}&=0\\
+\begin{pmatrix}
+\exV{U}\\
+\exV{XU}\\
+\end{pmatrix}
+&=0\\
+\end{split}
+\end{equation}
+
+Since $Cov[X,U]=\exV{XU}-\exV{X}\exV{U}=0$, we have that $U$ and $X$ are uncorrelated.
+
+\subsubsection*{ii}
+
+From the regression equation $Y=\beta_0+\beta_1 X + U$ we have:
+\begin{equation}
+\begin{split}
+\exV{Y|X=0}&=\beta_0+\exV{U|X=0}\\
+\exV{Y|X=1}&=\beta_0+\beta_1+\exV{U|X=1}\\
+\end{split}
+\end{equation}
+
+Now we can show that $\exV{U|X=0}=\exV{U|X=1}=0$ using the conditions obtained in item (i) above ($\exV{U}=0=\exV{XU}$):
+\begin{equation}
+\begin{split}
+0=\exV{XU}&=\exV{XU|X=0}\Pr(X=0)+\exV{XU|X=1}\Pr(X=1)\\
+&=0+\exV{U|X=1}\Pr(X=1)\\
+&\Longrightarrow \exV{U|X=1}=0 \text{        (because $\Pr(X=1)>0$)},
+\end{split}
+\end{equation}
+\noindent and this also implies:
+\begin{equation}
+\begin{split}
+0=\exV{U}&=\exV{U|X=0}\Pr(X=0)+\exV{U|X=1}\Pr(X=1)\\
+&=\exV{U|X=0}\Pr(X=0)+0\\
+&\Longrightarrow \exV{U|X=0}=0 \text{        (because $\Pr(X=0)>0$)}.
+\end{split}
+\end{equation}
+
+Therefore, we have that:
+\begin{equation}
+\begin{split}
+\beta_0&=\exV{Y|X=0}\\
+\beta_1&=\exV{Y|X=1}-\exV{Y|X=0}\\
+\end{split}
+\end{equation}
+
+\subsubsection*{iii}
+
+Yes. As seen in item (ii), $\exV{Y|X}=0$, a constant, for all possible values of $X$. This happens because, when we have binary variables as conditioners, the conditional expectation takes a linear form, and thus our best linear predictor is exactly equal to the conditional expectation. As a consequence, by definition of $U$ as the diference between the the conditional expectation and the linear predictor, it will be constantly zero.
+
+\subsection*{a}
+
+\subsubsection*{i}
+
+Not necessarily. The interpretation of causality only assumes that $Y=g(X.U)$, i.e., that $Y$ can be determined as a function of $X$ and $U$. But it does not assume anything else about the relationship between $X$ and $U$.
+
+\subsubsection*{ii}
+
+Notice that we can still take conditional expectations on both sides of the regression and get:
+\begin{equation}
+\begin{split}
+\beta_0&=\exV{Y|X=0}-\exV{U|X=0}\\
+\beta_1&=\exV{Y|X=1}-\exV{Y|X=0}+\exV{U|X=0}-\exV{U|X=1}\\
+\end{split}
+\end{equation}
+
+If $X$ and $U$ were in fact uncorrelated, then we could use the same steps in item (ii) of letter (a) above to conclude that $\exV{U|X}=0$ always, and obtain the same values of $\beta$. But if this is not case, the values will differ, because $\exV{U|X}$ is not constant in $X$.
+
+\end{document}

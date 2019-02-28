@@ -1,0 +1,20 @@
+using Distributions
+rand(Uniform(),1)
+n = 50
+rand( Uniform(), n ) .> .05 
+sum( rand( Uniform(), n ) .> .05  )
+n
+n = 1000
+t = .25
+t
+t
+confCheck[1,1,1]
+confCheck[:,1,1]
+mean(confCheck[:,1,1])
+mean(confCheck[:,1,1])*M
+sum( confCheck[:,1,1] )
+length(θ)
+1:length(θ)
+θ[1]
+2*2
+2*2

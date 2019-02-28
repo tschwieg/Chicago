@@ -1,0 +1,746 @@
+\documentclass[12pt]{paper}
+
+\usepackage{Schwieg}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{minted}
+\usepackage{tikz}
+\usepackage{dsfont}
+\newcommand{\Expect}{{\rm I\kern-.3em E}}
+\usepackage{graphicx}
+\newcommand{\indep}{\rotatebox[origin=c]{90}{$\models$}}
+
+\begin{document}
+
+\author{
+{Timothy Schwieg}\\
+{Paulo Henrique Ramos}\\
+{Samuel Barker}\\
+{Rafeh Qureshi}
+}
+
+\date{\today}
+\title{Empirical Analysis I -  Problem Set 3}
+
+
+\maketitle
+
+\section*{Question 1}
+
+Notice that, because we are interested in the limit distribution of the variance estimator, we can assume that the observations are centered (that is, consider that the mean of the distribution was already substracted from the $X_i$; i.e. $X_i=Y_i-\mu$ for some $Y_i$ with the distribution we are interested in). This gives us that $\exV{X_i}=0$ (which we can interpret as the first centered moment, and similarly with higher moments: all are interpreted as centered), and it does not change the variance or its estimator.
+
+Also, notice that $S_n^2=\frac{1}{n-1}\sum{(X_i-\overline{X}_n)^2}=\frac{n}{n-1}\Big[[\frac{1}{n}\sum{X_i^2}]-\overline{X}_n^2\Big]$. Thus we can write $S_n^2=g(\frac{n}{n-1},\overline{X^2}_n,\overline{X}_n)$, where $g(a,b,c)=a[b-c^2]$ is a continuous and differentiable function on the relevant domain.
+
+ Because $\frac{n}{n-1}\plim 1$, $\overline{X^2}_n\plim \exV{X_i^2}$ and $\overline{X}_n\plim \exV{X_i}$ due to the WLLN (which we can apply, because $\exV{X_i^4}\le \infty$), and marginal convergence in probability implies joint convergence in probability, we have $(\frac{n}{n-1},\overline{X^2}_n,\overline{X}_n)\plim (1,\exV{X_i^2},\exV{X_i})$.
+ 
+ Also, when applied to the limits, $g(1,\exV{X_i^2},\exV{X_i}))=[\exV{X_i^2}-\exV{X_i}^2]=\sigma^2$, the true variance.
+ 
+ Also, because $\exV{X_i^4}\le \infty$, we can apply the CLT to this vector:
+ \begin{equation}
+ \begin{split}
+ \sqrt{n}(\begin{bmatrix}
+ \frac{n}{n-1}\\
+ \overline{X^2}_n\\
+ \overline{X}_n\\
+ \end{bmatrix}-
+ \begin{bmatrix}
+ 1\\
+ \exV{X_i^2}\\
+ \exV{X_i}\\
+  \end{bmatrix}
+ )&\overset{d}{\to} N(0,
+ \begin{bmatrix}
+ 0&0&0\\
+ 0&\exV{X_i^4}-\exV{X_i^2}^2&\exV{X_i^3}-\exV{X_i^2}\exV{X_i}\\
+ 0&  \exV{X_i^3}-\exV{X_i^2}\exV{X_i}&\exV{X_i^2}-\exV{X_i}^2\\
+  \end{bmatrix}
+ )\\
+\text{(because $\exV{X_i}=0$)    } &=N(0,
+ \begin{bmatrix}
+ 0&0&0\\
+ 0&\exV{X_i^4}-\exV{X_i^2}^2&\exV{X_i^3}\\
+ 0&  \exV{X_i^3}&\exV{X_i^2}\\
+\end{bmatrix}
+ )
+\end{split}
+\end{equation}
+
+Now we can use the delta method with $g(.)$ (its derivative on $(a,b,c)$ is $(1,1,-2c)$) and conclude:
+ \begin{equation}
+ \begin{split}
+ \sqrt{n}(S_n^2-\sigma^2)&\overset{d}{\to}N(0,\begin{bmatrix}
+ 1&1&-2\exV{X_i}(=0)\\
+ \end{bmatrix}
+ \begin{bmatrix}
+ 0&0&0\\
+ 0&\exV{X_i^4}-\exV{X_i^2}^2&\exV{X_i^3}\\
+ 0&  \exV{X_i^3}&\exV{X_i^2}\\
+\end{bmatrix}
+\begin{bmatrix}
+ 1\\
+ 1\\
+ -2\exV{X_i}(=0)\\
+ \end{bmatrix}\\
+ &=N(0,\exV{X_i^4}-\exV{X_i^2}^2 )
+)
+\end{split}
+\end{equation}
+
+Thus, recalling that $\exV{X_i^4}$ and $\exV{X_i^2}$ are centered moments, we have that  $\sqrt{n}(S_n^2-\sigma^2)\overset{d}{\to}N(0,\exV{(Y_i-\mu)^4}-\sigma^4)$, if we consider $Y_i$ as the uncentered variable.
+
+\section*{Question 2}
+
+Show that $\smallO_P(1) + \bigO_P(1) = \bigO(1)$.
+\newline\newline
+Note that $X_n = \smallO_P(1)$ if $X_n \plim 0$ and $X_n = \bigO_P(1)$
+if $X_n$ is tight. Note that $X_n \plim 0$ implies that $X_n \convDist
+0$ and therefore $X_n$ is tight.
+
+Let $X_n = \smallO_P(1)$ and $Y_N = \bigO(1)$. By the above logic,
+$X_n$ is tight. So $\forall \epsilon > 0, \exists B_x, B_y$ such that:
+
+\begin{align*}
+  \inf_n \Pr( \abs{X_n} \leq B_x) &\geq 1- \frac{\epsilon}{2}\\
+  \inf_n \Pr( \abs{Y_n} \leq B_y) &\geq 1 - \frac{\epsilon}{2}
+\end{align*}
+
+For any such $\epsilon > 0$, choose $M$ such that
+\begin{equation*}
+  \frac{M}{2} > B_x \quad \quad \frac{M}{2} > B_y
+\end{equation*}
+
+Define $A$ and $B$ such that:
+\begin{equation*}
+  A := \{ \abs{X_n} + \abs{Y_n} > M \} \Rightarrow \left \{\abs{X_n} >
+    \frac{M}{2} \right\} \cup
+\left\{\abs{Y_n} > \frac{M}{2} \right\} =: B
+\end{equation*}
+
+Note that:
+\begin{equation*}
+  \Pr( A) \leq \Pr(B) \leq \Pr\left( \abs{X_n} > \frac{M}{2}\right) + \Pr\left( \abs{Y_n} > \frac{M}{2}\right) < \epsilon
+\end{equation*}
+From the definition of tightness, and our choice of $M$. 
+
+Define $C := \{ \abs{ X_n + Y_n} > M \}$. From the triangle inequality
+we know that $\abs{X_n + Y_n} \leq \abs{X_n} + \abs{Y_n}$
+
+Thus:
+\begin{align*}
+  \abs{X_n + Y_n} > M \Rightarrow \abs{X_n} + \abs{Y_n} &> M \\
+  \Pr( \abs{X_n + Y_n } > M) \leq \Pr( \abs{X_n} + \abs{Y_n} > M) &< \epsilon\\
+  \Pr( \abs{X_n + Y_n} \leq M ) &\geq 1 - \epsilon
+\end{align*}
+ This tells us that
+$X_n + Y_n$ is tight, and therefore
+$\bigO_P(1) + \bigO_P(1) = \bigO_P(1)$. So:
+\begin{equation*}
+  \smallO_P(1) + \bigO_P(1) = \bigO_P(1) 
+\end{equation*}
+
+\section*{Question 3}
+In what sense is $\smallO_P(1)=\bigO_P(1)$? Is $\bigO_P(1)=\smallO_p(1)$?
+\\
+
+We say that a sequence of random variables, $X_n$, is $\smallO_P(1)$ if $X_n \plim 0$. We say that $X_n$ is $\bigO_P(1)$ if $X_n$ is tight. Since we have that 
+\begin{align*}
+X_n=\smallO_P(1) &\implies X_n \convDist 0
+\end{align*}
+and
+\begin{align*}
+X_n \convDist X &\implies X_n=\bigO_P(1),
+\end{align*}
+(where $X$ is a random variable) we have,
+\begin{align*}
+X_n=\smallO_P(1) &\implies X_n=\bigO_P(1).
+\end{align*}
+In this sense,
+\begin{align*}
+\smallO_P(1)&=\bigO_P(1).
+\end{align*}
+
+However, the converse is not true in general. For instance, realize that $X_n \convDist X$ is a sufficient condition for tightness, but not for convergence in probability. Only when $X$ is a constant does it imply convergence in probability, but even then, $X$ must equal $0$ for $X_n=\smallO_P(1)$.
+
+An even stronger statement can be said though: in general, tightness does not imply convergence in distribution, and therefore does not imply convergence in probability. Consider, a sequence of random variables, $X_n$, where $X_{2n} \sim U[0,1]$, and $X_{2n+1} \sim U[2,3]$. It is obvious that $X_n$ does not converge in distribution. However, it is tight. To prove this, take $M_\epsilon=3$. Then, we have
+\begin{align*}
+\sup \Pr (|X_n|> 3)< \epsilon, \forall \epsilon >0.
+\end{align*}
+Thus, $X_n=\bigO_P(1)$, but $X_n \ne \smallO_P(1)$.
+
+\section*{Question 4}
+
+Suppose $\tau_n \uparrow \infty$ and for all $\epsilon>0$, there exists $B>0$, such that $$\inf_n Pr(|\tau_n (\hat \theta - \theta)|\leq B) \geq 1-\epsilon $$
+Equivalently, we have $\inf_n Pr(|\hat \theta - \theta|\leq \frac{B}{|\tau_n|}) \geq 1-\epsilon$. \\
+Now, we can choose some N $\in \mathbbm{N}$ such that, for all $n>N$, $\frac{B}{\tau_n} < \delta $ as B is a constant and $\tau_n \uparrow \infty$. Then, we have that, for all $n>N$,
+\begin{align*}
+    1-\epsilon \leq & \inf_n(Pr(|\hat \theta - \theta)| \leq \frac{B}{|\tau_n|}) \\
+    \leq & \inf_{n>N}(Pr(|\hat \theta - \theta)| \leq \frac{B}{|\tau_n|}) \\
+    \leq & \inf_{n>N}(Pr(|\hat \theta - \theta)| \leq \delta) \\
+\end{align*}
+This equivalently states that tightness of $\tau_n (\hat \theta - \theta)$ implies that \\ $Pr(|\hat \theta - \theta)| \leq \delta) \rightarrow 1$
+
+\section*{Question 5}
+
+\subsection*{a}
+
+($\Longrightarrow$) If $p(1|1)=p(1|0)$ and $p(0|1)=p(0|0)$, then the ratio $\frac{p(1|1)}{p(1|0)}\Big/\frac{p(0|1)}{p(0|0)}=1/1=1=\rho$.
+
+($\Longleftarrow$) If $\rho=1$, then we have:
+\begin{equation}
+\begin{split}
+\frac{p(1|1)}{p(1|0)}&=\frac{p(0|1)}{p(0|0)}\\
+&\Longleftrightarrow\\
+\frac{p(0|0)}{p(1|0)}+\frac{p(1|0)}{p(1|0)}&=\frac{p(0|1)}{p(1|1)}+\frac{p(1|1)}{p(1|1)}\\
+&\Longleftrightarrow\\
+\frac{p(0|0)+p(1|0)}{p(1|0)}&=\frac{p(0|1)+p(1|1)}{p(1|1)}\\
+&\Longleftrightarrow\\
+\frac{1}{p(1|0)}&=\frac{1}{p(1|1)}\\
+&\Longleftrightarrow\\
+p(1|0) &=p(1|1)\\
+\end{split}
+\end{equation}
+
+But, this implies that $1=\frac{p(0|1)}{p(0|0)}$, which implies $p(0|1)=p(0|0)$.
+
+\subsection*{b}
+
+Using bayes rules, we have:
+\begin{equation}
+\begin{split}
+\rho=\frac{\frac{p(1,1)}{p(1)}}{\frac{p(1,0)}{p(0)}}\Big/\frac{\frac{p(0,1)}{p(1)}}{\frac{p(0,0)}{p(0)}}\\
+\rho=\frac{p(1,1)}{p(1,0)}\Big/\frac{p(0,1)}{p(0,0)}
+\end{split}
+\end{equation}
+
+\subsection*{c}
+
+Let's first take $\hat{p}_{n}^{(1,1)}:=\frac{1}{n}\sum{\indicate{Y_i=1,X_i=1}}$. Because $\indicate{Y_i=1,X_i=1}$ is a Bernoulli random variable, it has finite expectation ($p(1,1)$) and variance (($p(1,1)[1-p(1,1)]$). Thus, since the sample of students is i.i.d., the random variable $\indicate{Y_i=1,X_i=1}$ is also i.i.d., and the WLLN gives us that $\hat{p}_{n}^{(1,1)}\plim p(1,1)$. The same rationale applies to $\hat{p}_{n}^{(1,0)},\hat{p}_{n}^{(0,1)}$ and $\hat{p}_{n}^{(0,0)}$. And because marginal convergence in probability implies joint convergence in probability, we have: $(\hat{p}_{n}^{(1,1)},\hat{p}_{n}^{(1,0)},\hat{p}_{n}^{(0,1)},\hat{p}_{n}^{(0,0)})\plim(p(1,1),p(1,0),p(0,1),p(0,0))$. 
+
+Now we know from item (b) that $\rho=\frac{p(1,1)}{p(1,0)}\Big/\frac{p(0,1)}{p(0,0)}$, and no terms in this expression are zero. Thus, $f(a,b,c,d)=\frac{a}{b}\Big/\frac{c}{d}$ is a continuous function on the relevant domain, and we can apply the continuous mapping theorem to conclude that:
+
+\begin{equation}
+\hat{\rho}_n=f(\hat{p}_{n}^{(1,1)},\hat{p}_{n}^{(1,0)},\hat{p}_{n}^{(0,1)},\hat{p}_{n}^{(0,0)})\plim f(p(1,1),p(1,0),p(0,1),p(0,0))=\rho
+\end{equation}
+
+Thus our estimator is $\hat{\rho}_n :=\frac{\hat{p}_{n}^{(1,1)}}{\hat{p}_{n}^{(1,0)}}\Big/\frac{\hat{p}_{n}^{(0,1)}}{\hat{p}_{n}^{(0,0)}}$, and its is consistent.
+
+\subsection*{d}
+
+As seen in item (c) above, $\indicate{Y_i=1,X_i=1}$ is bernoulli, with finite expectation and variance (and similarly with the other indicator functions for different outcomes). Therefore, we can apply the multivariate CLT to conclude that:
+\begin{equation}
+\sqrt{n}(\begin{bmatrix}
+\hat{p}_{n}^{(1,1)}\\
+\hat{p}_{n}^{(1,0)}\\
+\hat{p}_{n}^{(0,1)}\\
+\hat{p}_{n}^{(0,0)}\\
+\end{bmatrix}
+-\begin{bmatrix}
+p(1,1)\\
+p(1,0)\\
+p(0,1)\\
+p(0,0)\\
+\end{bmatrix})
+\overset{d}{\to} N(0, \Sigma),
+\end{equation} 
+\noindent where:
+\begin{equation}
+\Sigma=
+\begin{bmatrix}
+p_{(1,1)}[1-p_{(1,1)}] & -p_{(1,1)}p_{(1,0)} & -p_{(1,1)}p_{(0,1)} & -p_{(1,1)}p_{(0,0)} \\
+-p_{(1,0)}p_{(1,1)} &  p_{(1,0)}[1-p_{(1,0)}] & -p_{(1,0)}p_{(0,1)} & -p_{(1,0)}p_{(0,0)} \\
+-p_{(0,1)}p_{(1,1)} & -p_{(0,1)}p_{(1,0)} & p_{(0,1)}[1-p_{(0,1)}] & -p_{(0,1)}p_{(0,0)}\\
+-p_{(0,0)}p_{(1,1)} & -p_{(0,0)}p_{(1,0)} & -p_{(0,0)}p_{(0,1)} & p_{(0,0)}[1-p_{(0,0)}] \\
+\end{bmatrix}
+\end{equation}
+
+We can then take the function $g(a,b,c,d)=\ln{\frac{a}{b}\Big/\frac{c}{d}}=\ln{a}-\ln{b}-\ln{c}+\ln{d}$, which is continuous and differentiable on $(p(1,1),p(1,0),p(0,1),p(0,0))$, since they are greater than zero. Using the delta method, we obtain that:
+\begin{equation}
+\begin{split}
+\sqrt{n}(g(\hat{p}_{n}^{(1,1)},\hat{p}_{n}^{(1,0)},\hat{p}_{n}^{(0,1)},\hat{p}_{n}^{(0,0)})-&g(p(1,1),p(1,0),p(0,1),p(0,0)))\\
+&\overset{d}{\to} Dg(p(1,1),p(1,0),p(0,1),p(0,0)) N(0,\Sigma)\\
+\sqrt{n}(\ln{\hat{\rho}_n}-\ln{\rho})&\overset{d}{\to}Dg(p(1,1),p(1,0),p(0,1),p(0,0)) N(0,\Sigma)
+\end{split}
+\end{equation}
+
+Now we can calculate the variance of $Dg(.)N(0,\Sigma)$ and call it $\tau^2$ as we wanted:
+\begin{equation}
+\begin{split}
+\begin{bmatrix}
+\frac{1}{p_{(1,1)}}\\
+-\frac{1}{ p_{(1,0)}}\\
+-\frac{1}{p_{(0,1)}}\\
+\frac{1}{p_{(0,0)}}\\
+\end{bmatrix}^{T}
+&\begin{bmatrix}
+p_{(1,1)}[1-p_{(1,1)}] & -p_{(1,1)}p_{(1,0)} & -p_{(1,1)}p_{(0,1)} & -p_{(1,1)}p_{(0,0)} \\
+-p_{(1,0)}p_{(1,1)} &  p_{(1,0)}[1-p_{(1,0)}] & -p_{(1,0)}p_{(0,1)} & -p_{(1,0)}p_{(0,0)} \\
+-p_{(0,1)}p_{(1,1)} & -p_{(0,1)}p_{(1,0)} & p_{(0,1)}[1-p_{(0,1)}] & -p_{(0,1)}p_{(0,0)}\\
+-p_{(0,0)}p_{(1,1)} & -p_{(0,0)}p_{(1,0)} & -p_{(0,0)}p_{(0,1)} & p_{(0,0)}[1-p_{(0,0)}] \\
+\end{bmatrix}
+\begin{bmatrix}
+\frac{1}{p_{(1,1)}}\\
+-\frac{1}{ p_{(1,0)}}\\
+-\frac{1}{p_{(0,1)}}\\
+\frac{1}{p_{(0,0)}}\\
+\end{bmatrix}=\\
+&\begin{bmatrix}
+1&-1&-1&1\\
+\end{bmatrix}
+\begin{bmatrix}
+\frac{1}{p_{(1,1)}}\\
+-\frac{1}{ p_{(1,0)}}\\
+-\frac{1}{p_{(0,1)}}\\
+\frac{1}{p_{(0,0)}}\\
+\end{bmatrix}=\frac{1}{p_{(1,1)}}+\frac{1}{ p_{(1,0)}}+-\frac{1}{p_{(0,1)}}+\frac{1}{p_{(0,0)}}=:\tau^2
+\end{split}
+\end{equation}
+
+\subsection*{e}
+
+The estimator is: $\hat{\tau^2}_n:=1/\hat{p}_{n}^{(1,1)}+1/\hat{p}_{n}^{(1,0)}+1/\hat{p}_{n}^{(0,1)}+1/\hat{p}_{n}^{(0,0)}$. As seen in item (c) above, we have $(\hat{p}_{n}^{(1,1)},\hat{p}_{n}^{(1,0)},\hat{p}_{n}^{(0,1)},\hat{p}_{n}^{(0,0)})\plim(p_{(1,1)},p_{(1,0)},p_{(0,1)},p_{(0,0)})$. Thus, because all terms are greater than zero, the function $f(a,b,c,d)=1/a+1/b+1/c+1/d$ is continuous on the relevant domain, and we can apply the CMT to conclude that $\hat{\tau^2}_n\plim \tau^2$.
+
+\subsection*{f}
+
+We know from previous items that $\sqrt{n}(\ln{\hat{\rho}_n}-\ln{\rho})\overset{d}{\to}N(0,\tau^2)$. Because the function $g(x)=\exp{x}$ is continuous and differentiable at the true $\rho$, we can apply the delta method to obtain:
+\begin{equation}
+\begin{split}
+\sqrt{n}(\hat{\rho}_n-\rho)\overset{d}{\to}\rho N(0,\tau^2)=N(0,\tau^2\rho^2)
+\end{split}
+\end{equation}
+
+\subsection*{g}
+
+If gender is independent of supporting Obama, the we have that the conditional probabilities equal the unconditional ones: $p(1|0)=p(1|1)$ and $p(0|0)=p(0|1)$. As seen in item (a), this is equivalent to $\rho=1$, thus we can define $H_0: \rho=1$ and $H_1:\rho\ne 1$.
+
+Now define $T_n:= \abs{\frac{\sqrt{n}(\hat{\rho}_n-1)}{\sqrt{\hat{\tau^2}_n}}}=\frac{\sqrt{n}(\abs{\hat{\rho}_n-1})}{\sqrt{\hat{\tau^2}_n}}$. We will reject the null if $T_n>z_{1-\frac{\alpha}{2}}$.
+
+Under the null hypothesis (i.e., taking  $\rho=1$), and using CMT and slutsky (because $\hat{\tau^2}_n\plim \tau^2>0$, $g(x)=1/\sqrt{x}$ is continuous on the relevant domain, and $\tau^2$ is constant), we know that: $Tn\overset{d}{\to}\abs{z}\sim N(0,1)$. Therefore, we have:
+\begin{equation}
+ \limsup{\Pr(Tn> z_{1-\frac{\alpha}{2}})}\le \limsup{\Pr(Tn\ge z_{1-\frac{\alpha}{2}})}\le \Pr(\abs{z}\ge z_{1-\frac{\alpha}{2}})=\alpha.
+\end{equation}
+\noindent Thus the test is consistent in level $\alpha$. And we can also calculate the $p-$value using the following:
+\begin{equation}
+\begin{split}
+p-value&=\inf{\{\alpha\in(0,1)|T_n\ge z_{1-\frac{\alpha}{2}}\}}\\
+&=\inf{\{\alpha\in(0,1)|\phi(T_n)\ge \phi(z_{1-\frac{\alpha}{2}})\}}\\
+&=\inf{\{\alpha\in(0,1)|\phi(T_n)\ge 1-\frac{\alpha}{2}\}}\\
+&=\inf{\{\alpha\in(0,1)|\alpha\ge 2(1-\phi(T_n))\}}=2(1-\phi(T_n))\\
+\end{split}
+\end{equation}
+\noindent where $T_n$ is as defined above and $\phi(.)$ is the cdf of the standard normal distribution.
+
+\section*{Question 6}
+
+\begin{equation*}
+  \Vari{ Y \vert X} = \exV{ \left( Y - \exV{Y \vert X} \right)^2 \vert X}
+\end{equation*}
+
+Let $Z = Y^2$. Then
+\begin{equation*}
+\exV{\exV{Y^2 \vert X}} = \exV{\exV{Z \vert X}}= \exV{Z} = \exV{Y^2}  
+\end{equation*}
+
+\subsection*{a}
+
+\begin{align*}
+  \Vari{ Y \vert X} &= \exV{ Y^2 \vert X } - 2  \exV{ Y \exV{ Y \vert X} \vert X} +
+                  \exV{\exV{Y \vert X}^2\vert X}\\
+                &= \exV{ Y^2 \vert X} - 2 \exV{ Y \vert X} \exV{ Y \vert X} + \exV{Y \vert X}^2\\
+  &= \exV{Y^2 \vert X} - \exV{Y \vert X}^2
+\end{align*}
+
+\subsection*{b}
+
+\begin{align*}
+  \exV{\Vari{Y\vert X}} &= \exV{ \exV{ Y^2 | X}} - \exV{\exV{ Y \vert X}^2}\\
+  \Vari{\exV{Y\vert X}} &= \exV{\exV{Y \vert X}^2} - \exV{\exV{Y\vert X}}^2\\
+  \\
+  \exV{\Vari{Y\vert X}} + \Vari{\exV{Y\vert X}} &= \exV{ \exV{Y^2 \vert X}} -
+                                       \exV{\exV{Y\vert X}}^2\\
+                   &= \exV{\exV{Y^2 \vert X}} - \exV{Y}^2\\
+                   &=\exV{Y^2} - \exV{Y}^2\\
+                   &= \Vari{Y}
+\end{align*}
+
+\section*{Question 7}
+
+To prove this, notice first that it is essentially Jensen's Inequality with conditional expectations. Thus, we will need the Chordal Slope Lemma. Also, (after defining $c:=\Expect[Y|X]$) the following objects will be helpful:
+\begin{align*}
+\Delta_{+,h(c)} :=& \frac{f(c+h)-f(c)}{h}\\
+\Delta_{-,h(c)}:=&\frac{f(c)-f(c-h)}{h}\\
+D_+(c):=&\lim_{h\downarrow0}\Delta_{+,h(c)}\\
+D_-(c):=&\lim_{h\downarrow0}\Delta_{-,h(c)},
+\end{align*}
+where $f$ is a convex function. It is also easy to see by the Chordal Slope Lemma that $D_-(c)$ and $D_+(c)$ are bounded below and above respectively by $\Delta_{-,h(c)}$ and $\Delta_{+,h(c)}$.
+
+Next, select an $m \in [D_-(c),D_+(c)]$, and define
+\begin{align*}
+L(x)&:=f(c)+m(x-c).
+\end{align*}
+We we now want to show that $L(x)\leq f(x)$. There are three cases: when $c>x$, $c=x$, and when $c<x$. From this point on, we will replace the previous convex function $f$ with another convex function, call it $\phi$.
+
+First consider $c=x$. The inequality holds trivially.
+
+Next, take $c>x=c-h$. Notice that since $m \in [D_-(c),D_+(c)]$, we get:
+\begin{align*}
+m&\geq \frac{\phi(c)-\phi(x)}{c-x}\\
+\phi(c)+m(x-c)&\leq \phi(x)\\
+L(x)&\leq \phi(x).
+\end{align*}
+
+For the last case, take $c<x=c-h$. Just like above, we get:
+\begin{align*}
+m&\leq \frac{\phi(x)-\phi(c)}{x-c}\\
+\phi(c)+m(x-c)&\leq \phi(x)\\
+L(x)&\leq \phi(x).
+\end{align*}
+Thus, $L(x)\leq\phi(x)$.
+
+Next, take, $x=Y$ and recall that $c:=\Expect[Y|X]$. We have that
+\begin{align*}
+L(Y)\leq&~\phi(Y) &\\
+0\leq&~\phi(Y)-L(Y) &\\
+0\leq&~\Expect[\phi(Y)-L(Y)|X] & 3)\\
+0\leq&~\Expect[\phi(Y)|X]-\Expect[L(Y)|X] &1)\\
+\Expect[L(Y)|X]\leq&~\Expect[\phi(Y)|X]\\
+\Expect[\phi(\Expect[Y|X])|X]+\Expect[mY|X]-\Expect[m\Expect[Y|X]|X]\leq&~\Expect[\phi(Y)|X] &1)\\
+\phi(\Expect[Y|X])+m\Expect[Y|X]-m\Expect[Y|X]\leq&~\Expect[\phi(Y)|X] &1) \text{ \& } 2)\\
+\phi(\Expect[Y|X])\leq&~\Expect[\phi(Y)|X].
+\end{align*}
+And thus, our result has been obtained. The steps above can be justified from three properties of conditional expectation (the steps have been labeled accordingly). Namely: $1)$ $\Expect[Y+Z|X]=\Expect[Y|X]+\Expect[Z|X]$; $2)$ If $Y=f(X)$, then $\Expect[Y|X]=f(X)$; and $3)$ we know that if $\Pr(0\leq Y)=1$, then $\Pr(0\leq \Expect[Y|X])=1$. 
+
+\section*{Question 8}
+
+\subsection*{a}
+Noting that $f(y|x) = 0$ if $f_X = 0$, we know the integral over $\mathbbm{R^k}\times \mathbbm{R}$ simplifies to the integral over the area where $f_X(x)>0$ (as it is 0 everywhere else). Therefore, we are integrating over this region, unless stated otherwise.
+\begin{align*}
+    E[m^{*2}(X)] &= \int (\int yf(y|x)dy)^2 f_X(x)dx \\
+    & \leq \int (\int |y| \frac{f(y,x)}{f_X(x)}dy)^2 f_X(x)dx
+\end{align*}
+Knowing that $\int \frac{f(y,x)}{f_X(x)}dy = 1$, we know (i.e by Cauchy -Schwartz):
+$$(\int |y| \frac{f(y,x)}{f_X(x)}dy)^2 \leq  (\int y^2 \frac{f(y,x)}{f_X(x)}dy)$$
+Thus, we can write out
+\begin{align*}
+    E[{m^*}^2(X)] \leq & \int (\int y^2 \frac{f(y,x)}{f_X(x)}dy)f_X(x)dx \\
+    = & \int \int (y^2 \frac{f(y,x)}{f_X(x)}f_X(x))dy dx \\
+    & \leq \int \int y^2 f(x,y) dy dx \leq E(Y^2) < \infty \\
+\end{align*}
+where the inequality follows because $y^2>0$ and we expanded the integration to the entire region in the last line; and again, $f_X$ is zero everywhere else. 
+
+
+\subsection*{b}
+Recall, from class that 
+\begin{align*}
+    E[(y-m(x))^2] = & E[(y - m(x) + m^*(x) - m^*(x))^2] \\
+    = & E[(y-m^*(x))^2] + 2E[(y-m^*(x))(m^*(x)-m(x))] + E[(m^*(x) - m(x))^2] \\ 
+    \geq & E[(Y-m^*(X))^2]
+\end{align*}
+Thus, we found that $\min E[(Y-m^*(X))] \Leftrightarrow E[(Y-m^*(X))m(X)] = 0 $ for all m(X).
+Now, see that 
+\begin{align*}
+    E[(y-m^*(x))m(x)] = & \int \int (y-m^*(x))m(x)f(y,x)dy dx \\
+    = & \int (\int (y-m^*(x))m(x)f(y,x) dy) dx \\
+    = & \int m(x) f_X(x) (\int y f(y|x) - m^*(x) f(y|x) dy) dx \\
+    = & \int m(x) m^*(x) f_X (x) dx - \int m(x) m^*(x) (\int f(y|x) dy) f_X (x) dx 
+    \end{align*}
+As $\int f(y|x)dy$ just integrates to 1, these two terms on the left and right are equal (namely $E[(y-m^*(x))m(x)] =0$
+
+\section*{Question 9}
+
+Mean independence means that $\exV{Y|X}=c$, a constant, and using the law of iterated expectations, we have that $c=\exV{c}=\exV{\exV{Y|X}}=\exV{Y}$. Thus we have:
+\begin{equation}
+\begin{split}
+Cov[Y,X]&=\exV{YX}-\exV{X}\exV{Y}\\
+\text{(By LIE)  }&=\exV{\exV{YX|X}}-\exV{X}\exV{Y}\\
+\text{(Because X is a function of X)  }&=\exV{X\exV{Y|X}}-\exV{X}\exV{Y}\\
+\text{(Because of mean independence)  }&=\exV{X}\exV{Y}-\exV{X}\exV{Y}=0\\
+\end{split}
+\end{equation}
+
+But $Cov[Y,X]=0$ does not imply mean independence. Take, for instance, $X\sim N(0,1)$ and $Y=X^2$. Then we have $Cov[Y,X]=\exV{X^3}-\exV{X}\exV{X^2}=0$ (because the mean and third moment of the normal are zero), but $\exV{Y|X}=Y=X^2$, because $Y$ is a function of $X$. 
+
+Also, mean independence does not imply independence. Take $Y|X\sim N(0,\sigma^2 X)$, with a non-degenerate random variable. Then we do have $\exV{Y|X}=0$, a constant, but the distributions of $Y$ and $X$ are dependent (by construction, the conditional distribution of $Y$ changes with $X$, and thus cannot be equal the unconditional distribution for all $X$). 
+
+\section*{Question 10}
+
+Let $(Y,X)$ be a bivariate normal random variable. Find $\exV{Y \vert
+  X}$. \newline \newline
+
+\begin{equation*}
+  (Y,X) \sim \normal \left( \binom{\mu_Y}{\mu_X},
+    \begin{pmatrix}
+      \sigma_Y^2 & \rho \sigma_Y \sigma_X\\
+      \rho \sigma_Y \sigma_X & \sigma_X^2
+    \end{pmatrix}
+  \right)
+\end{equation*}
+Any bivariate normal random variable can be rewritten as:
+\begin{align*}
+  X &= \sigma_X Z_1 + \mu_X\\
+  Y &= \sigma_Y \rho Z_1 + Z_2 \sqrt{ 1 - \rho^2} + \mu_Y
+\end{align*}
+
+This allows us to rewrite $Z_1$ and then $Y$.
+\begin{align*}
+  Z_1 &= \frac{X - \mu_X}{\sigma_X}\\
+  Y &= \sigma_Y \rho \left( \frac{X - \mu_X}{\sigma_X} \right) + Z_2\sqrt{ 1 - \rho^2} + \mu_Y\\
+\end{align*}
+
+Taking the expectation conditioned on $X$.
+
+\begin{align*}
+  \exV{Y \vert X} &= \exV{ \sigma_Y \rho \frac{X - \mu_X}{\sigma_X} \vert X} + \exV{ \sqrt{ 1 - \rho^2}
+            Z_2 \vert X} + \exV{\mu_Y \vert X}\\
+  &= \frac{\sigma_Y \rho}{\sigma_X} \exV{X \vert X} - \frac{\sigma_Y \rho \mu_X}{\sigma_X} + \sqrt{ 1
+    - \rho^2} \exV{ Z_2 \vert X} + \mu_Y\\
+  &= \frac{\sigma_Y \rho}{\sigma_X} X - \frac{\sigma_Y \rho \mu_X}{\sigma_X} + \mu_Y
+\end{align*}
+
+where $\exV{Z_2 \vert X} = \exV{Z_2} = 0$ by the fact that $Z_1, Z_2$ are
+independent, and $X$ is a function of $Z_1$ only.
+
+\section*{Question 11}
+
+To answer this question, we are going to need to prove the following fact: that independence of $X$ and $Y$ implies that $\Expect[Y|X]=\Expect[Y]$, which is a constant.
+
+Consider the definition of conditional expectation. Since all we are given is that the first moment for $Y$ exists, we have to work from the following definition: $\Expect[Y|X]$ is any $m^*(X)$ with $\Expect[|m^*(X)|]<\infty$ such that for any Borel set $B$ in $\mathcal{B}$,
+\begin{align*}
+\Expect[(Y-m^*(X))\mathds{1}_{\{X\in B\}}]=0.
+\end{align*}
+Working from this definition, we can obtain our result. First, let $m^*(X)=\Expect[Y]$ and $B$ an arbitrary Borel set, then test to see if it solves the following:
+\begin{align*}
+\Expect[(Y-m^*(X))\mathds{1}_{\{X\in B\}}]&=0\\
+\Expect[(Y-\Expect[Y])\mathds{1}_{\{X\in B\}}]&=0\\
+\Expect[Y\mathds{1}_{\{X\in B\}}]&=\Expect[\Expect[Y]\mathds{1}_{\{X\in B\}}]\\
+\Expect[Y]\Expect[\mathds{1}_{\{X\in B\}}]&=\Expect[\Expect[Y][\mathds{1}_{\{X\in B\}}]&\text{ by } Y \indep X\\
+\Expect[Y]\Expect[\mathds{1}_{\{X\in B\}}]&=\Expect[Y]\Expect[\mathds{1}_{\{X\in B\}}]\\
+\Expect[Y]\Pr\{X\in B\}&=\Expect[Y]\Pr\{X\in B\}.
+\end{align*}
+Since $\Expect[Y]$ works above, and $\Expect[Y|X]:=m^*(X)$ we have that $\Expect[Y|X]=\Expect[Y]$ with probability one, as we wanted (using the result that the conditional expectation is unique up to a set of probability zero). Thus, $\Expect[Y|X]$ is equal to a constant with probability one, and that constant is $\Expect[Y]$.
+
+\section*{Question 12}
+
+\subsection*{a}
+Take $$Y = \beta_0 + \beta_1 X + U $$
+Now, since we are adopting the best linear predictor interpretation, we have: 
+\begin{align}
+    \beta_1 =& \frac{Cov(X,Y)}{\sigma^2_X} \\
+    =& \rho_{X,Y} \frac{\sigma_Y}{\sigma_X}
+\end{align}
+Thus, the $|\beta_1|<1$ does not necessarily mean $\frac{Var(X)}{Var(Y)} <1$ as we need $\frac{\beta_1}{\rho_{X,Y}}<1$. Note, you can also see that $|\beta|<1$ doesn't imply the claim from just writing out (and knowing that under this interpretation the covariance between $X$ and $U$ is zero):
+$$\frac{var(Y)}{var(X)} = \frac{\beta_1^2 var(X) + var(U)}{var(X)}$$
+
+
+\subsection*{b}
+As $\sigma_X = \sigma_Y$, the above equation (2) implies that we have $\beta_1 = \rho_{X,Y}$ (which has absolute value less than 1, by cauchy-schwarzs inequality). And $\beta_1 = 1$ iff $\rho_{X,Y}=1$ (which means that one variable is a linear function of the other with probability one). \\ 
+
+This can also be seen in the following expression: $\sigma^2_Y = \beta_1^2 \sigma^2_X + \sigma^2_U$, where, for $\beta_1 = 1$ we require that $\sigma^2_U=0$, since $Cov(X,U)=0$ in the best linear predictor interpretation.
+
+\subsection*{c}
+Again, as we have 
+\begin{align*}
+    \beta_1  = \rho_{X,Y} \frac{\sigma_Y}{\sigma_X} \\
+    = \rho_{X,Y}\frac{\sigma_X}{\sigma_Y} \\
+    = \alpha_1
+\end{align*}
+as the distributions (and variances) are equal. The equality of $\alpha_1$ and $\beta_1$ requires, either $\rho_{X,Y} = 0$ or $\sigma_X = \sigma_Y$.
+
+\section*{Question 13}
+
+\subsection*{a}
+
+\subsubsection*{i}
+
+Yes. Because we are interpreting the regression as the best linear predictor of $Y$ given $X$, the vector $\beta:=(\beta_0,\beta_1)'$ minimizes $\exV{(Y-\overline{X}'\beta)^2}$, where $\overline{X}=(1,X)$. This results in the first order conditions:
+\begin{equation}
+\begin{split}
+-2\exV{\overline{X}(Y-\overline{X}'\beta)}&=0\\
+\exV{\begin{pmatrix}
+1\\
+X\\
+\end{pmatrix}
+\Big(Y-\begin{pmatrix}
+1&X\\
+\end{pmatrix}
+\begin{pmatrix}
+\beta_0\\
+\beta_1\\
+\end{pmatrix}\Big)
+}&=0\\
+\exV{\begin{pmatrix}
+Y-\beta_0-\beta_1 X\\
+X(Y-\beta_0-\beta_1 X)\\
+\end{pmatrix}
+}&=0\\
+\begin{pmatrix}
+\exV{U}\\
+\exV{XU}\\
+\end{pmatrix}
+&=0\\
+\end{split}
+\end{equation}
+
+Since $Cov[X,U]=\exV{XU}-\exV{X}\exV{U}=0$, we have that $U$ and $X$ are uncorrelated.
+
+\subsubsection*{ii}
+
+From the regression equation $Y=\beta_0+\beta_1 X + U$ we have:
+\begin{equation}
+\begin{split}
+\exV{Y|X=0}&=\beta_0+\exV{U|X=0}\\
+\exV{Y|X=1}&=\beta_0+\beta_1+\exV{U|X=1}\\
+\end{split}
+\end{equation}
+
+Now we can show that $\exV{U|X=0}=\exV{U|X=1}=0$ using the conditions obtained in item (i) above ($\exV{U}=0=\exV{XU}$):
+\begin{equation}
+\begin{split}
+0=\exV{XU}&=\exV{XU|X=0}\Pr(X=0)+\exV{XU|X=1}\Pr(X=1)\\
+&=0+\exV{U|X=1}\Pr(X=1)\\
+&\Longrightarrow \exV{U|X=1}=0 \text{        (because $\Pr(X=1)>0$)},
+\end{split}
+\end{equation}
+\noindent and this also implies:
+\begin{equation}
+\begin{split}
+0=\exV{U}&=\exV{U|X=0}\Pr(X=0)+\exV{U|X=1}\Pr(X=1)\\
+&=\exV{U|X=0}\Pr(X=0)+0\\
+&\Longrightarrow \exV{U|X=0}=0 \text{        (because $\Pr(X=0)>0$)}.
+\end{split}
+\end{equation}
+
+Therefore, we have that:
+\begin{equation}
+\begin{split}
+\beta_0&=\exV{Y|X=0}\\
+\beta_1&=\exV{Y|X=1}-\exV{Y|X=0}\\
+\end{split}
+\end{equation}
+
+\subsubsection*{iii}
+
+Yes. As seen in item (ii), $\exV{Y|X}=0$, a constant, for all possible values of $X$. This happens because, when we have binary variables as conditioners, the conditional expectation takes a linear form, and thus our best linear predictor is exactly equal to the conditional expectation. As a consequence, by definition of $U$ as the diference between the the conditional expectation and the linear predictor, it will be constantly zero.
+
+\subsection*{b}
+
+\subsubsection*{i}
+
+Not necessarily. The interpretation of causality only assumes that $Y=g(X.U)$, i.e., that $Y$ can be determined as a function of $X$ and $U$. But it does not assume anything else about the relationship between $X$ and $U$.
+
+\subsubsection*{ii}
+
+Notice that we can still take conditional expectations on both sides of the regression and get:
+\begin{equation}
+\begin{split}
+\beta_0&=\exV{Y|X=0}-\exV{U|X=0}\\
+\beta_1&=\exV{Y|X=1}-\exV{Y|X=0}+\exV{U|X=0}-\exV{U|X=1}\\
+\end{split}
+\end{equation}
+
+If $X$ and $U$ were in fact uncorrelated, then we could use the same steps in item (ii) of letter (a) above to conclude that $\exV{U|X}=0$ always, and obtain the same values of $\beta$. But if this is not case, the values will differ, because $\exV{U|X}$ is not constant in $X$.
+
+\section*{Question 14}
+
+The best linear predictor of $Y$ conditioned on $\vec{X}$ is given by:
+\begin{equation*}
+  \min_{\vec{b} \in \setR^3} \exV{ \brak{Y - X' \vec{b}}^2}
+\end{equation*}
+Note that $X_1 b_1 + X_2 b_2 + X_3 b_3 = X_1 \left( b_1
+  + \alpha_1 b_3 \right) + X_2 \left( b_2 + \alpha_2 b_3  \right) := ( \gamma_1, \gamma_2)$. 
+
+
+The best linear predictor of $Y$ given $(X_1,X_2)$ is given by:
+\begin{equation*}
+  \min_{\vec{\beta} \in \setR^2} \exV{ \brak{ Y - X_1 \beta_1 - X_2 \beta_2}^2}
+\end{equation*}
+
+It would not be possible to minimize over two dimensions and do better
+than minimizing over three. One could fix $b_3 = 0$ and then reach
+the same problem as minimizing over two dimensions.
+
+This tells us that
+\begin{equation*}
+  \min_{\vec{\beta} \in \setR^2} \exV{ \brak{ Y - X_1 \beta_1 - X_2 \beta_2}^2} \geq
+  \min_{\vec{b} \in \setR^3} \exV{ \brak{Y - X' \vec{b}}^2}
+\end{equation*}
+
+One cannot do any worse minimizing over the two dimensions either. For
+any value of $\vec{b}$, choose $\vec{\gamma}$ as above, and $\exV{ \brak{ Y -
+  X' \vec{b}}^2} = \exV{ \brak{ Y - (X_1, X_2)' \vec{\gamma}}^2}$. Thus the two
+dimensional case can always do as well as the three dimensional case
+and:
+
+\begin{equation*}
+  \min_{\vec{\beta} \in \setR^2} \exV{ \brak{ Y - X_1 \beta_1 - X_2 \beta_2}^2} \leq
+  \min_{\vec{b} \in \setR^3} \exV{ \brak{Y - X' \vec{b}}^2}  
+\end{equation*}
+
+This leads us to conclude that:
+\begin{equation*}
+  \min_{\vec{\beta} \in \setR^2} \exV{ \brak{ Y - X_1 \beta_1 - X_2 \beta_2}^2} =
+  \min_{\vec{b} \in \setR^3} \exV{ \brak{Y - X' \vec{b}}^2}
+\end{equation*}
+
+This means the best linear predictor of $Y$ given $\vec{X}$ is equivalent to
+the best linear predictor of $Y$ given $(X_1,X_2)$. Since we know that
+there is no perfect colinearity between $(X_1,X_2)$ we may apply the
+standard Linear Regression approach.
+
+\begin{equation*}
+  \vec{\beta} = \exV{ (X_1, X_2) (X_1, X_2)'}\exV{ (X_1, X_2)Y} 
+\end{equation*}
+
+The solution to the minimization problem over all $X$ is any
+combination of $b_1, b_2, b_3$ such that
+$\vec{\beta} = (b_1 + \alpha_1 b_3, b_2 + \alpha_2 b_3)'$.
+
+\section*{Question 15}
+
+We are given that $\Expect[Y|X]=X' \beta$, and that $Y=X'\beta+U$. This implies that $\Expect[U|X]=0$. To see this take the conditional expectation of $Y=X'\beta+U$:
+\begin{align*}
+\Expect[Y|X]&=\Expect[X'\beta+U|X]\\
+\Expect[Y|X]&=\Expect[X'\beta|X]+\Expect[U|X] &1)\\
+\Expect[Y|X]&=X'\beta+\Expect[U|X]. &2)
+\end{align*}
+And since we are given that $\Expect[Y|X]=X' \beta$, it is immediate that:
+\begin{align*}
+\Expect[U|X]=0.
+\end{align*}
+As in Question 7, the steps above can be justified from two properties of conditional expectation (the steps have been labeled accordingly). Namely: $1)$ $\Expect[Y+Z|X]=\Expect[Y|X]+\Expect[Z|X]$; and $2)$ If $Y=f(X)$, then $\Expect[Y|X]=f(X)$.
+
+Although this implies that $U$ is mean independent of $X$, it does not imply independence. Notice that because $Y$ takes values in $\{0,1\}$, we have that $Y|X$ is Bernoulli with $p=\Expect[Y|X]$, i.e.
+\begin{align*}
+Var[Y|X]=\Expect[Y|X](1-\Expect[Y|X]).
+\end{align*} 
+We can also observe that
+\begin{equation}
+Var[U|X]=Var[Y-X'\beta|X]=Var[Y|X]=\Expect[Y|X](1-\Expect[Y|X])
+\end{equation}
+
+And since it is given that $\Expect[Y|X]=X' \beta$, we have that:
+\begin{align*}
+Var[U|X]=X' \beta(1-X' \beta)
+\end{align*} 
+which does depend on $X$, unless $\beta=0$. So it is not reasonable to assume that $Var[U|X]$ does not depend on $X$ if we believe $X$ has some prediction power over $Y$.
+
+\section*{Question 16}
+
+Intuitively, since $X$ and $\hat{X}$ take values in $\{0,1\}$, we cannot have the measurement error to ``cancel out" in the case of classical measurement error as if X =1, the measurement error cannot be positive and if X = 0, the measurement error must be positive, so it must be negatively correlated with X. \\
+
+Note that if E(V) = 0,
+\begin{align*}
+Cov(X,V) &= E((X-E(X))(V-E(V))) \\
+&= E(XV)-E(X)E(V) \\
+& = E(XV)
+\end{align*}
+Now, looking at variance of $\hat X$, we see that if $Cov(X,V) = E(XV) = 0$, we must have $Var(\hat X) = Var(X)+Var(V)$ 
+\begin{align*}
+Var(\hat X) =& E(X^2) + E(V^2) + 2E(XV) - E(\hat X)^2 \\
+=& E(X^2) - E(X)^2 + E(V^2) \\
+=& Var(X) + Var(V)
+\end{align*}
+But here, as $E(X^2)$ = $E(X)$ = $E(\hat{X})$ = $E(\hat{X}^2)$ (since $V$ has mean zero and $X$ and $\hat{X}$ take values in $\{0,1\}$) and, $$var(\hat X) = E(\hat X)(1-E(\hat X)) = var(X)$$ we then have $Var(V) = 0 $, so V= 0 and $\hat X $ is just $X$. 
+
+
+
+\end{document}

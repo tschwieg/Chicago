@@ -1,0 +1,110 @@
+\documentclass[12pt, letterpaper]{paper}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{tikz}
+\usepackage{bm}
+\usepackage{amsthm}
+\usepackage{mathtools}
+
+\DeclareMathOperator{\diam}{diam}
+\DeclareMathOperator{\interior}{int}
+
+\newcommand{\met}[1]{d \left ( #1 \right )}
+\newcommand{\brak}[1]{ \left [ #1 \right ] }
+\newcommand{\cbrak}[1]{ \left \{ #1 \right \}}
+\renewcommand{\vec}[1]{ \bm{ #1 }}
+\newcommand{\abs}[1]{\left \lvert #1 \right \rvert}
+\newcommand{\seq}[1]{{\left \{ #1 \right \}}}
+\newcommand{\conj}[1]{ \overline{ #1 } }
+\newcommand{\close}[1]{ \bar{ #1 } }
+\newcommand{\set}[1]{\left \{ #1 \right \}}
+\newcommand{\Lim}{\lim\limits_}
+\newcommand{\compose}{\circ}
+\newcommand{\inverse}[1]{{#1}^{-1}}
+\newcommand{\compl}[1]{{#1}^{c}}
+\newcommand{\setMinus}{ \\ }
+
+
+
+\newcommand{\setR}{ \mathbb{R} }
+\newcommand{\setQ}{ \mathbb{Q} }
+\newcommand{\setZ}{ \mathbb{Z} }
+\newcommand{\setN}{ \mathbb{N} }
+
+\newcommand{\plim}{ \overset{p}{\to} }
+\newcommand{\mean}[1]{ \overline{ #1 }}
+\newcommand{\exV}[1]{\mathbb{E} \left [ #1 \right ]}
+\newcommand{\Vari}[1]{\mathbb{V} \left ( #1 \right )}
+
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
+
+\newtheorem*{definition}{Definition}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{question}{Question}
+\newtheorem*{answer}{Answer}
+
+
+\begin{document}
+
+\author{Timothy Schwieg}
+\date{\today}
+\title{Metrics Problem Set One}
+
+
+\maketitle
+
+\begin{question}
+  Let $F$ be the cdf of a random variable $X$ on the real line. A cdf
+  must satisfy the following three properties:
+  \begin{itemize}
+  \item $\Lim_{x \to -\infty} F(x) = 0$ and $\Lim_{x \to \infty} F(x) = 1$
+  \item $F$ is nondecreasing
+  \item F is right continuous, i.e., $\lim_{y \downarrow x} F(y) = F(x)$
+  \end{itemize}
+  Define $\inv{F}(u) = \inf\{ x \in \setR : F(x) \geq u\}$.
+  \begin{itemize}
+  \item Show that $\inv{F}(u) \leq x$ if and only if $u \leq F(x)$
+  \item Let $U \sim U(0,1)$. Show that $\inv{F}(U) \overset{d}{=} X$.
+  \end{itemize}
+
+  \begin{proof}
+    \begin{itemize}
+    \item Let $\inv{F}(u) \leq x$. By definition: $\inf \{ z \in \setR :
+      F(z) \geq u \} \leq x$. Consider any point $z$ such that $F(z) \geq
+      u$. Clearly, $\inv{F}(u) < z$. 
+
+      Since $F$ is nondecreasing, it can be composed
+      on either side of a weak inequality.
+
+      $F( \inv{F}(u)) \leq F(x)$. 
+
+      
+    \end{itemize}
+  \end{proof}
+\end{question}
+
+
+\begin{question}
+  Let $X_1, ..., X_n$ be iid random variables with distribution
+  $P$. Write $X_i = X_i^+ - X_i^-.$ Suppose $\exV{X_i^-} < \infty$ and
+  $\exV{X_i^+} = \infty$. Show that $\mean{X_n} \plim \infty$.
+
+  \begin{proof}
+    
+  \end{proof}
+\end{question}
+\end{document}

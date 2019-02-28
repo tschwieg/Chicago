@@ -1,0 +1,53 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k}{function} \PYG{n}{p}\PYG{p}{(} \PYG{n}{x}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{,} \PYG{o}{::}\PYG{n}{Nothing}\PYG{p}{)}
+    \PYG{n}{a} \PYG{o}{=} \PYG{n}{cos}\PYG{p}{(}\PYG{n}{x}\PYG{p}{)}
+    \PYG{n}{b} \PYG{o}{=} \PYG{n}{cos}\PYG{p}{(}\PYG{l+m+mf}{1.5}\PYG{o}{*}\PYG{n}{x}\PYG{p}{)}
+    \PYG{n}{c} \PYG{o}{=} \PYG{n}{pdf}\PYG{p}{(} \PYG{n}{Normal}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{),} \PYG{n}{x}\PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{a}\PYG{o}{*}\PYG{n}{a}\PYG{o}{*}\PYG{n}{b}\PYG{o}{*}\PYG{n}{b}\PYG{o}{*}\PYG{n}{c}
+\PYG{k}{end}
+
+\PYG{c}{\PYGZsh{}This is just uniformly distributed $\alpha$ units away from $x$}
+\PYG{k}{function} \PYG{n}{q}\PYG{p}{(} \PYG{n}{xPrime}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{,} \PYG{n}{x}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{,} \PYG{n}{α}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{)}
+    \PYG{k}{return} \PYG{p}{(}\PYG{l+m+mi}{1}\PYG{o}{/}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{α}\PYG{p}{))}\PYG{o}{*}\PYG{p}{(} \PYG{n}{abs}\PYG{p}{(}\PYG{n}{xPrime} \PYG{o}{\PYGZhy{}} \PYG{n}{x}\PYG{p}{)} \PYG{o}{\PYGZlt{}} \PYG{n}{α}\PYG{p}{)}
+\PYG{k}{end}
+
+\PYG{k}{function} \PYG{n}{simQ}\PYG{p}{(}  \PYG{n}{x}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{,} \PYG{n}{α}\PYG{o}{::}\PYG{k+kt}{Float64}\PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{rand}\PYG{p}{(} \PYG{n}{Uniform}\PYG{p}{(} \PYG{n}{x} \PYG{o}{\PYGZhy{}} \PYG{n}{α}\PYG{p}{,} \PYG{n}{x} \PYG{o}{+} \PYG{n}{α} \PYG{p}{),}\PYG{l+m+mi}{1}\PYG{p}{)[}\PYG{l+m+mi}{1}\PYG{p}{]}
+\PYG{k}{end}
+
+
+\PYG{k}{function} \PYG{n}{CalculateAcceptanceRate}\PYG{p}{(} \PYG{n}{theta}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},} \PYG{n}{N}\PYG{o}{::}\PYG{k+kt}{Int64}\PYG{p}{)}
+    \PYG{n}{nDiff} \PYG{o}{=} \PYG{l+m+mf}{0.0}
+    \PYG{k}{for} \PYG{n}{i} \PYG{k+kp}{in} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{N}
+        \PYG{k}{if}\PYG{p}{(} \PYG{n}{theta}\PYG{p}{[}\PYG{n}{i}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{!=} \PYG{n}{theta}\PYG{p}{[}\PYG{n}{i}\PYG{p}{])}
+            \PYG{n}{nDiff} \PYG{o}{+=} \PYG{l+m+mi}{1}
+        \PYG{k}{end}
+    \PYG{k}{end}
+    \PYG{c}{\PYGZsh{}return nDiff}
+    \PYG{k}{return} \PYG{n}{nDiff} \PYG{o}{/} \PYG{n}{convert}\PYG{p}{(}\PYG{k+kt}{Float64}\PYG{p}{,}\PYG{n}{N}\PYG{p}{)}
+\PYG{k}{end}
+
+\PYG{c}{\PYGZsh{}This function takes the sample and computes the relevant summaries}
+\PYG{k}{function} \PYG{n}{StatWaiter}\PYG{p}{(} \PYG{n}{s}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},} \PYG{n}{N}\PYG{p}{,} \PYG{n}{α}\PYG{p}{)}
+    \PYG{n}{a} \PYG{o}{=} \PYG{n}{round}\PYG{p}{(}\PYG{n}{CalculateAcceptanceRate}\PYG{p}{(} \PYG{n}{s}\PYG{p}{,} \PYG{n}{N}\PYG{p}{)}\PYG{o}{*}\PYG{l+m+mi}{100}\PYG{p}{)}\PYG{o}{/}\PYG{l+m+mf}{100.0}
+    \PYG{n}{b} \PYG{o}{=} \PYG{n}{round}\PYG{p}{((}\PYG{n}{maximum}\PYG{p}{(}\PYG{n}{s}\PYG{p}{)} \PYG{o}{\PYGZhy{}} \PYG{n}{minimum}\PYG{p}{(}\PYG{n}{s}\PYG{p}{))}\PYG{o}{*}\PYG{l+m+mi}{100}\PYG{p}{)}\PYG{o}{/}\PYG{l+m+mf}{100.0}
+    \PYG{n}{c} \PYG{o}{=} \PYG{n}{mode}\PYG{p}{(} \PYG{n}{round}\PYG{o}{.}\PYG{p}{(} \PYG{n}{s}\PYG{o}{.*}\PYG{l+m+mi}{10}\PYG{p}{)} \PYG{o}{./} \PYG{l+m+mi}{10}\PYG{p}{)}
+    \PYG{c}{\PYGZsh{}plot!(plt, autocov(s),label=@sprintf(\PYGZdq{}\PYGZpc{}.2f\PYGZdq{},α))}
+
+    \PYG{c}{\PYGZsh{}d = autocov(s)}
+    \PYG{k}{return} \PYG{p}{[}\PYG{n}{a}\PYG{p}{,}\PYG{n}{b}\PYG{p}{,}\PYG{n}{c}\PYG{p}{]}
+\PYG{k}{end}
+
+\PYG{k}{function} \PYG{n}{CompareAlphas}\PYG{p}{(} \PYG{n}{alphas}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{})}
+    \PYG{n}{N} \PYG{o}{=} \PYG{l+m+mi}{10000}
+    \PYG{c}{\PYGZsh{}plt = plot( xlims=(0,51), ylims=(\PYGZhy{}.1,1.6), legend=:topright )\PYGZsh{}plot( autocov(Metropolis( 2.0, N, p, q, simQ, 4.0)), label=\PYGZdq{}4.0\PYGZdq{});}
+    \PYG{n}{AcceptanceRates} \PYG{o}{=} \PYG{p}{[}\PYG{n}{StatWaiter}\PYG{p}{(}\PYG{n}{Metropolis}\PYG{p}{(} \PYG{n}{rand}\PYG{p}{(} \PYG{n}{Uniform}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{1.0}\PYG{p}{,} \PYG{l+m+mf}{2.0} \PYG{p}{),}\PYG{l+m+mi}{1}\PYG{p}{)[}\PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n}{N}\PYG{p}{,} \PYG{n}{p}\PYG{p}{,} \PYG{n}{q}\PYG{p}{,} \PYG{n}{simQ}\PYG{p}{,} \PYG{p}{[}\PYG{n+nb}{nothing}\PYG{p}{],} \PYG{p}{[}\PYG{n}{α}\PYG{p}{]),} \PYG{n}{N}\PYG{p}{,} \PYG{n}{α}\PYG{p}{)} \PYG{k}{for} \PYG{n}{α} \PYG{k+kp}{in} \PYG{n}{alphas}\PYG{p}{]}
+    \PYG{c}{\PYGZsh{}display(plt)}
+    \PYG{c}{\PYGZsh{}savefig( plt, \PYGZdq{}acf.png\PYGZdq{})}
+
+    \PYG{k}{return} \PYG{n}{AcceptanceRates}
+\PYG{k}{end}
+
+\PYG{n}{alphas} \PYG{o}{=} \PYG{p}{[}\PYG{o}{.}\PYG{l+m+mi}{01}\PYG{p}{,} \PYG{o}{.}\PYG{l+m+mi}{05}\PYG{p}{,} \PYG{o}{.}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{o}{.}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{o}{.}\PYG{l+m+mi}{35}\PYG{p}{,} \PYG{o}{.}\PYG{l+m+mi}{5}\PYG{p}{,} \PYG{o}{.}\PYG{l+m+mi}{75}\PYG{p}{,} \PYG{l+m+mf}{1.0}\PYG{p}{,} \PYG{l+m+mf}{2.0}\PYG{p}{,} \PYG{l+m+mf}{3.0}\PYG{p}{]}
+\PYG{n}{accepted} \PYG{o}{=} \PYG{n}{mean}\PYG{p}{(} \PYG{p}{[}\PYG{n}{CompareAlphas}\PYG{p}{(} \PYG{n}{alphas}\PYG{p}{)} \PYG{k}{for} \PYG{n}{i} \PYG{k+kp}{in} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{l+m+mi}{100}\PYG{p}{]} \PYG{p}{)}
+\end{Verbatim}

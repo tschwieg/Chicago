@@ -1,0 +1,309 @@
+\documentclass[12pt]{paper}
+
+\usepackage{Schwieg}
+\usepackage[margin=1in]{geometry}
+\usepackage{tikz}
+\usepackage{minted}
+
+\begin{document}
+\section*{Question 4}
+
+
+Let $\seq{(Y_i,X_i)}_{i=1}^n$ be an i.i.d. sequence of random
+vectors. Suppose that $\exV{X_i X_i'}$ and $\exV{X_i Y_i}$
+exists. Suppose further that there is no perfect colinearity in
+$X_i$, Hence $\exV{X_i X_i'}$ is invertible.
+
+\subsection*{a}
+
+Does it also follow that
+\begin{equation*}
+  \frac{1}{n} \sum_{i=1}^n X_i X_i'
+\end{equation*} 
+is invertible? \newline \newline
+
+No. As a trivial case, consider when $n=1, k=2$ and $X_2 \sim \normal( 1, 1
+)$. Let $a$ be any realization of $X_2$.
+\begin{equation*}
+  \frac{1}{n} \sum_{i=1}^n X_i X_i' = (1,a)' (1,a) =
+  \begin{pmatrix}
+    1 & a\\ a & a^2
+  \end{pmatrix}
+\end{equation*}
+
+We can see that the second column is $a$ times the first column, and
+the matrix is not invertible. This occurs because for any vector $x \in
+\setR^k$, $x x'$ always has rank 1.
+
+\subsection*{b}
+
+For any $\lambda_n > 0$ show that
+\begin{equation*}
+  \frac{1}{n} \sum_{i=1}^n ( X_i X_i' + \lambda_n \eye )
+\end{equation*}
+is invertible. \newline \newline
+
+Note that this can be rewritten as
+\begin{equation*}
+  \brak{\frac{1}{n} \sum_{i=1}^n  X_i X_i'} + \lambda_n \eye 
+\end{equation*}
+
+For any given $i$, $X_i X_i'$ is positive semi-definite. The sum of
+positive semi-definite matrices is also positive semi-definite. This
+tells us that the first matrix is always positive semi-definite.
+
+\begin{equation*}
+  \frac{1}{n} \sum_{i=1}^n  X_i X_i' \succeq 0
+\end{equation*}
+
+It is obvious that $\lambda_n \eye$ is a positive definite matrix. The sum
+of a positive definite matrix and a positive semi-definite matrix is
+positive definite.
+
+Proof: Let $A$ be a positive semi-definite matrix, and $B$ be a
+positive definite matrix. Then $\forall x \in \setR^k, x' B x > 0$ and $x' A x
+\geq 0$. Consider two cases:
+
+Case 1: $x \in \setR^k, x' A x > 0, x' B x > 0$. Then:
+\begin{align*}
+  \left( x' A + x' B \right) X &> 0\\
+  x' ( A + B ) x &> 0
+\end{align*}
+
+Case 2: $x \in \setR^k, x' A x = 0, x' B x > 0$ Then:
+\begin{align*}
+  x' A x + x' B x &> 0\\
+  \left( x' A + x' B \right) X &> 0\\
+  x' ( A + B ) x &> 0
+\end{align*}
+
+This tells us that:
+\begin{equation*}
+  \brak{\frac{1}{n} \sum_{i=1}^n  X_i X_i'} + \lambda_n \eye \succ 0
+\end{equation*}
+
+Any positive definite matrix has strictly positive eigenvalues, and
+therefore has a strictly positive determinant. This implies that the
+matrix is invertible.
+
+\subsection*{c}
+
+Suppose that $\lambda_n \rightarrow 0$ as $n \rightarrow \infty$. Find the limit in probability of
+\begin{equation*}
+  \tilde{\beta_n} = \inv{ \left( \frac{1}{n} \sum_{i=1}^n ( X_i X_i' + \lambda_n
+      \eye) \right)} \left( \frac{1}{n} \sum_{i=1}^n X_i Y_i \right)
+\end{equation*}
+
+From the weak law of large numbers, we know that $\frac{1}{n}
+\sum_{i=1}^n X_i X_i' \plim \exV{X X'}$ and $\frac{1}{n} \sum_{i=1}^n X_i
+Y_i \plim \exV{XY}$.
+
+We wish to show that
+\begin{equation*}
+  \frac{1}{n} \sum_{i=1}^n X_i X_i' + \lambda_n \eye \plim \frac{1}{n} \sum_{i=1}^n X_i X_i'
+\end{equation*}
+
+Applying the definition of convergence in probability.
+\begin{align*}
+  \lim_{n\rightarrow\infty} \Pr\left( \abs{ \frac{1}{n} \sum_{i=1}^n X_i X_i' + \lambda_n \eye -
+  \frac{1}{n} \sum_{i=1}^n X_i X_i' } < \epsilon\right) &= \lim_{n\rightarrow\infty} \Pr( \abs{ \lambda_n
+                                          \eye } < \epsilon)\\
+                                        %&= \lim_{n\rightarrow\infty} \Pr( \sqrt{ k \lambda_n^2} < \epsilon)\\
+                                        %&= \lim_{n\rightarrow\infty} \indicate{ \sqrt{ k \lambda_n^2} < \epsilon} \\
+  %= 1
+\end{align*}
+We will consider this on an element-wise basis. Note that if we are
+not on a diagonal, $\left( \lambda_n \eye \right)_{ij} = 0$. So we may
+restrict ourselves to the diagonal elements of this matrix. However
+all the diagonal elements are the same, so this question amounts to
+the convergence of $\abs{\lambda_n}$. Since $\lambda_n$ is non-random: 
+\begin{align*}
+  \lim_{n\rightarrow\infty} \Pr( \abs{ \lambda_n} < \epsilon) = 1
+\end{align*}
+
+As we have assumed that $\lambda_n \rightarrow 0$ above.
+
+
+
+
+Thus
+\begin{equation*}
+  \frac{1}{n} \sum_{i=1}^n X_i X_i' + \lambda_n \eye \plim \frac{1}{n}
+  \sum_{i=1}^n X_i X_i' \plim \exV{X X'}
+\end{equation*}
+
+As multiplication and inverting a matrix are continuous functions, we
+may apply the continuous mapping theorem to get that 
+
+\begin{equation*}
+  \tilde{\beta_n} = \inv{ \left( \frac{1}{n} \sum_{i=1}^n ( X_i X_i' + \lambda_n
+      \eye) \right)} \left( \frac{1}{n} \sum_{i=1}^n X_i Y_i \right)
+  \plim \inv{ \exV{X X'}} \exV{XY} = \beta
+\end{equation*}
+
+
+\section*{Question 8}
+
+\subsection*{a}
+
+\begin{minted}[mathescape,
+               linenos,
+               breaklines,
+               numbersep=5pt,
+               frame=lines]{R}
+
+
+data <- read.csv( "ps4.csv" )
+
+k <- ncol(data)
+N <- nrow(data)
+
+## Since we are not calling lm, we want to do matrix algebra, we need
+## R to not store this stuff as a data frame. What a terrible language.
+
+Y <-  as.matrix(data$y)
+X <- as.matrix(cbind( rep(1,N), data[,2:3] ))
+
+## Remember that matrix multiplication uses the %*%
+mat <-  t(X)%*%X
+
+## Rather than using inverses, let's be numerically stable and use the
+## Cholesky decomp and forward/back substitution for legitimate answers
+F <- chol(mat)
+
+## We now have $ X' X \beta = X' Y$
+## This is equivalent to $F' F \beta = X' Y$
+## Thus $\beta = \inv{F} \inv{F'}  X' Y$
+
+## Note that F' is lower triangular so we use forward substitution.
+beta <-  backsolve( F, forwardsolve( t(F), t(X)%*%Y ) )
+
+\end{minted}
+
+Our estimated values of $\beta$ are: $(0.1680066, 1.0843565, 0.9203671)'$.
+
+\subsection*{b}
+
+
+
+\begin{minted}[mathescape,
+               linenos,
+               breaklines,
+               numbersep=5pt,
+               frame=lines,
+               firstnumber=last]{R}
+
+## Now lets build our variance estimates.
+
+outerproduct <- function( row ){
+    row%*%t(row)
+}
+
+## We are interested in estimating $\inv{\left (\frac{1}{n} \sum_{i=1}^n X_i X_i' \right )}$
+
+
+## The inner apply() forms the outer product matrices, the outer
+## averages over them The matrix() reforms them as a matrix since
+## apply flattens them.  This is equivalent to just doing
+## $\frac{1}{n} X' X$, I just wanted some R practice.
+outerProductGradient <- matrix( apply( apply( X, 1, outerproduct ), 1,
+                                      mean ), nrow = k, ncol = k )
+
+## Mama told me to never invert a matrix on a computer
+varF <- chol( outerProductGradient )
+informationEstimate <- backsolve( varF, forwardsolve( t(varF), diag(k) ) )
+
+## Now lets get the heteroskedasticity-robust version of this bad boy.
+## We multiply the matrix of $X_i X_i'$ by $\hat{u_i}^2$ component wise, hence no % 
+monstronsity <- matrix( apply(
+    matrix( rep( (Y - X%*%beta)^2, k*k ), nrow=k*k, ncol = N, byrow = TRUE )
+     * apply( X, 1, outerproduct ), 1, mean ), nrow = k, ncol = k )
+
+## This is what are interested in: $\Vari{\est{\beta} \vert X }$
+condVarHetero <- informationEstimate%*%monstronsity%*%informationEstimate
+
+
+## Note that it's  possible to just use matrix operations to get there
+## I just chose this way for practice and to have it look like the notes.
+## One could always do $\inv{ ( X' X ) } X' \est{\Sigma} X \inv{ ( X' X )}$
+
+\end{minted}
+
+Our estimated Variance-Covariance Matrix of $\est{\beta}$ is:
+\begin{equation*}
+  \Vari{ \est{\beta} \vert X} =
+  \begin{pmatrix}
+     4.8905355 &  0.4493318 & -1.6478739\\
+  0.4493318 &  0.4517238 & -0.3702895\\
+ -1.6478739 & -0.3702895 &  0.7567006\\
+  \end{pmatrix}
+\end{equation*}
+
+\subsection*{c}
+
+\begin{minted}[mathescape,
+               linenos,
+               breaklines,
+               numbersep=5pt,
+               frame=lines,
+               firstnumber=last]{R}
+## Now we face multiple linear restrictions in the form of $R \beta = r$
+
+## We don't really know anything about the nature of $R \Vari{ \est{ \beta } }$
+## So we can't rely on any decompositions, and we'll let solve() work here
+multipleLinearTest <- function( R, r, N, beta, Var ){
+    N*t(R%*%beta - r )%*%solve(R%*%Var%*%t(R))%*%(R%*%beta -r  )
+}
+
+
+R <-  matrix( c( 0, 0, 1, 0 ,0,1 ), nrow = 2, ncol = 3 )
+r <- c(  1, 1 )
+
+## This is free to be changed.
+alpha <- .05
+
+## This c is the critical value used in a hypothesis test
+c <- qchisq( alpha, df = 2, lower.tail = FALSE )
+
+
+testStat <- multipleLinearTest( R, r, N, beta, condVarHetero )
+pValue <-  pchisq( testStat, df = 2, lower.tail = FALSE )
+
+\end{minted}
+
+Our test statistic value is $1.599558$ and our p-value is: $0.4494283$
+
+\subsection*{d}
+
+
+\begin{minted}[mathescape,
+               linenos,
+               breaklines,
+               numbersep=5pt,
+               frame=lines,
+               firstnumber=last]{R}
+## Testing: $f( \beta ) = (\beta_1 - \beta_2 )^2 = 0$
+## However we need the rows of the total derivative to be linearly independent.
+## $\nabla f( \beta ) = ( 0, 2( \beta_1 - \beta_2 ), -2 ( \beta_1 - \beta_2 ) )'$
+## The rows are not linearly independent - The standard nonlinear test will not work.
+
+## Worse yet, if we attempt to simply take the square root of both
+## sides we lose the reliability as this is a Wald-Test. Wald Tests
+## are not invariant to non-linear Transforms. This means we want to
+## use a likelihood-ratio test, which is. However if we do not want to
+## assume normality of Y and then the GLM framework to get a
+## likelihood-ratio test, we can just stand for the errors in the Wald Test.
+
+## Our test is simply testing if $\beta_1 - \beta_2 = 0$
+
+R <- matrix( c( 0, 1, -1 ), nrow = 1, ncol = 3 )
+r <- c(0)
+
+## I just copy and pasted the previous code
+c <- qchisq( alpha, df = 1, lower.tail = FALSE )
+testStat <- fischerFTest( R, r, N, beta, condVarHetero )
+pValue <-  pchisq( testStat, df = 1, lower.tail = FALSE )
+   
+\end{minted}
+Our test statistic value is $1.379809$ and our p-value is: $0.2401337$
+\end{document}

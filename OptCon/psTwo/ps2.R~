@@ -1,0 +1,54 @@
+#Stargazer makes output in nice latex tables
+library(stargazer)
+#For quantile regression
+library(quantreg)
+
+
+birthData <- read.csv("data.csv")
+
+summary(birthData)
+
+
+reg <- lm( formula = birthweight~boy + married + black + age + highschool + somecollege + college + prenone + presecond + prethird + smoker + cigsdaily + weightgain + I(age^2) + I(weightgain^2), data=birthData )
+
+stargazer(reg)
+
+cMat <- reg$coefficients
+
+quantiles = c(1:9/10.0)
+
+for( q in quantiles ){
+    quantReg <- rq( formula = birthweight ~ . + I(age^2) + I(weightgain^2), data = birthData, tau = q )
+    cMat <- cbind(cMat, quantReg$coefficients )
+
+    print( stargazer( quantReg ) )
+}
+
+
+cMat <- rbind( append("OLS", as.character(quantiles),1), cMat)
+
+
+print( stargazer( cMat ))
+
+
+
+
+sum( reg$residuals )
+length( reg$residuals[abs(reg$residuals) < 1e-10] )
+
+
+#Lets use $\tau$ = .5 as LAD is supposedly comparable to OLS
+ladEstimate <- rq( formula = birthweight ~ . + I(age^2) + I(weightgain^2), data = birthData, tau = .5 )
+sum( ladEstimate$residuals )
+length( ladEstimate$residuals[abs(ladEstimate$residuals) < 1e-10] )
+
+#Check if this depends on our choice of $\tau$
+for( q in quantiles ){
+    quantReg <- rq( formula = birthweight ~ . + I(age^2) + I(weightgain^2), data = birthData, tau = q )
+    print(sum( quantReg$residuals ))
+    print(length( quantReg$residuals[abs(quantReg$residuals) < 1e-10] ))
+}
+
+pdf("qNineHist.pdf")
+hist(ladEstimate$dual)
+dev.off()

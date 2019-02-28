@@ -1,0 +1,12 @@
+\documentclass[12pt]{paper}
+
+\usepackage{Schwieg}
+\usepackage[margin=1in]{geometry}
+\usepackage{tikz}
+
+\begin{document}
+Let $\seq{(Y_i,X_i)}_{i=1}^n$ be an i.i.d. sequence of random
+vectors. Suppose that $\exV{X_i X_i'}$ and $\exV{X_i Y_i}$
+exists. Suppose further that there is no perfect collinearity in
+$X_i$, Hence $\exV{X_i X_i'}$ is invertible.
+\end{document}

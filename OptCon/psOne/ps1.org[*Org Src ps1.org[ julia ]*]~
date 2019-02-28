@@ -1,0 +1,72 @@
+using Distributions
+using Plots
+
+
+function p( x::Float64)
+    a = cos(x)
+    b = cos(1.5*x)
+    c = pdf( Normal(2,1), x)
+    return a*a*b*b*c
+end
+
+
+
+#This is just uniformly distributed $\alpha$ units away from $x$
+function q( xPrime::Float64, x::Float64, α::Float64)
+    return (1/(2*α))*( abs(xPrime - x) < α)
+end
+
+function Metropolis( start, N, α )
+    #The uniforms are not conditional on any values of $\theta$
+    #So we might as well simulate them all up-front
+    coinFlips = rand( Uniform(), N)
+    #This allocates the vector for all the thetas.
+    theta = ones(N+1).*start
+    for i in 1:N
+        #First simulate from q
+        thetaStar = rand(Uniform(theta[i]-α, theta[i]+α),1)[1]
+
+        #Now go through all the mess of calculating the ratio of p and q's
+        quotient = p( thetaStar)*q(theta[i],thetaStar,α) / ( p( theta[i])*q(thetaStar,theta[i],α))
+
+        #Decide if we are going to let this guy through or not.
+        if( coinFlips[i] < quotient)
+            theta[i+1] = thetaStar
+        else
+            theta[i+1] = theta[i]
+        end
+    end
+    #Return the entire vector of paths to do with however you please
+    return theta
+end
+
+function CalculateAcceptanceRate( theta::Vector{Float64}, N::Int64)
+    nDiff = 0.0
+    for i in 1:N
+        if( theta[i+1] != theta[i])
+            nDiff += 1
+        end
+    end
+    #return nDiff
+    return nDiff / convert(Float64,N)
+end
+
+
+function SimulateDist( α::Float64)
+
+    N = 100000
+    
+    samples = Metropolis( 2.0, 100000, α )
+    burnout = 10001
+
+    histogram( samples[burnout:end] )
+
+    x = linspace(-1,5)
+    y = p.(x)
+    plot!( x, .5*(N-burnout).*y)
+end
+
+
+
+    
+    

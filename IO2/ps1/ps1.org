@@ -1,0 +1,588 @@
+#+OPTIONS: toc:nil 
+#+TITLE: Advanced Industrial Organization 2 Pset 1
+#+AUTHOR: Timothy Schwieg
+#+PROPERTY: header-args :cache yes :exports both :tangle yes
+#+PROPERTY: header-args:julia :session *julia*
+
+#+LaTeX_CLASS: paper
+#+LaTeX_CLASS_OPTIONS: [12pt, letterpaper]
+
+#+LATEX_HEADER: \usepackage[margin=1in]{geometry}
+#+LATEX_HEADER: \usepackage{fontspec}
+#+LATEX_HEADER: \setmonofont{DejaVu Sans Mono}[Scale=MatchLowercase]
+
+* 1
+The firms observe the characteristics of their products, as well as
+the characteristics of the products of all of their competitors. The
+prices in the market are observed by all. Only the $\epsilon_{ijt}$ remains
+unobserved by the firms. 
+
+A consumers utility is given by:
+#+BEGIN_EXPORT latex
+\begin{equation*}
+  u_{ijt} = \alpha p_{jt} + x_{jt} \beta + \xi_{jt} + \epsilon_{ijt}
+\end{equation*}
+
+Let $\epsilon_{ijt} \sim T1EV$. Note that this distribution is in the
+location-scale family, so we may add deterministic components to it
+and only affect the mean.
+
+Note that the maximum of a set of $T1EV ( \alpha_j)$ random variables is
+distributed $T1EV\left[ \log \sum_{i=1}^n \exp (\alpha_i) \right]$.
+
+\begin{align*}
+  \Pr( i \rightarrow j) &= \Pr( u_{ijt} > u_{ikt} \quad \forall k \neq j)\\
+  &= \Pr( \alpha p_{jt} + x_{jt} \beta + \xi_{jt} + \epsilon_{ijt} > \alpha p_{kt} + x_{kt}
+    \beta + \xi_{kt} + \epsilon_{ikt} \quad \forall k \neq j )\\
+  &= \Pr( \alpha p_{jt} + x_{jt} \beta + \xi_{jt} + \epsilon_{ijt} > \max_{k \neq j} \{ \alpha p_{kt} + x_{kt}
+    \beta + \xi_{kt} + \epsilon_{ikt}\} )\\
+\end{align*}
+
+From the above note, we know that
+
+\begin{equation*}
+  \max_{k \neq j} \{ \alpha p_{kt} + x_{kt} \beta + \xi_{kt} + \epsilon_{ikt}\} \sim T1EV(
+  \log \sum_{k \neq j} \alpha p_{kt} + x_{kt} \beta + \xi_{kt}) 
+\end{equation*}
+
+For notational convenience, call this object $u_{i,-j,t}$. We may also
+note that
+\begin{equation*}
+  \alpha p_{jt} + x_{jt} \beta + \xi_{jt} + \epsilon_{ijt} \sim T1EV( \alpha p_{jt} + x_{jt} \beta + \xi_{jt} )
+\end{equation*}
+
+Lastly, the difference between two independent $T1EV$ distributions is
+distributed logistically. Since $\epsilon_{ijt}$ are all independent, and our
+transformations are simply adding to the location of each of the
+distributions, they will be independent as well.
+
+\begin{align*}
+  \Pr( \alpha p_{jt} + x_{jt} \beta + \xi_{jt} + \epsilon_{ijt} > u_{i,-j,t} ) &= \Pr(
+                                                               u_{i,-j,t}-
+                                                               \alpha
+                                                               p_{jt}
+                                                               +x_{jt}\beta
+                                                               +\xi_{jt}
+                                                               +\epsilon_{ijt}
+                                                               \leq0)\\
+  &= \frac{\exp(\alpha p_{jt} + x_{jt} \beta + \xi_{jt})}{\sum \exp(\alpha p_{kt} +
+    x_{kt}\beta + \xi_{kt})}
+\end{align*}
+
+This is the probability that an individual elects to purchase good $j$
+when the prices are the vector $p$ and the characteristics are $x$ and
+$\xi$. The demand that the firm will face for their good is the number
+of consumers $N$ times the probability that each consumer will buy the
+product.
+
+\begin{equation*}
+  D_{jt}( p, x, \xi; \theta) = N \frac{\exp(\alpha p_{jt} + x_{jt} \beta + \xi_{jt})}{\sum
+    \exp(\alpha p_{kt} + x_{kt}\beta + \xi_{kt})}
+\end{equation*}
+#+END_EXPORT
+
+* 2
+#+BEGIN_EXPORT latex
+Assume a Nash equilibrium exists. Derive the first order conditions of
+firm $f$ and express it as an (implicit) function of $p_{jt}$.
+
+\vspace{.3in}
+
+The profits for each firm are given by:
+\begin{align*}
+  \Pi_{ft} &= \sum_j (p_{jt} - mc_{jt}) D_{jt}(p,x,\xi;\theta)\\
+  &= \sum_j N (p_{jt}-mc_{jt}) \frac{\exp(\alpha p_{jt} + x_{jt} \beta + \xi_{jt})}{\sum
+    \exp(\alpha p_{kt} + x_{kt}\beta + \xi_{kt})}\\    
+\end{align*}
+
+Note that each firm is setting price to compete, taking derivatives
+with respect to $p_{jt}$. The notation for $D(p,x,\xi;\theta)$ will be
+suppressed for readability.
+
+\begin{align*}
+  \sum_j (p_{jt} - mc_{jt}) \deriv{D_{jt}}{p_{jt}} + D_{jt} &= 0
+\end{align*}
+
+Following the rules of exponentiation:
+\begin{align*}
+  \deriv{D_{jt}}{p_{jt}} &= \alpha D_{jt}\left( \sum_{k \neq j} D_{kt}\right) =
+                           \frac{\alpha}{N} D_{jt} (1 - D_{jt})\\
+   \deriv{D_{mt}}{p_{jt}} &= - \frac{\alpha}{N} D_{mt} D_{jt} 
+\end{align*}
+
+\begin{align*}
+  \deriv{\Pi_{ft}}{p_j} &= \frac{\alpha}{N} D_{jt} \left[ \sum_{k \in \mathcal{F}_t, k \neq j}
+                        (p_{kt} - mc_{kt})( - D_{kt}) + (p_{jt} -
+                        mc_{jt})( 1 - D_{jt} ) \right] + D_{jt} = 0
+\end{align*}
+
+This is the first order condition that all firms face. The existence
+of the Nash equilibrium implies that they have no profitable
+deviations, and therefore the derivatives for all of their products
+are equal to zero.
+
+This is an implicit function of $p$ and $\xi$ as they both enter the
+equation through the demand function $D(p,x,\xi;\theta)$.
+#+END_EXPORT
+
+* 3
+#+BEGIN_EXPORT latex
+What does the above result imply in the relationship between $p_{jt}$
+and $\xi_{jt}$.
+\vspace{.3in}
+
+We can see that both enter the demand function non-trivially, so it is
+hard to believe that $\exV{p_{jt}\xi_{jt}} = 0$. Since the firms are
+setting their prices based on the demand of consumers, which is based
+upon the unobserved characteristics.
+
+It is logical to believe that these unobserved characteristics will
+have some effect on price, and therefore price is not exogenous to
+these characteristics.
+#+END_EXPORT
+
+* 4
+#+BEGIN_EXPORT latex
+Define
+\begin{equation*}
+  \hat{s}_{jt} = \frac{1}{N} \sum_{i=1}^N \indicate{y_{it} = j}
+\end{equation*}
+
+Compute $p \lim_{N \rightarrow\infty} \hat{s}_{jt}$ and discuss its relationship with
+$D_{jt}(p,x,\xi;\theta)$.
+\vspace{.3in}
+
+Conditioned upon knowledge of the characteristics and $\theta$, each
+$y_{it}$ is independent of each other, as the only variation occurs
+because of different iid shocks of $\epsilon_{ijt}$. The limit in probability
+of a sample mean of iid random variables can be computed using the
+Weak Law of Large Numbers.
+
+\begin{equation*}
+  \frac{1}{N} \sum_{i=1}^N \indicate{y_{it} = j} \plim
+  \exV{\indicate{y_{it} = j}} = \Pr( y_{it} = j) = \frac{\exp(\alpha p_{jt}
+    x_{jt}\beta + \xi_{jt})}{\sum_k \exp(\alpha p_{kt} + x_{kt} \beta + \xi_{kt})}
+\end{equation*}
+
+This is just an individual consumer's demand for good $j$, and since
+all consumers are homogenous, it is the demand for good $j$ divided by
+$N$.
+
+\begin{equation*}
+  \hat{s}_{jt} \plim \frac{1}{N} D_{jt} (p,x,\xi;\theta)
+\end{equation*}
+#+END_EXPORT
+
+* 5
+#+BEGIN_EXPORT latex
+Suppose you only have market-level data instead of an individual level
+dataset. Derive a linear regression equation.
+\vspace{.3in}
+
+\begin{equation*}
+  \hat{s}_{jt} \plim \frac{1}{N} D_{jt} (p,x,\xi;\theta)
+\end{equation*}
+
+If we take this to have converged, that is: $\hat{s}_{jt} =
+\frac{1}{N} D_{jt}(p,x,\xi;\theta)$, then we can compute a demand equation.
+
+Let the good indexed by $0$ be such that $p_{0t} = 0$, $x_{0t} = 0$,
+$\xi_{0t} = 0$.
+
+\begin{align*}
+  \hat{s}_{jt} &= \frac{\exp(\alpha p_{jt} + x_{jt} \beta + \xi_{jt})}{\sum_k \exp( \alpha
+                 p_{kt} + x_{kt}\beta + \xi_{kt})}\\
+  \frac{\hat{s}_{jt}}{\hat{s}_{0t}} &= \exp( \alpha p_{jt} + x_{jt} \beta +
+                                      \xi_{jt})\\
+  \log \hat{s}_{jt} - \log \hat{s}_{0t} &= \alpha p_{jt} + x_{jt}\beta + \xi_{jt}
+\end{align*}
+
+This is now a linear regression equation for the demand system.
+#+END_EXPORT
+
+* 6
+#+BEGIN_EXPORT latex
+The linear regression for the demand system can be written as such:
+\begin{equation*}
+  \log \hat{s}_{jt} - \log \hat{s}_{0t} = \alpha p_{jt} + x_{jt}\beta + \xi_{jt}
+\end{equation*}
+
+Since $\xi_{jt}$ is unobserved to the econometrician, we can treat it as
+the unobserved error typically denoted $U$ in linear regression. In
+order to ensure that the OLS estimates are consistent, we need to
+verify that there is no perfect colinearity in $X_{jt} = (p_{jt},x_{jt})$ and that
+$\exV{X_{jt} \xi_{jt}} = 0$. From question (3) we can see that this
+exogeneity will not be satisfied in the current formation of the
+model.
+
+When there is endogeneity in the model, the OLS estimates become
+inconsistent. In order to correct for this, exogenous and relevant
+instruments must be introduced.
+#+END_EXPORT
+
+* 7
+#+BEGIN_EXPORT latex
+Discuss potential advantages and disadvantages of the following
+variables as instruments:
+\begin{itemize}
+\item $w_{jt} \\ x_{jt}$ (cost components not a part of $x_{jt}$)
+\item $x_{-j,t}$ (characteristics of other products)
+\item $p_{j,-t}$ (prices of $j$ in other markets)
+\end{itemize}
+\vspace{.3in}
+
+The first instrument: $w_{jt} \\ x_{jt}$ would be exogenous, as shocks
+to the cost system of the firm will propagate to all goods that the
+firm produces. However, if the good that is produced has unique
+properties, cost shocks to it may not appear in the cost components of
+other goods. This could mean that the instrument relevance is low,
+even if the instrument is exogenous.
+
+The characteristics of other products will likely be quite relevant,
+but to believe that they are exogenous, we must believe that every
+firm sets its characteristics without considering the demand for each
+good, and then set prices based on the characteristics. This seems
+hard to believe, as entrance to a market especially occurs in a part
+of the characteristic space producers believe there is high profit.
+
+The Hausman instruments, prices of $j$ in other markets relies on
+the markets being similar enough that they share common costs, but
+differentiated enough that they do not share demand shocks. This way,
+prices are in part set by the marginal costs of the goods, but since
+the demand shocks are uncorrelated with the demand shocks of the
+market of interest, these are exogenous instruments.
+#+END_EXPORT
+
+* 8
+#+BEGIN_SRC julia :exports none
+using DataFrames
+using CSVFiles
+using LinearAlgebra
+#+END_SRC
+
+#+RESULTS[b3315ddb189ef2fb1bf411d248b45b1872835029]:
+
+#+BEGIN_SRC julia
+  #This takes a vector of M codified values and splits it into M-1
+  #columns of vectors that are dummies indiciating deviation from the
+  #first value.
+  function ReturnDummyMat( v::Vector)
+
+      return mat
+  end
+
+  #Builds the Y,X,Z matrices using columns from data as specified.
+  #regCols - exogenous X
+  #dummyCols - exogenous codified X to be turned into dummy variables
+  #endCols - endogenous X
+  #instCols - instruments
+  function DoEstimation( data, yCol, regCols, dummyCols, endCols, instCols)
+
+      Y = data[yCol]
+      N = length(Y)
+
+      #base is the collection of exogenous variables in X
+      base = ones(N)
+      for col in regCols
+          base = hcat( base, data[col] )
+      end
+      dummycolNames = []
+      for col in dummyCols
+          difVals = unique(data[col])
+          mat = zeros(length(data[col]),length(difVals)-1)
+          for i in 1:(length(difVals)-1)
+              dummycolNames = vcat( dummycolNames,string(col)*string(difVals[i])  )
+              mat[:,i] = (data[col] .== difVals[i])
+          end
+          base = hcat( base, mat)
+
+      end
+
+      X = copy(base)
+      for col in endCols
+          X = hcat( X, data[col])
+      end
+
+      Z = copy(base)
+      for col in instCols
+          Z = hcat(Z, data[col])
+      end
+
+      #TSLS estimation using Z as the instruments.
+      ProjectMat = Z*((Z'*Z) \ Z')
+      β = (X' * ProjectMat * X) \ X'*ProjectMat*Y
+
+
+      colNames = vcat( "constant", string.(regCols), dummycolNames, string.(endCols))
+      return colNames,β
+  end
+#+END_SRC
+
+#+RESULTS[7a04ff6cd2b2623ee9f4311158bf087b2c2909ab]:
+
+#+BEGIN_SRC julia    
+  cereal = DataFrame(load("cereal_ps3.csv"))
+
+  yCol = :share
+  regCols = [:sugar, :mushy]
+  dummyCols = [:firm, :brand, :city, :quarter]
+  endCols = [:price]
+  #This just grabs z1-z20
+  instCols = [convert(Symbol, "z"*string(i)) for i in 1:20]
+
+  (names, full_̂θ) = DoEstimation( cereal, yCol, regCols, dummyCols, endCols, instCols)
+
+
+  result = hcat(names, full_̂θ )
+#+END_SRC
+
+#+RESULTS[0bfc4cc36d9fb9d38f655d302d2e1048b56c2167]:
+
+#+BEGIN_SRC julia :session *julia*
+result
+#+END_SRC
+
+#+RESULTS[e84da80ad81e1c4be2deabb67683118126b3b5a7]:
+| constant |     0.09452395286016772 |
+| sugar    |  -0.0036229003407306204 |
+| mushy    |    -0.05377938298265536 |
+| firm1    |     0.03025786949566205 |
+| firm2    |     0.06859188738411108 |
+| firm3    |    0.017978251937311094 |
+| firm4    |     0.08862672938445004 |
+| brand4   |   -0.007827751293794498 |
+| brand6   |     0.09808416013471244 |
+| brand7   |    0.030575366792363553 |
+| brand9   |    -0.04825803737216904 |
+| brand11  |     0.05735877752524789 |
+| brand13  |     0.01072391036024938 |
+| brand17  |    0.029119260410598823 |
+| brand30  |    -0.03612509805211942 |
+| brand45  |   0.0059055060053192585 |
+| brand5   |    -0.06968351847038054 |
+| brand8   |     -0.0394232794856651 |
+| brand15  |    -0.03513508260073791 |
+| brand16  |   -0.005315366607306169 |
+| brand19  |   -0.028417105361929304 |
+| brand26  |    -0.02486210761643548 |
+| brand28  |     0.06989582394749617 |
+| brand40  |   -0.052421957007616565 |
+| brand48  |    -0.07615382696309982 |
+| brand14  |     0.02039964933132369 |
+| brand2   |    -0.03098345892470701 |
+| brand10  |    -0.09702027200792152 |
+| brand12  |   -0.061518504996531234 |
+| city1    |    0.007263281793424108 |
+| city3    |  -0.0006626629602255662 |
+| city4    |    0.011914398011016077 |
+| city5    |    0.002399802961171884 |
+| city7    |    0.010924546268865729 |
+| city8    |     0.00932447811166075 |
+| city11   |    0.005745892986811458 |
+| city12   |    0.003110754303612967 |
+| city13   |    0.004401560374064275 |
+| city14   |    0.006153561691822627 |
+| city15   |   0.0027736388066075253 |
+| city16   |    0.003921133678888184 |
+| city18   |    0.004731411889285651 |
+| city20   |    0.004818703133951892 |
+| city23   |   0.0040707736798448356 |
+| city24   |  0.00016891403114496122 |
+| city25   |  -0.0024205063419679646 |
+| city26   |    0.007704726917316753 |
+| city27   |    0.008505680174688147 |
+| city29   |    0.002831657936010673 |
+| city30   |    0.006000805226445476 |
+| city31   |    0.008436895025156085 |
+| city32   |   0.0009855572647901648 |
+| city33   | -0.00030116308363990806 |
+| city34   |    0.003581621715548837 |
+| city35   |     0.01168142467672599 |
+| city36   |   0.0011702741536025452 |
+| city37   |    0.001405238160069809 |
+| city38   |   0.0004038396752910203 |
+| city39   |   0.0029994546786393126 |
+| city40   |    0.004087699180677084 |
+| city41   |    0.003371997487892595 |
+| city43   |      0.0103272707974997 |
+| city44   |   0.0005021099791386084 |
+| city45   |    0.010408520797499717 |
+| city47   |    0.012480811198165482 |
+| city48   |   0.0037799346017207756 |
+| city49   |    0.011365515299537469 |
+| city52   |    0.007204436146408087 |
+| city53   |   0.0009256060457633699 |
+| city54   |   -0.002282108454361214 |
+| city55   |    0.002289142389639406 |
+| city56   |    0.004372253109269109 |
+| city58   |    0.010830505497957093 |
+| city61   |    0.005756215921392387 |
+| city63   |     0.00925526052216169 |
+| quarter1 |  -0.0008332849742770259 |
+| price    |     -0.5692740301934274 |
+
+#+BEGIN_SRC julia
+  dummyCols = [:firm, :quarter]
+  (names, none_̂θ) = DoEstimation( cereal, yCol, regCols, dummyCols, endCols, instCols)
+  hcat(names, none_̂θ )
+#+END_SRC
+
+#+RESULTS[3b39c6157dfdaaa952e1b191b58ca5971afac57e]:
+| constant |   0.05093554458055989 |
+| sugar    | 0.0009067176441928651 |
+| mushy    | 0.0007475677536836593 |
+| firm1    | -0.009333572805316397 |
+| firm2    | -0.012142491752576461 |
+| firm3    |  -0.00917113263273654 |
+| firm4    | -0.016357883490273836 |
+| quarter1 | -0.000619776913080898 |
+| price    |  -0.22274583878442455 |
+
+#+BEGIN_SRC julia
+  dummyCols = [:firm, :brand, :quarter]
+  (names, brand_̂θ) = DoEstimation( cereal, yCol, regCols, dummyCols, endCols, instCols)
+  hcat(names, brand_̂θ )
+#+END_SRC
+
+#+RESULTS[e783ad3606de5ece0576b1b7f86166a616867260]:
+| constant |    0.09829258100648783 |
+| sugar    |   0.004712655794150292 |
+| mushy    |  -0.014843261854955044 |
+| firm1    |    0.33855207691133316 |
+| firm2    |    -0.1731209631718661 |
+| firm3    |     0.3095807178340259 |
+| firm4    |  -0.012738751356021216 |
+| brand4   |    -0.3712881270664309 |
+| brand6   |    -0.3990433609574691 |
+| brand7   |    -0.3497553981268808 |
+| brand9   |    -0.3812533163390119 |
+| brand11  |   -0.35120447630723817 |
+| brand13  |    -0.4141575870057549 |
+| brand17  |    -0.3429980534843888 |
+| brand30  |   -0.37764418549265855 |
+| brand45  |    -0.4190220104550446 |
+| brand5   |    0.16386565852093773 |
+| brand8   |    0.11081936194339437 |
+| brand15  |    0.13460050910320015 |
+| brand16  |     0.1724918604725708 |
+| brand19  |     0.1050836830116646 |
+| brand26  |    0.10848909782068171 |
+| brand28  |     0.1389873679030841 |
+| brand40  |     0.1060373926955723 |
+| brand48  |    0.14064781766528192 |
+| brand14  |   -0.32958227754682845 |
+| brand2   |   -0.04643419433718314 |
+| brand10  |   -0.04538382862628028 |
+| brand12  |   -0.05990341627001738 |
+| quarter1 | -0.0008284478190168549 |
+| price    |     -0.561423222807172 |
+
+#+BEGIN_SRC julia
+  dummyCols = [:firm, :city, :quarter]
+  (names, city_̂θ) = DoEstimation( cereal, yCol, regCols, dummyCols, endCols, instCols)
+  hcat(names, city_̂θ )
+#+END_SRC
+
+#+RESULTS[a10f3164fec589381b4b1dab0cd6a4a2f71792a2]:
+| constant |     0.04636531879189724 |
+| sugar    |    0.000899764365574375 |
+| mushy    |   0.0007679230385243365 |
+| firm1    |   -0.009214632375958834 |
+| firm2    |   -0.012050568893326131 |
+| firm3    |   -0.009064997363407502 |
+| firm4    |   -0.016211508144466952 |
+| city1    |    0.004825259194445694 |
+| city3    |  -0.0006407645536495724 |
+| city4    |    0.010819477682132652 |
+| city5    |    0.001399775727458221 |
+| city7    |    0.010705562203087078 |
+| city8    |    0.007061642765303374 |
+| city11   |    0.003964822585162112 |
+| city12   |   0.0029720643952864125 |
+| city13   |   0.0034453299535059123 |
+| city14   |   0.0058615829374526265 |
+| city15   |    0.002116686609276903 |
+| city16   |    0.006680332907668951 |
+| city18   |    0.006016118408505643 |
+| city20   |    0.005198275514629498 |
+| city23   |    0.005851844081491139 |
+| city24   |  -0.0011595893012333017 |
+| city25   |  -0.0037709080809238526 |
+| city26   |    0.005763068200764806 |
+| city27   |    0.007929022134809819 |
+| city29   |   0.0021236094566655338 |
+| city30   |     0.00337299643712737 |
+| city31   |    0.008144916270786525 |
+| city32   | -0.00015315987724855281 |
+| city33   |  -0.0012646929730575035 |
+| city34   |    0.004464857447511922 |
+| city35   |    0.011564633174976968 |
+| city36   |   0.0018053279443524745 |
+| city37   |   0.0005147029592442998 |
+| city38   |   0.0017542414142437234 |
+| city39   |   0.0009264055226213303 |
+| city40   |    0.002474516562789547 |
+| city41   |    0.003028922451507969 |
+| city43   |     0.00880898127478192 |
+| city44   |  -0.0036074909885995803 |
+| city45   |    0.008890231274781857 |
+| city47   |     0.00824711925982067 |
+| city48   |    0.004050014949509956 |
+| city49   |     0.01030709231495004 |
+| city52   |    0.005021894957501958 |
+| city53   |    -890201256688592e-19 |
+| city54   |    -0.00571285881819259 |
+| city55   |   0.0006686603028926497 |
+| city56   |    0.004554739830747775 |
+| city58   |    0.010370638959825042 |
+| city61   |       0.004734290281101 |
+| city63   |    0.009481544056795571 |
+| quarter1 |  -0.0006174070654620801 |
+| price    |     -0.2188995249512379 |
+
+
+* 9
+#+BEGIN_EXPORT latex
+From $D_{jt}(p,x,\xi;\theta)$, derive own and cross-price elasticities. Do
+you find them restrictive? Why or why not? If you think they are, what
+could be potential remedies? Discuss briefly.
+\vspace{.3in}
+
+We know that:
+\begin{align*}
+  \deriv{D_{jt}}{p_{jt}} &= \frac{\alpha}{N} D_{jt} (1 - D_{jt})\\
+  \deriv{D_{kt}}{p_{jt}} &= -\frac{\alpha}{N} D_{kt} D_{jt}
+\end{align*}
+
+
+Let $\epsilon_{jk,t}$ be such that
+\begin{equation*}
+  \epsilon_{jk,t} = \deriv{D_{jt}}{p_{kt}} \frac{p_{k,t}}{D_{jt}}
+\end{equation*}
+
+Plugging in the computed values:
+
+\begin{align*}
+  \epsilon_{jj,t} &= \frac{\alpha }{N} p_{jt} ( 1 - D_{jt}) \\
+  \epsilon_{jk,t} &= \frac{\alpha}{N} p_{kt} D_{kt}
+\end{align*}
+
+This equality between the different cross-price elasticities is called
+independence of irrelevant alternatives. I believe that they are
+restrictive, as it means that when consumers substitute away from a
+good, they substitute to all other goods the same amount.
+
+This would not be restrictive if we believe that all goods are in the
+same class, i.e. we are examining seven different types of peanut
+butter that are all priced nearly the same. It is extremely
+restrictive when considering the introduction of a new good that is
+very close substitutes to another, and not like a third good. One
+example is a blue and red bus against walking. The introduction of a
+bus that only depends on color should not persuade walkers to ride the
+bus, but IIA assumes this.
+
+One method to get around this problem is to introduced unobserved
+heterogeneity into the model. This is the primary motivation for the
+approach utilized in BLP. Another way to get around this is to assume
+a correlated error structure such as a Nested Logit model.
+#+END_EXPORT

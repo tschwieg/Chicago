@@ -1,0 +1,27 @@
+\documentclass[12pt, letterpaper]{paper}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{Schwieg}
+
+
+\author{Timothy Schwieg}
+\date{\today}
+\title{Math Camp Notes}
+
+
+\begin{document}
+
+\maketitle
+
+
+
+\end{document}

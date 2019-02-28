@@ -1,0 +1,449 @@
+% Created 2019-02-02 Sat 22:48
+% Intended LaTeX compiler: pdflatex
+\documentclass[presentation]{beamer}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{fontspec}
+\usepackage{natbib}
+\usepackage{tikz}
+\usepackage{bm}
+\usepackage{minted}
+\usetheme{UnofficialUChicago}
+\author{Timothy Schwieg}
+\date{\today}
+\title{Artificial Intelligence as Structural Estimation: Economic Interpretations of Deep Blue, Bonanza, and AlphaGo}
+\hypersetup{
+ pdfauthor={Timothy Schwieg},
+ pdftitle={Artificial Intelligence as Structural Estimation: Economic Interpretations of Deep Blue, Bonanza, and AlphaGo},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 26.1.50 (Org mode 9.1.9)}, 
+ pdflang={English}}
+\begin{document}
+
+\maketitle
+
+\section{Introduction}
+\label{sec:org1641203}
+\begin{frame}[label={sec:org3b38bea}]{Introduction}
+\begin{itemize}
+\item Artificial Intelligence and Machine Learning are often seen as black
+box techniques with no interpretability.
+\item Implementations of these methods is often an implementation of a
+dynamic structural model.
+\item Case studies for three famous Game AIs: All board games of perfect
+information
+\item Chess: Deep Blue (Calibrated Value Function)
+\item Shogi: Bonanza (Estimated Value Function - Harold Zurcher)
+\item Go: AlphaGo (Conditional choice probability and condition choice
+simulation)
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org5e3cff2}]{Why Board Games?}
+\begin{itemize}
+\item Perfect information but extremely large state spaces: \(10^{171}\).
+\item Humans can interpret the results and quantify success and failure
+much more easily.
+\item Economically, there is a single valued best response function to any
+state space.
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[label={sec:orgf8ea62d}]{Rules}
+\begin{itemize}
+\item Two players take turns making moves in discrete time. Let \(a_t\)
+denote the actions of the moving player at time \(t\).
+\item State transition is deterministic: \(s_{t+1} = f( s_t, a_t )\)
+\item Action state is finite, determined by "legal moves" \(a_t \in
+  \mathcal{A}(s_t)\)
+\item State space is finite, and can be one of four outcomes, continue,
+draw, win, loss. Defined from the perspective of player 1.
+\end{itemize}
+\begin{equation*}
+  u_1(s_t) =
+  \begin{cases}
+    1 \quad &\text{ if } s_t \in S_{win}\\
+    -1  \quad &\text{ if } s_t \in S_{loss}\\
+    0  \quad &\text{ otherwise }
+  \end{cases}
+\end{equation*}
+\end{frame}
+
+
+\section{Deep Blue}
+\label{sec:org56879db}
+\begin{frame}[label={sec:org8090194}]{How does deep blue work?}
+\begin{itemize}
+\item Three components: Evaluation function, search algorithm, databases.
+\item Evaluation function is a linear combination of observable
+characteristics of the state space \(s_t\).
+\end{itemize}
+
+\begin{equation*}
+  V_{DB}( s_t, \theta) = \theta_1 x_{1,t} + \theta_2 x_{2,t} + ... + \theta_K x_{K,t}
+\end{equation*}
+
+Where $\theta$ is a vector of $K$ parameters, and $x_t$ is a vector of $K$
+observable characteristics of $s_t$
+
+\begin{itemize}
+\item Published version has \(K = 8150\).
+\item Chosen by expert knowledge - multiple grand masters manually
+adjusted the parameters of the model.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:orgd618f21}]{Search Algorithm and Databases}
+\begin{itemize}
+\item We would like to use backwards induction from end-game positions,
+but this is computationally infeasible.
+\item Instead of searching completely, it searched possible moves for a
+fixed number of moves, as well as pruning moves that are known to be
+bad.
+\item Databases were all possible five-piece position end-games solved as
+well as some six-piece end-games.
+\item Opening book - Collection of the optimal way to play each of the
+common openings.
+\item Four grand-masters constructed an opening book of 4000 openings by
+hand.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org7857b69}]{What move should I make?}
+\begin{itemize}
+\item If we had the optimal value function, then we would never need to
+look forward to solve a game, because this value function would have
+embodied this already.
+\item However our value function can only ever be an approximation to this
+optimal one.
+\item Approximation errors are handled by the search, which conducts
+backwards induction on the truncated version of the game tree.
+\item How should we construct the approximation of the value function?
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}[label={sec:org152f035}]{The evaluation function is a Calibrated Value Function}
+\begin{itemize}
+\item Obtain a value function that at each point generates behavior
+consistent with ideal play.
+\item It should never suggest a move that the value function itself can
+beat.
+\item Differences between calibrating this model and a macro model lie
+only in the goals and magnitude
+\item Many more parameters
+\item More interested in prediction rather than testing fit. (This
+motivates the larger number of parameters)
+\item At the end of the day, these parameters are still chosen to produce
+output that is consistent with some goal.
+\end{itemize}
+\end{frame}
+
+\section{Shogi - Bonanza}
+\label{sec:orgd2092ef}
+
+\begin{frame}[label={sec:org1b61d33}]{What is shogi?}
+\begin{itemize}
+\item Commonly called Japanese chess or Game of Generals
+\item Pieces can return to the board: \(\vert S \vert\) does not decrease over time.
+\item Many pieces have significantly less mobility than in chess
+\item There are more types of pieces
+\item The board is larger
+\item These factors all combine to generate a state space of
+\end{itemize}
+\begin{equation*}
+  \vert S_{shogi} \vert \approx 10^{71}
+\end{equation*}
+\end{frame}
+
+\begin{frame}[label={sec:org7ff9d5b}]{How to approximate the value function?}
+\begin{itemize}
+\item Kunihoto Hoki factorized he state space into 50 million variables.
+\item Based on relative positions of clusters of three pieces.
+\item This is combined into a linear valuation function
+\end{itemize}
+\begin{equation*}
+  V_{BO}(s_t \vert \theta) = \sum_{k=1}^K \theta_k x_k
+\end{equation*}
+
+Want to choose the action that maximizes this value function in some
+future $t+L$ turn.
+
+\begin{equation*}
+  a_t^{*} = arg\max_{a \in \mathcal{A}(s_t)} \{ V_{BO}(s_{t+L} \vert \theta) \}
+\end{equation*}
+\end{frame}
+
+\begin{frame}[label={sec:org800b2e3}]{How big is too big?}
+\begin{itemize}
+\item This is much too large to ever try manual calibration for predictive
+accuracy.
+\item Instead this value function is approximated from professional play.
+\item Only 50,000 games with 100 moves on average.  (Figure out how he
+handled this)
+\item Discrete choice regression is then used to estimate the values of
+\(\theta\).
+\item In effect, we are estimating a dynamic discrete choice problem.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:orgcda2c30}]{Bonanza is Harold Zurcher}
+\begin{itemize}
+\item Utility is the probability of winning at each state (\(V_{BO}\)) and
+error \(\epsilon_{j,t}\) is the approximation error of the function using less
+parameters than the state space.
+\item Good parameterization of the state space generates conditional
+independence and iid properties.
+\item 
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:orga17ba1b}]{Who is this Harold Zurcher?}
+\begin{itemize}
+\item Harold Zurcher - Want to predict the actions of the superintendent
+for maintenance of Madison Metropolitan Bus Company
+\end{itemize}
+
+\begin{itemize}
+\item Nested Fixed Point algorithm comprises of finding \(\theta\) values that
+make the model's predictions fit the observed data, and then solves
+the model to find the corresponding policy function.
+\item First portion is solved via Maximum likelihood estimation, and the
+second using value function iteration. (NFXP algorithm)
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org097ac86}]{Bonanza is Harold Zurcher}
+\begin{itemize}
+\item The goal of bonanza is to estimate the policy function, which
+ideally would be the best response function. Why is it not?
+\item Bonanza follows a two-step procedure as well:
+\item Step One: Estimate \(\theta\) via logit-regressions. This is the same as
+Rust (1987).
+\item Step Two: Estimate the optimal strategy for the truncated game tree
+with the value function on the leaves, assuming the opponent has the
+same value function.
+\item While the second step differs from Rust (Two players) in both cases,
+there is a unique optimal strategy that both models are solving. See
+Igami (2017,2018) for proof of how the NFXP extends to these games.
+\end{itemize}
+\end{frame}
+
+\section{AlphaGo}
+\label{sec:org4902f45}
+
+\begin{frame}[label={sec:orgfec6d6d}]{Go}
+\begin{itemize}
+\item Chess and Shogi utilized parameterizations of the state spaces to
+construct approximations of the optimal value function.
+\item Very difficult to do this for Go.
+\item State space is huge: \(19 \times 19\) board, with \(\vert S \vert \approx 10^{171}\).
+\item Very difficult to articulate what makes good play versus bad play
+\item One advantage is that Go becomes simpler in the end game.
+\item Moves are just placing a stone in an open space, and the final
+positions are unambiguous.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org13b7239}]{AlphaGo}
+\begin{itemize}
+\item Combines four different estimation techniques in an ensemble.
+\item Supervised Learning of a Policy Network
+\item Reinforcement Learning
+\item Value network
+\item Monte Carlo Search Trees
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org0246d47}]{Supervised Learning of the Policy Network}
+\begin{itemize}
+\item Deep neural network to predict professional players' moves from a
+state.
+\item Policy function using a Convolution Neural Network and \(4.6\) million
+weights (parameters)
+\item Learned from online database of 160,000 games leading to \(256\)
+million states. This is virtually nothing compared to the state
+space size.
+\item Goal is to estimate the probability of victory based on the logit.
+\end{itemize}
+\begin{equation*}
+  \Pr( a_t = j \vert s_t, \theta) = \frac{\exp(y_j(s_t, \theta))}{\sum_{j'\in
+      \mathcal{A}(s_t)} \exp( y_{j'}(s_t, \theta))} 
+\end{equation*}
+Where $y_j(s_t,\theta)$ is the latent value of choosing action $j$ in state
+$s_t$ for the parameters $\theta$.
+\end{frame}
+
+
+\begin{frame}[label={sec:orgefc3e0b}]{Reinforcement Learning of the Policy Network}
+\begin{itemize}
+\item The policy network is only estimating human play. It correctly
+predicts human play out of sample 55.7\% of the time, which is very
+high considering how little data are observed.
+\item However we are not interested in predicting human play, as much as
+predicting the optimal play.
+\item We seek a policy function based on different parameters \(\theta^{\prime}\)
+that performs better when playing against \(\theta\).
+\end{itemize}
+
+\begin{equation*}
+  \Pr_{win}\left( \sigma(s_t, \theta^{\prime}), \sigma(s_t, \theta) \right) > \Pr_{win}\left(
+    \sigma(s_t, \theta), \sigma(s_t, \theta) \right)
+\end{equation*}
+\end{frame}
+
+\begin{frame}[label={sec:org281b5f4}]{Reinforcement Learning Continued}
+\begin{itemize}
+\item This does not imply that the new strategy is dominant, as we are
+only playing it against what we previously approximated as optimal.
+\item This could only ever be fully addressed by solving explicitly for the
+optimal strategy.
+\item To try to combat this, the new strategy \(\sigma(s_t, \theta^{\prime})\) plays
+against many policies randomly sampled form previous rounds.
+\item Is this satisficing?
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org271213f}]{Evaluation Function}
+\begin{itemize}
+\item This is constructed from the existing policy function that is an
+approximation to the optimal policy function
+\item Sample many games using the policy function to determine play
+\item Pick many random states and record the winners of each of the game.
+\item This generates an arbitrarily large synthetic dataset.
+\item This can then be used to predict the probability of winning from any
+location in the state space \(s_t\).
+\item The policy function implies outcomes in games against itself, and
+then can be made explicit through simulation.
+\item Estimated through another deep neural network with 49 channels, 15
+layers, and 192 kernels.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org61f32a3}]{Monte Carlo Search Trees}
+\begin{itemize}
+\item Can simulate how good a position is by simulating entire games
+starting from a position randomly, and counting how many of them are
+wins and how many are losses.
+\item This is very easily parallizable, and can be done in real time to
+evaluate a single position on the board.
+\item This was the state of the art for Go computing before AlphaGo, and
+is implemented in AlphaGo.
+\item Both the Policy and the Value functions are combined in MCTS to
+determine the play that is used by AlphaGo.
+\end{itemize}
+\end{frame}
+
+\section{AlphaGo is Two-step Estimation}
+\label{sec:orgd3a119b}
+
+
+\begin{frame}[label={sec:orgcfdbee2}]{Hotz and Miller (1993)}
+\begin{itemize}
+\item Wish to circumvent the curse of dimensionality in NFXP. Don't want
+to have to solve a dynamic program at each iteration of \(\theta\).
+\item Want to estimate the policy function directly from the data
+\item If our data is large enough, we can use the observed choice
+probabilities conditioned on the state to non-parametrically obtain
+the optimal policy function.
+\item Trades away the computational curse of dimensionality for the data
+curse instead.
+\item In this context, neural networks are ideal, as they can approximate
+any arbitrary function provided they have enough layers and nodes
+(Hornik, Stinchombe, White 1989)
+\item They also show that there is a one-to-one mapping between policy
+functions and value functions.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org886748a}]{Policy network is first-stage CCP Estimator}
+\begin{itemize}
+\item In this context, the policy network is doing exactly this
+\item Estimates the strategies that are present in the data by looking at
+the optimal play.
+\item 
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org928f075}]{Reinforcement Learning is a Counter-factual with long-lived players}
+\begin{itemize}
+\item Reinforcement learning is policy function iteration.
+\item A policy (strategy) is assumed, and the value function is
+evaluated. This value function implies a new policy function, and
+this process is iterated.
+\item Consider the strategy found in the Policy network (stage 1) to
+be the best strategy arrived at so far in part of the life of an
+infinitely lived agent that encompasses all the top Go players.
+\item Improvements in this strategy can be considered to be aging of this
+agent, as he discovers new strategies that are better than the
+previous strategy.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[label={sec:org058eae8}]{Value Network is Second-Stage CCS Estimates}
+\begin{itemize}
+\item HMSS (1994) Calculate the value function by simulating the
+first-stage CCP Estimators, these simulations imply a value function
+as well as its underlying structural parameters.
+\item This is exactly how the value network is generated by AlphaGo.
+\item AlphaGo is interested in beating human champions rather than
+studying the strategic iterations, so it ignores many dynamic-game
+interactions.
+\item BBL (2007) extend HMSS (1994) to dynamic games using a
+moment-inequality-based estimation. This would only become relevant
+for using structural methods to study the interaction of Go Engines
+(players).
+\end{itemize}
+\end{frame}
+
+
+\section{Assumptions}
+\label{sec:org88cd0f1}
+\begin{frame}[label={sec:orgf46e5fc}]{Implicit Assumptions}
+\begin{itemize}
+\item Both Bonanza and AlphaGo implicitly type-1 extreme value errors when
+they use logit-style discrete choice models.
+\item Both also assume that the error is iid across actions, players,
+times and games.
+\item This forces them to ignore several important aspects of games
+\end{itemize}
+\begin{enumerate}
+\item Consideration Sets and Selective Search
+\item Cross-sectional Heterogeneity
+\item Inter-temporal Heterogeneity
+\item Strategic interactions
+\item Time/Physical Constraints
+\end{enumerate}
+\end{frame}
+
+\begin{frame}[label={sec:org5c7b658}]{Opportunities for Future Research}
+\begin{itemize}
+\item Since in games of perfect information AI is so dominant, making it
+"human" may be a new goal
+\item The Econometric Toolbox has evolved since 1987 and 1993, in
+particular for strategic interaction (BBL) and heterogeneity.
+\item Heterogeneity may be increasingly important in games of incomplete
+information where beliefs must be formed.
+\item Structural interpretability: This does not mean that will suddenly
+have interpretations of Neural Networks, but rather the object for
+which the neural network is an approximation of. (AlphaGo's Policy
+Network is the CCP estimate of the average professional player's
+strategy under the assumptions of homogeneity)
+\item Use of Convolution Neural Networks for non-parametric estimation of
+CCPs.
+\end{itemize}
+\end{frame}
+\end{document}

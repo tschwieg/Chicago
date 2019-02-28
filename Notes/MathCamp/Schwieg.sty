@@ -1,0 +1,44 @@
+\NeedsTeXFormat{LaTeX2e}[1994/06/01]
+\ProvidesPackage{Schwieg}[Styles used by Timothy Schwieg]
+
+
+\RequirePackage{amsmath}
+\RequirePackage{bm}
+\RequirePackage{amsthm}
+\RequirePackage{mathtools}
+
+\DeclareMathOperator{\diam}{diam}
+
+\newcommand{\met}[1]{d \left ( #1 \right )}
+\newcommand{\exV}[1]{\mathbb{E} \left [ #1 \right ]}
+\newcommand{\brak}[1]{ \left [ #1 \right ] }
+\renewcommand{\vec}[1]{ \bm{ #1 }}
+\newcommand{\abs}[1]{\left \lvert #1 \right \rvert}
+\newcommand{\seq}[1]{{\left \{ #1 \right \}}}
+\newcommand{\conj}[1]{ \overline{ #1 } }
+\newcommand{\close}[1]{ \bar{ #1 } }
+\newcommand{\set}[1]{\left \{ #1 \right \}}
+\newcommand{\Lim}[1]{\lim\limits_}
+\newcommand{\compose}{\circ}
+\newcommand{\inverse}[1]{{#1}^{-1}}
+\newcommand{\compl}[1]{{#1}^{c}}
+\newcommand{\setMinus}{ \\ }
+
+
+
+\newcommand{\setR}{ \mathbb{R} }
+\newcommand{\setQ}{ \mathbb{Q} }
+\newcommand{\setZ}{ \mathbb{Z} }
+\newcommand{\setN}{ \mathbb{N} }
+
+
+\DeclarePairedDelimiter{\ceil}{\lceil}{\rceil}
+\DeclarePairedDelimiter{\floor}{\lfloor}{\rfloor}
+\DeclarePairedDelimiter{\norm}{\lVert}{\rVert}
+
+\newtheorem*{definition}{Definition}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{question}{Question}
+\newtheorem*{answer}{Answer}
+
+\endinput

@@ -1,0 +1,59 @@
+\documentclass{paper}
+
+
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{bbm}
+
+\usepackage{tikz}
+\usepackage[margin=1in]{geometry}
+
+\begin{document}
+
+The owner in this model faces a decision on hiring between two
+different managers. One is a family member, which will be referred to
+as the related manager. The other is a more skilled manager whom is
+not related to the owner. This worker will be referred to as the
+foreigner.
+
+Consider a world where the owner faces profits of $\Pi_i, i \in \{0,1\}$
+which is the profit that the owner earns under each particular
+manager.
+
+\begin{equation*}
+  \Pi_i = \beta_i ( T_i + u - e_i )
+\end{equation*}
+Where $T_i$ is the talent of manager $i$, $\beta_i$ is share of profit the
+owner keeps under manager $i$.  $i$, and $e_i$ is the amount stolen by
+manager $i$.
+
+If the owner elects to hire a family manager he faces the problem of:
+\begin{align*}
+  U_0 = \alpha U( \beta_0 ( T_0 + u - e_0 ) ) + (1-\alpha) U( (1-\beta)(T_0 + u - e_0) +
+  e_0) \quad \alpha \in (.5,1)\\
+  U_0 = \alpha U( \beta_0 ( T_0 + u - e_0 ) ) + (1-\alpha)  U( (1-\beta)(T_0 + u) + \beta e_0 )\quad \alpha \in (.5,1)\\
+  U_1 = U( \beta ( T_1 + u - e_1 ) )
+\end{align*}
+
+Manager $i$ obtains Utility governed by:
+
+\begin{align*}
+  U( (1-\beta) ( T_i + u - e_i) + e_i - \gamma e_i )
+          &= U( (1-\beta) ( T_i + u ) - (1-\beta) e_i + e_i - \gamma e_i )\\
+          &= U( (1-\beta)( T_i + u) + \beta e_i- \gamma e_i )\\
+          &= U( (1-\beta)(T_i + u) + (\beta-\gamma)e_i )
+\end{align*}
+
+From this, we can see that the benefit to the manager of stealing is
+$\beta$, the portion of the profit that would be given to the owner. The
+cost is $\gamma$ which is the effort that must be expended to obtain one
+dollar. Thus for there to be no theft, we must find that $\gamma > \beta$.
+
+\section{b}
+
+The manager 
+
+
+\end{document}

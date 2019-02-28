@@ -1,0 +1,176 @@
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`\$=3\catcode`\^=7\catcode`\_=8}]
+\PYG{k}{function} \PYG{n}{Barrodale}\PYG{p}{(} \PYG{n}{X}\PYG{o}{::}\PYG{k+kt}{Matrix}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},} \PYG{n}{x}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},}
+                    \PYG{n}{k}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Int64}\PYG{p}{\PYGZcb{},} \PYG{n}{b}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},}
+                    \PYG{n}{c}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},} \PYG{n}{BInv}\PYG{o}{::}\PYG{k+kt}{Matrix}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},}
+                    \PYG{n}{p}\PYG{o}{::}\PYG{k+kt}{Int64}\PYG{p}{,} \PYG{n}{M}\PYG{o}{::}\PYG{k+kt}{Int64}\PYG{p}{,} \PYG{n}{N}\PYG{o}{::}\PYG{k+kt}{Int64}\PYG{p}{)}
+
+    \PYG{n}{cBar} \PYG{o}{=} \PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{}(}\PYG{n}{undef}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{p}\PYG{p}{)}
+
+    \PYG{n}{ℓ} \PYG{o}{=} \PYG{l+m+mi}{0}
+    \PYG{n}{u} \PYG{o}{=} \PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{}(}\PYG{n}{undef}\PYG{p}{,}\PYG{l+m+mi}{0}\PYG{p}{)}
+
+    \PYG{k}{for} \PYG{n}{i} \PYG{k+kp}{in} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{p}
+        \PYG{n}{j} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
+        \PYG{n}{min} \PYG{o}{=} \PYG{l+m+mf}{1e10}
+        \PYG{c}{\PYGZsh{}Which β should enter the distribution?}
+        \PYG{k}{for} \PYG{n}{z} \PYG{k+kp}{in} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{p}
+            \PYG{n}{cBar}\PYG{p}{[}\PYG{n}{z}\PYG{p}{]} \PYG{o}{=} \PYG{n}{c}\PYG{p}{[}\PYG{n}{z}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{dot}\PYG{p}{(} \PYG{n}{c}\PYG{p}{[}\PYG{n}{k}\PYG{p}{],} \PYG{n}{BInv}\PYG{o}{*}\PYG{n}{X}\PYG{p}{[}\PYG{o}{:}\PYG{p}{,}\PYG{n}{z}\PYG{p}{])}
+            \PYG{k}{if} \PYG{n}{cBar}\PYG{p}{[}\PYG{n}{z}\PYG{p}{]} \PYG{o}{\PYGZlt{}} \PYG{n}{min}
+                \PYG{n}{j} \PYG{o}{=} \PYG{n}{z}
+                \PYG{n}{min} \PYG{o}{=} \PYG{n}{cBar}\PYG{p}{[}\PYG{n}{z}\PYG{p}{]}
+            \PYG{k}{end}
+        \PYG{k}{end}
+        \PYG{k}{for} \PYG{n}{z} \PYG{k+kp}{in} \PYG{p}{(}\PYG{n}{p}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{o}{:}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{p}
+            \PYG{n}{cBar}\PYG{p}{[}\PYG{n}{z}\PYG{p}{]} \PYG{o}{=} \PYG{n}{c}\PYG{p}{[}\PYG{n}{z}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{dot}\PYG{p}{(} \PYG{n}{c}\PYG{p}{[}\PYG{n}{k}\PYG{p}{],} \PYG{o}{\PYGZhy{}}\PYG{n}{BInv}\PYG{o}{*}\PYG{n}{X}\PYG{p}{[}\PYG{o}{:}\PYG{p}{,}\PYG{n}{z}\PYG{o}{\PYGZhy{}}\PYG{n}{p}\PYG{p}{])}
+            \PYG{k}{if} \PYG{n}{cBar}\PYG{p}{[}\PYG{n}{z}\PYG{p}{]} \PYG{o}{\PYGZlt{}} \PYG{n}{min}
+                \PYG{n}{j} \PYG{o}{=} \PYG{n}{z}
+                \PYG{n}{min} \PYG{o}{=} \PYG{n}{cBar}\PYG{p}{[}\PYG{n}{z}\PYG{p}{]}
+            \PYG{k}{end}
+        \PYG{k}{end}
+        \PYG{c}{\PYGZsh{}j is now the smallest element of cBar}
+
+        \PYG{k}{if} \PYG{n}{j} \PYG{o}{\PYGZlt{}=} \PYG{n}{p}
+            \PYG{n}{ℓ}\PYG{p}{,}\PYG{n}{u} \PYG{o}{=} \PYG{n}{ChangeSignPivots}\PYG{p}{(} \PYG{n}{c}\PYG{p}{,} \PYG{n}{BInv}\PYG{p}{,} \PYG{n}{X}\PYG{p}{[}\PYG{o}{:}\PYG{p}{,}\PYG{n}{j}\PYG{p}{],} \PYG{n}{x}\PYG{p}{,} \PYG{n}{k}\PYG{p}{,} \PYG{n}{b}\PYG{p}{,} \PYG{n}{p}\PYG{p}{,} \PYG{n}{M}\PYG{p}{,} \PYG{n}{j}\PYG{p}{)}
+        \PYG{k}{else}
+            \PYG{n}{ℓ}\PYG{p}{,}\PYG{n}{u} \PYG{o}{=} \PYG{n}{ChangeSignPivots}\PYG{p}{(} \PYG{n}{c}\PYG{p}{,} \PYG{n}{BInv}\PYG{p}{,} \PYG{o}{\PYGZhy{}}\PYG{n}{X}\PYG{p}{[}\PYG{o}{:}\PYG{p}{,}\PYG{n}{j}\PYG{o}{\PYGZhy{}}\PYG{n}{p}\PYG{p}{],} \PYG{n}{x}\PYG{p}{,} \PYG{n}{k}\PYG{p}{,} \PYG{n}{b}\PYG{p}{,} \PYG{n}{p}\PYG{p}{,} \PYG{n}{M}\PYG{p}{,} \PYG{n}{j}\PYG{p}{)}
+        \PYG{k}{end}
+
+        \PYG{c}{\PYGZsh{} Now we do a normal pivot bringing in β[j]}
+        \PYG{n}{k}\PYG{p}{[}\PYG{n}{ℓ}\PYG{p}{]} \PYG{o}{=} \PYG{n}{j}
+
+        \PYG{c}{\PYGZsh{}Are elementary matrix operations faster than this?}
+        \PYG{k}{for} \PYG{n}{z} \PYG{k+kp}{in} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{M}
+            \PYG{k}{if}\PYG{p}{(} \PYG{n}{z} \PYG{o}{==} \PYG{n}{ℓ}\PYG{p}{)}
+                \PYG{k}{continue}
+            \PYG{k}{end}
+            \PYG{n}{BInv}\PYG{p}{[}\PYG{n}{z}\PYG{p}{,}\PYG{o}{:}\PYG{p}{]} \PYG{o}{\PYGZhy{}=} \PYG{p}{(}\PYG{n}{u}\PYG{p}{[}\PYG{n}{z}\PYG{p}{]} \PYG{o}{/} \PYG{n}{u}\PYG{p}{[}\PYG{n}{ℓ}\PYG{p}{])}\PYG{o}{*}\PYG{n}{BInv}\PYG{p}{[}\PYG{n}{ℓ}\PYG{p}{,}\PYG{o}{:}\PYG{p}{]}
+        \PYG{k}{end}
+        \PYG{n}{BInv}\PYG{p}{[}\PYG{n}{ℓ}\PYG{p}{,}\PYG{o}{:}\PYG{p}{]} \PYG{o}{./=}  \PYG{n}{u}\PYG{p}{[}\PYG{n}{ℓ}\PYG{p}{]}
+
+        \PYG{c}{\PYGZsh{}Compute the new x value}
+        \PYG{n}{x} \PYG{o}{.=} \PYG{l+m+mf}{0.0}
+        \PYG{n}{x}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]} \PYG{o}{=} \PYG{n}{BInv}\PYG{o}{*}\PYG{n}{b}
+    \PYG{k}{end}
+    \PYG{c}{\PYGZsh{}Phase 1 complete.}
+    \PYG{n}{println}\PYG{p}{(} \PYG{n}{x}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{o}{:}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{p}\PYG{p}{])}
+
+    \PYG{n}{cBar} \PYG{o}{=} \PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{}(}\PYG{n}{undef}\PYG{p}{,}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{M}\PYG{p}{)}
+    \PYG{n}{min} \PYG{o}{=} \PYG{l+m+mf}{1e10}
+    \PYG{n}{j} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
+    \PYG{k}{for} \PYG{n}{i} \PYG{k+kp}{in} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{M}\PYG{c}{\PYGZsh{}(2*p+1):(2*p+M)}
+        \PYG{n}{cBar}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{c}\PYG{p}{[}\PYG{n}{i}\PYG{o}{+}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{p}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{dot}\PYG{p}{(} \PYG{n}{c}\PYG{p}{[}\PYG{n}{k}\PYG{p}{],} \PYG{n}{BInv}\PYG{p}{[}\PYG{o}{:}\PYG{p}{,}\PYG{n}{i}\PYG{p}{])}
+        \PYG{k}{if} \PYG{n}{cBar}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{\PYGZlt{}} \PYG{n}{min}
+            \PYG{n}{j} \PYG{o}{=} \PYG{n}{i}\PYG{o}{+}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{p}
+            \PYG{n}{min} \PYG{o}{=} \PYG{n}{cBar}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}
+        \PYG{k}{end}
+    \PYG{k}{end}
+    \PYG{k}{for} \PYG{n}{i} \PYG{k+kp}{in} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{M}\PYG{c}{\PYGZsh{}Note that the second half of the residuals uses \PYGZhy{}I}
+        \PYG{n}{cBar}\PYG{p}{[}\PYG{n}{M}\PYG{o}{+}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{c}\PYG{p}{[}\PYG{n}{M}\PYG{o}{+}\PYG{n}{i}\PYG{o}{+}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{p}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{dot}\PYG{p}{(} \PYG{n}{c}\PYG{p}{[}\PYG{n}{k}\PYG{p}{],} \PYG{o}{\PYGZhy{}}\PYG{n}{BInv}\PYG{p}{[}\PYG{o}{:}\PYG{p}{,}\PYG{n}{i}\PYG{p}{])}
+        \PYG{k}{if} \PYG{n}{cBar}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{\PYGZlt{}} \PYG{n}{min}
+            \PYG{n}{j} \PYG{o}{=} \PYG{n}{i}\PYG{o}{+}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{p}\PYG{o}{+}\PYG{n}{M}
+            \PYG{n}{min} \PYG{o}{=} \PYG{n}{cBar}\PYG{p}{[}\PYG{n}{M}\PYG{o}{+}\PYG{n}{i}\PYG{p}{]}
+        \PYG{k}{end}
+    \PYG{k}{end}
+
+    \PYG{c}{\PYGZsh{} We stop once all reduced costs are positive.}
+    \PYG{k}{while}\PYG{p}{(} \PYG{n}{min} \PYG{o}{\PYGZlt{}} \PYG{l+m+mf}{0.0}\PYG{p}{)}
+        \PYG{c}{\PYGZsh{}Since we know we are using A[:,j] where j is a standard}
+        \PYG{c}{\PYGZsh{}ordered basis, we just need to make sure we get the element}
+        \PYG{c}{\PYGZsh{}correct. Lots of silly modular shit to do that}
+        \PYG{n}{sob} \PYG{o}{=} \PYG{n}{zeros}\PYG{p}{(}\PYG{n}{M}\PYG{p}{)}
+        \PYG{n}{sob}\PYG{p}{[((}\PYG{n}{j}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{p}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{o}{\PYGZpc{}}\PYG{n}{M}\PYG{p}{)}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{o}{=} \PYG{l+m+mf}{1.0}\PYG{o}{\PYGZhy{}}\PYG{l+m+mf}{2.0}\PYG{p}{(}\PYG{n}{j}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{p} \PYG{o}{\PYGZgt{}} \PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{p}\PYG{o}{+}\PYG{n}{M}\PYG{p}{)}
+        \PYG{n}{ℓ}\PYG{p}{,}\PYG{n}{u} \PYG{o}{=} \PYG{n}{ChangeSignPivots}\PYG{p}{(} \PYG{n}{c}\PYG{p}{,} \PYG{n}{BInv}\PYG{p}{,} \PYG{n}{sob}\PYG{p}{,} \PYG{n}{x}\PYG{p}{,} \PYG{n}{k}\PYG{p}{,} \PYG{n}{b}\PYG{p}{,} \PYG{n}{p}\PYG{p}{,} \PYG{n}{M}\PYG{p}{,} \PYG{n}{j}\PYG{p}{)}
+        \PYG{c}{\PYGZsh{} Now we do a normal pivot bringing in β[j]}
+        \PYG{n}{k}\PYG{p}{[}\PYG{n}{ℓ}\PYG{p}{]} \PYG{o}{=} \PYG{n}{j}
+
+        \PYG{c}{\PYGZsh{}Are elementary matrix operations faster than this?}
+        \PYG{k}{for} \PYG{n}{z} \PYG{k+kp}{in} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{M}
+            \PYG{k}{if}\PYG{p}{(} \PYG{n}{z} \PYG{o}{==} \PYG{n}{ℓ}\PYG{p}{)}
+                \PYG{k}{continue}
+            \PYG{k}{end}
+            \PYG{n}{BInv}\PYG{p}{[}\PYG{n}{z}\PYG{p}{,}\PYG{o}{:}\PYG{p}{]} \PYG{o}{\PYGZhy{}=} \PYG{p}{(}\PYG{n}{u}\PYG{p}{[}\PYG{n}{z}\PYG{p}{]} \PYG{o}{/} \PYG{n}{u}\PYG{p}{[}\PYG{n}{ℓ}\PYG{p}{])}\PYG{o}{*}\PYG{n}{BInv}\PYG{p}{[}\PYG{n}{ℓ}\PYG{p}{,}\PYG{o}{:}\PYG{p}{]}
+        \PYG{k}{end}
+        \PYG{n}{BInv}\PYG{p}{[}\PYG{n}{ℓ}\PYG{p}{,}\PYG{o}{:}\PYG{p}{]} \PYG{o}{./=}  \PYG{n}{u}\PYG{p}{[}\PYG{n}{ℓ}\PYG{p}{]}
+
+        \PYG{c}{\PYGZsh{}Recalculate all of the reduced costs for u,v}
+        \PYG{n}{min} \PYG{o}{=} \PYG{l+m+mf}{1e10}
+        \PYG{n}{j} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
+        \PYG{k}{for} \PYG{n}{i} \PYG{k+kp}{in} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{M}\PYG{c}{\PYGZsh{}(2*p+1):(2*p+M)}
+            \PYG{n}{cBar}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{c}\PYG{p}{[}\PYG{n}{i}\PYG{o}{+}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{p}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{dot}\PYG{p}{(} \PYG{n}{c}\PYG{p}{[}\PYG{n}{k}\PYG{p}{],} \PYG{n}{BInv}\PYG{p}{[}\PYG{o}{:}\PYG{p}{,}\PYG{n}{i}\PYG{p}{])}
+            \PYG{k}{if} \PYG{n}{cBar}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{\PYGZlt{}} \PYG{n}{min}
+                \PYG{n}{j} \PYG{o}{=} \PYG{n}{i}\PYG{o}{+}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{p}
+                \PYG{n}{min} \PYG{o}{=} \PYG{n}{cBar}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]}
+            \PYG{k}{end}
+        \PYG{k}{end}
+        \PYG{k}{for} \PYG{n}{i} \PYG{k+kp}{in} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{M}\PYG{c}{\PYGZsh{}(2*p+1):(2*p+M)}
+            \PYG{n}{cBar}\PYG{p}{[}\PYG{n}{M}\PYG{o}{+}\PYG{n}{i}\PYG{p}{]} \PYG{o}{=} \PYG{n}{c}\PYG{p}{[}\PYG{n}{M}\PYG{o}{+}\PYG{n}{i}\PYG{o}{+}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{p}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{dot}\PYG{p}{(} \PYG{n}{c}\PYG{p}{[}\PYG{n}{k}\PYG{p}{],} \PYG{o}{\PYGZhy{}}\PYG{n}{BInv}\PYG{p}{[}\PYG{o}{:}\PYG{p}{,}\PYG{n}{i}\PYG{p}{])}
+            \PYG{k}{if} \PYG{n}{cBar}\PYG{p}{[}\PYG{n}{i}\PYG{p}{]} \PYG{o}{\PYGZlt{}} \PYG{n}{min}
+                \PYG{n}{j} \PYG{o}{=} \PYG{n}{i}\PYG{o}{+}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{p}\PYG{o}{+}\PYG{n}{M}
+                \PYG{n}{min} \PYG{o}{=} \PYG{n}{cBar}\PYG{p}{[}\PYG{n}{M}\PYG{o}{+}\PYG{n}{i}\PYG{p}{]}
+            \PYG{k}{end}
+        \PYG{k}{end}
+    \PYG{k}{end}
+
+    \PYG{c}{\PYGZsh{}Compute the new x value}
+    \PYG{n}{x} \PYG{o}{.=} \PYG{l+m+mf}{0.0}
+    \PYG{n}{x}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]} \PYG{o}{=} \PYG{n}{BInv}\PYG{o}{*}\PYG{n}{b}
+    \PYG{k}{return} \PYG{n}{x}
+\PYG{k}{end}
+
+\PYG{k}{function} \PYG{n}{ChangeSignPivots}\PYG{p}{(} \PYG{n}{c}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},} \PYG{n}{BInv}\PYG{o}{::}\PYG{k+kt}{Matrix}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},}
+                           \PYG{n}{Aj}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},} \PYG{n}{x}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},}
+                           \PYG{n}{k}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Int64}\PYG{p}{\PYGZcb{},} \PYG{n}{b}\PYG{o}{::}\PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{},}
+                           \PYG{n}{p}\PYG{o}{::}\PYG{k+kt}{Int64}\PYG{p}{,} \PYG{n}{M}\PYG{o}{::}\PYG{k+kt}{Int64}\PYG{p}{,} \PYG{n}{j}\PYG{o}{::}\PYG{k+kt}{Int64}\PYG{p}{)}
+
+    \PYG{n}{exiting} \PYG{o}{=} \PYG{l+m+mi}{0}
+    \PYG{n}{ℓ} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
+
+    \PYG{n}{u} \PYG{o}{=} \PYG{k+kt}{Vector}\PYG{p}{\PYGZob{}}\PYG{k+kt}{Float64}\PYG{p}{\PYGZcb{}}
+
+    \PYG{k}{while}\PYG{p}{(} \PYG{n}{c}\PYG{p}{[}\PYG{n}{j}\PYG{p}{]} \PYG{o}{\PYGZhy{}} \PYG{n}{dot}\PYG{p}{(} \PYG{n}{c}\PYG{p}{[}\PYG{n}{k}\PYG{p}{],} \PYG{n}{BInv}\PYG{o}{*}\PYG{n}{Aj}\PYG{p}{)} \PYG{o}{\PYGZlt{}} \PYG{l+m+mf}{1e\PYGZhy{}8}\PYG{p}{)}
+        \PYG{n}{u} \PYG{o}{=} \PYG{n}{BInv}\PYG{o}{*}\PYG{n}{Aj}
+        \PYG{n}{min} \PYG{o}{=} \PYG{l+m+mf}{1.0e10}
+        \PYG{n}{ℓ} \PYG{o}{=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
+        \PYG{k}{for} \PYG{n}{z} \PYG{k+kp}{in} \PYG{l+m+mi}{1}\PYG{o}{:}\PYG{n}{M}
+            \PYG{k}{if}\PYG{p}{(} \PYG{n}{u}\PYG{p}{[}\PYG{n}{z}\PYG{p}{]} \PYG{o}{\PYGZgt{}} \PYG{l+m+mf}{0.0} \PYG{p}{)}
+                \PYG{n}{thetaTemp} \PYG{o}{=} \PYG{p}{(}\PYG{n}{x}\PYG{p}{[}\PYG{n}{k}\PYG{p}{[}\PYG{n}{z}\PYG{p}{]]} \PYG{o}{/} \PYG{n}{u}\PYG{p}{[}\PYG{n}{z}\PYG{p}{])}
+                \PYG{c}{\PYGZsh{}The strict inequality means that the first i wins the}
+                \PYG{c}{\PYGZsh{}tie.}
+                \PYG{k}{if}\PYG{p}{(} \PYG{n}{thetaTemp} \PYG{o}{\PYGZlt{}} \PYG{n}{min} \PYG{p}{)}
+                    \PYG{n}{min} \PYG{o}{=} \PYG{n}{thetaTemp}
+                    \PYG{n}{ℓ} \PYG{o}{=} \PYG{n}{z}
+                \PYG{k}{end}
+            \PYG{k}{end}
+        \PYG{k}{end}
+
+        \PYG{k}{if} \PYG{n}{ℓ} \PYG{o}{==} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
+            \PYG{n}{println}\PYG{p}{(}\PYG{l+s}{\PYGZdq{}ℓ issue\PYGZdq{}}\PYG{p}{)}
+            \PYG{k}{return} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{n}{u}
+        \PYG{k}{end}
+
+        \PYG{c}{\PYGZsh{}Now we know we want k[ℓ] to exit, we need to find its}
+        \PYG{c}{\PYGZsh{}negative (positve) counter\PYGZhy{}part}
+        \PYG{n}{exiting} \PYG{o}{=} \PYG{n}{k}\PYG{p}{[}\PYG{n}{ℓ}\PYG{p}{]}
+        \PYG{c}{\PYGZsh{} If we need to do a beta change of sign}
+        \PYG{k}{if} \PYG{n}{exiting} \PYG{o}{\PYGZlt{}=} \PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{p}
+            \PYG{c}{\PYGZsh{} Note that Julia is 1\PYGZhy{}indexed so for modular}
+            \PYG{c}{\PYGZsh{} arthimetic we need to minus one, mod, then add one}
+            \PYG{n}{entering} \PYG{o}{=} \PYG{p}{(}\PYG{n}{exiting} \PYG{o}{+} \PYG{n}{p}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)} \PYG{o}{\PYGZpc{}} \PYG{p}{(}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{p}\PYG{p}{)}\PYG{o}{+}\PYG{l+m+mi}{1}
+        \PYG{k}{else}
+            \PYG{n}{entering} \PYG{o}{=} \PYG{p}{((}\PYG{n}{exiting}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{p}\PYG{p}{)}\PYG{o}{+}\PYG{n}{M}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{)}\PYG{o}{\PYGZpc{}}\PYG{p}{(}\PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{M}\PYG{p}{)} \PYG{o}{+} \PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{p}\PYG{o}{+}\PYG{l+m+mi}{1}
+        \PYG{k}{end}
+
+        \PYG{n}{k}\PYG{p}{[}\PYG{n}{ℓ}\PYG{p}{]} \PYG{o}{=} \PYG{n}{entering}
+        \PYG{n}{BInv}\PYG{p}{[}\PYG{n}{ℓ}\PYG{p}{,}\PYG{o}{:}\PYG{p}{]} \PYG{o}{*=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
+        \PYG{n}{x} \PYG{o}{.=} \PYG{l+m+mf}{0.0}
+        \PYG{n}{x}\PYG{p}{[}\PYG{n}{k}\PYG{p}{]} \PYG{o}{=} \PYG{n}{BInv}\PYG{o}{*}\PYG{n}{b}
+    \PYG{k}{end}
+    \PYG{c}{\PYGZsh{}If we had a negative Reduced cost before, we should undo the}
+    \PYG{c}{\PYGZsh{}last change, and do a regular pivot. These pivots are cheap,}
+    \PYG{c}{\PYGZsh{}so doing 2 more pivots than we need isn\PYGZsq{}t a big deal}
+    \PYG{n}{k}\PYG{p}{[}\PYG{n}{ℓ}\PYG{p}{]} \PYG{o}{=} \PYG{n}{exiting}
+    \PYG{n}{BInv}\PYG{p}{[}\PYG{n}{ℓ}\PYG{p}{,}\PYG{o}{:}\PYG{p}{]} \PYG{o}{*=} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}
+
+    \PYG{k}{return}  \PYG{n}{ℓ}\PYG{p}{,}\PYG{n}{u}
+\PYG{k}{end}
+\end{Verbatim}

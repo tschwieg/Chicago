@@ -1,0 +1,147 @@
+\documentclass{paper}
+
+\usepackage{Schwieg}
+
+\begin{document}
+\section{Rust (1987) Bus engine replacement problem}
+
+\subsection{1}
+
+Since the data in the .csv file gives us the end of period mileage, we
+must find that it increases unless there is an engine replacement at
+the start of that time period. In this case, the mileage would have
+decreased.
+
+It is possible that we could miss a case where the engine is replaced,
+and then there is more mileage used in that single time period than
+wear that it had previously. We will abstract from this case and
+continue as if this never occurs.
+
+\subsection{2}
+
+What is Rust (1987)'s condition independence assumption which we will
+maintain for the rest of the problem? Discuss briefly.
+\vspace{.3in}
+
+The conditional independence assumption is that $x_{t+1}$ is independent
+of both $(\epsilon_t, \epsilon_{t+1})$
+\begin{align*}
+  \Pr( x_{t+1},\epsilon_{t+1} \vert x_t, \epsilon_t, a_t, \phi ) &= \Pr( \epsilon_{t+1} \vert
+                                              x_{t+1},x_t, \epsilon_t, \alpha_t,
+                                              \phi) \Pr( x_{t+1} \vert x_t,
+                                              \epsilon_t, a_t, \phi)\\
+  &= \Pr( \epsilon_{t+1}) \Pr( x_{t+1} \vert x_t a_t \phi)
+\end{align*}
+
+This means that the different draws of $\epsilon$ can only affect $x_t$
+through $a_t$, and ensures that we will be able to obtain closed form
+likelihood functions for $\Pr( a_t = j \vert x_t, \theta, \phi)$.
+
+\subsection{3}
+
+Discretize $x_t$ and estimate the Markov transition probability
+$p(x_{t+1} \vert x_t, t_t, \theta_3)$ using the hint that it is an upper
+triangular stochastic matrix.
+
+\vspace{.3in}
+
+We elect to have $K = 11$ with upper bounds equal to $1,2,3,...10,\infty$,
+as there are relatively few $10+$ observations. Estimation is
+conducted by denoting which bin each of the observations fall into,
+and then separating the cases where the mileage decreased, as could
+only happen by there being an engine replacement.
+
+We estimate two matrices, one of which where the mileage is
+decreasing, as is the case where action is taken, i.e. $i=1$ and one
+where there is no action taken, and the mileage necessarily
+increases.  The interesting case is when $i = 0$ where we
+estimate the contents of the transition probability matrix by a method
+of moments estimator.
+\begin{equation*}
+  \est{p}{ij} = \frac{\sum_{t=1}^T \indicate{x_{t-1} = i, x_t =
+      j}}{\sum_{t=1}^{T} \indicate{x_{t-1} = i}}
+\end{equation*}
+
+This ensures that the matrix is stochastic, and by the weak law of
+large numbers, it will converge to the true transition probability
+matrix. Its upper-triangular form is guaranteed by the removal of all
+engine replacement data points from the data set.
+
+
+The estimated matrix is given below:
+
+% Just kidding
+
+\subsection{4}
+
+From our assumptions we know that
+
+\begin{align*}
+  u(s_t, i_t) &= \bar{u}_{j}(x_t \vert \theta) + \epsilon_{jt}\\
+  \Pr( \epsilon_{t+1} \vert \epsilon_t) &= \Pr( \epsilon_{t+1})\\
+  \Pr( x_{t+1}, \epsilon_{t+1} \vert x_t, \epsilon_t, i_t) &= \Pr( \epsilon_{t+1}) \Pr( x_{t+1}
+                                           \vert x_t, i_t)
+\end{align*}
+
+We further assume that $\epsilon_{jt} \sim T1EV$ with mean zero, all of which
+are iid. 
+
+From this we wish to derive $\Pr( i_t = j \vert x_t)$. 
+
+We assume that the actor chooses from $j$ options, and the one with
+the highest draw is the selected one. That is, he observes $\epsilon_{0,t}$
+and $\epsilon_{1,t}$ and chooses $i_t$ such that
+\begin{equation*}
+  i_t =
+  \begin{cases}
+    0 \text{ if: } -\theta_1 x_t - \theta_2 x_t^2 + \epsilon_{0,t} + \beta
+    \exV{V_{\theta}(x_{t+1},\epsilon_{t+1}) \vert x_t, i_t = 0} \geq -RC + \epsilon_{1,t} + \beta
+    \exV{V_{\theta}(x_{t+1},\epsilon_{t+1}) \vert x_t, i_t = 1}\\
+    1 \text{ otherwise}
+  \end{cases}
+\end{equation*}
+
+That is, the forward-looking bus manager decides whether or not to
+replace the engine based on the costs today, but also the expect
+savings and expenses he will earn by this action affecting the
+future. This choice can be written as the per-period utility,
+$\bar{u(x_t,i_t,\epsilon_t)}$ and the expected value of taking the choice
+$i_t$, we shall write it as $\bar{u(x_t,i_t,\epsilon_t)} + \exV{V_{\theta}(x,i)}$
+
+
+Using the assumption that $\epsilon_{jt} \sim T1EV$ we can derive the
+probabilities of the choices of $i_t$:
+\begin{align*}
+  \Pr( i_t = 0) &= \Pr( \bar{u}(x_t,0,\epsilon_t) + \exV{V_{\theta}(x_{t+1},0)} \geq
+                  \bar{u}(x_t,1,\epsilon_t) + \exV{V_{\theta}(x_{t+1},1)})\\
+  &= \frac{\exp(\bar{u}(x_t,0,\epsilon_t) +
+    \exV{V_{\theta}(x_{t+1},0)})}{\sum_{k=0}^1 \exp( \bar{u}(x_t,k,\epsilon_t) +
+    \exV{V_{\theta}(x_{t+1},k)} )}\\
+\end{align*}
+
+These are the standard choice probabilities that have been worked with
+before, but now there is a dynamic component that is characterized by
+the expected value of future utility conditioned on the choice that I
+make today.
+
+\subsection{5}
+
+
+Show that the following fixed point equation holds:
+
+\begin{equation*}
+  \exV{V_{\theta}(x,i)} = \int_y \log \left\{ \sum_j \exp( \bar{u}(y,j) + \beta
+    \exV{V_{\theta}(x,i)}) \right\} p( dy \vert x,i,\theta_3)
+\end{equation*}
+
+\vspace{.3in}
+
+
+
+\subsection{6}
+
+Estimate the model parameters $\theta$, using Rust's full ML method, for
+the discount rate $\beta = .9$
+
+
+\end{document}
